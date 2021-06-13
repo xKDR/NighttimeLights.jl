@@ -3,6 +3,10 @@ uuid = "4d912a30-7731-4b12-9bf5-9d9a78b4f19a"
 authors = ["Ayush Patnaik", "Ajay Shah", "Anshul Tayal", "Susan Thomas"]
 version = "0.1.0"
 
+[deps]
+ArchGDAL = "c9ce4bd3-c3d5-55b8-8973-c0e20141b8c3"
+GeoArrays = "2fb1d81b-e6a0-5fc5-82e6-8e06903437ab"
+
 [compat]
 julia = "1"
 
