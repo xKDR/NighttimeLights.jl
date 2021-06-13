@@ -7,3 +7,8 @@
 [![Build Status](https://api.cirrus-ci.com/github/ayushpatnaikgit/NighttimeLights.jl.svg)](https://cirrus-ci.com/github/ayushpatnaikgit/NighttimeLights.jl)
 [![Coverage](https://codecov.io/gh/ayushpatnaikgit/NighttimeLights.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/ayushpatnaikgit/NighttimeLights.jl)
 [![Coverage](https://coveralls.io/repos/github/ayushpatnaikgit/NighttimeLights.jl/badge.svg?branch=master)](https://coveralls.io/github/ayushpatnaikgit/NighttimeLights.jl?branch=master)
+
+## To install: 
+```Julia
+ Pkg.clone("git://github.com/JuliaPlanet/NighttimeLights.jl.git")
+```
