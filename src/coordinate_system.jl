@@ -50,4 +50,4 @@ function translate_coordinate_system(coordinate_system::CoordinateSystem,top_lef
     width = round(top_left_row - bottom_right_row)
     return CoordinateSystem(top_left, bottom_right, height, width) 
 end
-india = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
+global india = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
