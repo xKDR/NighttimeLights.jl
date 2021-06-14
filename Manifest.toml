@@ -205,6 +205,12 @@ git-tree-sha1 = "3f71217b538d7aaee0b69ab47d9b7724ca8afa0d"
 uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 version = "4.0.4"
 
+[[CubicSplines]]
+deps = ["Test"]
+git-tree-sha1 = "82b1842edc46cdb6d8386e70a18aa96d508aef4e"
+uuid = "9c784101-8907-5a6d-9be6-98f00873c89b"
+version = "0.1.1"
+
 [[CustomUnitRanges]]
 git-tree-sha1 = "537c988076d001469093945f3bd0b300b8d3a7f3"
 uuid = "dc8bdbbb-1ca9-579f-8c36-e416f6a65cce"
@@ -791,6 +797,12 @@ deps = ["JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pkg"]
 git-tree-sha1 = "e6ea89d915cdad8d264f7f9158c6664f879edcde"
 uuid = "d3a379c0-f9a3-5b72-a4c0-6bf4d2e8af0f"
 version = "2.9.0+0"
+
+[[Loess]]
+deps = ["Distances", "LinearAlgebra", "Statistics"]
+git-tree-sha1 = "b5254a86cf65944c68ed938e575f5c81d5dfe4cb"
+uuid = "4345ca2d-374a-55d4-8d30-97f9976e7612"
+version = "0.5.3"
 
 [[LogExpFunctions]]
 deps = ["DocStringExtensions", "LinearAlgebra"]
