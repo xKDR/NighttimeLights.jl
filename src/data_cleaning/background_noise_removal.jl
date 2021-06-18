@@ -29,14 +29,14 @@ function noise_threshold(x,th = 0.4)
 end
 
 function background_noise_mask(datacube=radiance_datacube, clouds=clouds_datacube, th=0.4)
-    last_year      = datacube[:,:,(size(datacube)[3]-12):size(datacube)[3]]
-    cloudYear   = clouds[:,:,(size(datacube)[3]-12):size(datacube)[3]]
+    last_year_rad      = datacube[:,:,(size(datacube)[3]-12):size(datacube)[3]]
+    last_year_cloud   = clouds[:,:,(size(datacube)[3]-12):size(datacube)[3]]
     average_lastyear = copy(datacube[:,:,1])
-    for i in 1:size(last_year)[1]
-        for j in 1:size(last_year)[2]
-            average_lastyear[i,j] = weighted_mean(last_year[i,j,:],cloudYear[i,j,:])
+    for i in 1:size(last_year_rad)[1]
+        for j in 1:size(last_year_rad)[2]
+            average_lastyear[i,j] = weighted_mean(last_year_rad[i,j,:],last_year_cloud[i,j,:])
         end
     end
-    mask = noise_mask.(average_lastyear,th)
+    mask = noise_threshold.(average_lastyear,th)
     return mask
 end

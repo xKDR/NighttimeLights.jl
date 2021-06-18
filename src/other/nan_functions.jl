@@ -12,7 +12,7 @@ function counter_nan(x)
     
 function max_nan(x)
 """Finds the maximum value of a array where NaN are present.""" 
-    y = replace(x, NaN => 0)
+    y = replace(copy(x), NaN => 0)
     return(maximum(y))
 end
 
