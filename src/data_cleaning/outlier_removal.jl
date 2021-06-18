@@ -21,23 +21,21 @@ function outlier_mask(datacube,mask)
             return 0
         end
     end
-    threshold = quantile(litrads(stds,mask),0.999)
+    threshold = quantile(mask_vals(stds,mask),0.999)
     outlierMask= std_mask.(stds,threshold)
     outlierMask = outlierMask.*mask
     outlierMask = convert(Array{Int8,2},outlierMask)
     return outlierMask
 end
 
-
-R"""
-library(compiler)
-ROutlierRem <- function(x) {
-    library(forecast)
-    return<-tsclean(x, replace.missing=FALSE)
-}
-
-"""
 function outlier_ts(arr)
+    R"""
+    library(compiler)
+    ROutlierRem <- function(x) {
+        library(forecast)
+        return<-tsclean(x, replace.missing=FALSE)
+    }
+    """
     array = copy(arr)
     """
     Applies tsclean outlier removal from Rob Hyndman's package forecast in R

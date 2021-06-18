@@ -6,7 +6,7 @@ function threshold(x,minrad=0,replacement=NaN)
     end
 end
 
-function threshold_datacube(datacube,mask=ones(Int8, (size(datacube)[1],size(datacube)[2])),minrad=0,replacement=NaN)
+function threshold_datacube(datacube,minrad=0,replacement=NaN,mask=ones(Int8, (size(datacube)[1],size(datacube)[2])))
     cleaned_matrix = copy(datacube)
     for i in 1:size(cleaned_matrix)[1]
         for j in 1:size(cleaned_matrix)[2]

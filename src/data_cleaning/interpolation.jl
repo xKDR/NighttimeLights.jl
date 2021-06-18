@@ -1,15 +1,12 @@
 #Modifying impute function from https://github.com/invenia/Impute.jl/blob/master/src/imputors/interp.jl 
 
-using RCall
-R"""
-library(forecast)
-"""
-R"""
-RInterp <- function(x) {
-    return<-na.interp(x)
-
-}"""
 function forecast_interp(arr)
+    R"""
+    library(forecast)
+    RInterp <- function(x) {
+        return<-na.interp(x)
+
+    }"""
     array =copy(arr)
     """
     Applies na.interp from Rob Hyndman's package forecast in R

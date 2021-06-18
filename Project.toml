@@ -24,6 +24,7 @@ RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
 RecursiveArrayTools = "731186ca-8d62-57ce-b412-fbd966d074cd"
 Shapefile = "8e980c4a-a4fe-5da2-b3a7-4b4b0353a2f4"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]

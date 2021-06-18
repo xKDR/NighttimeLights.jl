@@ -1,6 +1,31 @@
+# Taken from https://github.com/JuliaData/DataFrames.jl/blob/main/test/runtests.jl
 using NighttimeLights
 using Test
 
-@testset "NighttimeLights.jl" begin
-    # Write your tests here.
+fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
+quiet = length(ARGS) > 0 && ARGS[1] == "-q"
+anyerrors = false
+
+my_tests = ["sparse_cube.jl","data_cleaning/bias_correction.jl","data_cleaning/interpolation.jl","data_cleaning/outlier_removal.jl"]
+
+println("Running tests:")
+
+for my_test in my_tests
+    try
+        include(my_test)
+        println("\t\033[1m\033[32mPASSED\033[0m: $(my_test)")
+    catch e
+        global anyerrors = true
+        println("\t\033[1m\033[31mFAILED\033[0m: $(my_test)")
+        if fatalerrors
+            rethrow(e)
+        elseif !quiet
+            showerror(stdout, e, backtrace())
+            println()
+        end
+    end
+end
+
+if anyerrors
+    throw("Tests failed")
 end

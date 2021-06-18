@@ -58,7 +58,7 @@ function bias_correction_datacube(radiance_datacube,clouds_datacube,mask=ones(In
             end
             radiance_arr = radiance_datacube[i,j,:]
             clouds_arr = clouds_datacube[i,j,:]
-            rad_corrected_datacube[i,j,:]= na_exclude(bias_correction(radiance_arr,clouds_arr))
+            rad_corrected_datacube[i,j,:]= na_exclude(bias_correction,radiance_arr,clouds_arr)
         end
     end
     return rad_corrected_datacube
