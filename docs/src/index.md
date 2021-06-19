@@ -9,6 +9,7 @@ Documentation for [NighttimeLights](https://github.com/ayushpatnaikgit/Nighttime
 ```@index
 ```
 
-```@autodocs
-Modules = [NighttimeLights]
+```@docs
+load_img(filepath)
 ```
+    

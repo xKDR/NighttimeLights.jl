@@ -1,3 +1,11 @@
+"""
+Loads a tif file as a 2D matrix
+
+# Example:
+```
+julia> load_img("example.tif")
+```
+"""
 function load_img(filepath)
     img = ArchGDAL.read((ArchGDAL.read(filepath)),1)
     img_trans = img' #tif loaded using ArchGDAL needs to be transposed
@@ -18,14 +26,40 @@ function load_img(radiance_filepath,clouds_filepath)
     return radiance
 end
 
+"""
+saves a 2D matrix in a tif file
+
+# Example:
+```
+julia> save_img("example.tif",img)
+```
+"""
 function save_img(filepath,img)
     GeoArrays.write!(filepath,GeoArray(convert(Array{Float32},img')))
 end
+
+"""
+Loads a JLD datacube 
+
+# Example:
+```
+julia> load_datacube("example.jld")
+```
+"""
 
 function load_datacube(datacube_path)
     datacube = load(datacube_path)["data"]
     return datacube
 end
+
+"""
+Saves a datacube as a JLD file. 
+
+# Example:
+```
+julia> save_datacube("example.jld",datacube)
+```
+"""
 
 function save_datacube(filepath,datacube)
     save(filepath, "data", datacube)

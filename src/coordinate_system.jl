@@ -46,8 +46,9 @@ function translate_geometry(geometry::CoordinateSystem,top_left::Coordinate,bott
     bottom_right_row = lat_to_row(geometry, bottom_right.latitude)
     bottom_right_col = long_to_column(geometry,bottom_right.longitude)
     top_left_col = long_to_column(geometry, top_left.longitude)
-    height = round(top_left_col - bottom_right_col)
-    width = round(top_left_row - bottom_right_row)
+    height = round(bottom_right_row - top_left_row)
+    width = round(bottom_right_col - top_left_col)
     return CoordinateSystem(top_left, bottom_right, height, width) 
 end
-global india = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
+global INDIA_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
+global MUMBAI_COORDINATE_SYSTEM = translate_geometry(INDIA_COORDINATE_SYSTEM,Coordinate(19.49907,72.721252),Coordinate(18.849475, 73.074187))

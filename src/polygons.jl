@@ -38,9 +38,6 @@ function make_polygons(geometry::CoordinateSystem, geoms)
 end
 
 function polygon_mask(geometry::CoordinateSystem, shapefile_row)
-    """
-    shapefile_row can be selected using the following shapefile_row = shapefile_dataframe[:35, :]
-    """
     geoms = shapefile_row.geometry
     polygons = make_polygons(geometry,geoms)
     points = zeros(geometry.height, geometry.width)

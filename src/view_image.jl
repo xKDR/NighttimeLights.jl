@@ -1,3 +1,11 @@
+"""
+    view_img(img)
+
+Displays and image in GIMP
+
+# Example:
+view_img(rand(1:10,10,10))
+"""
 function view_img(img)
     save_img("/tmp/image.tif",img)
     run(`gimp /tmp/image.tif`)

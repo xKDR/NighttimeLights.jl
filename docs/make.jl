@@ -1,5 +1,6 @@
-using NighttimeLights
 using Documenter
+push!(LOAD_PATH,"src/")
+using NighttimeLights
 
 DocMeta.setdocmeta!(NighttimeLights, :DocTestSetup, :(using NighttimeLights); recursive=true)
 

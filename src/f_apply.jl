@@ -41,10 +41,19 @@ function cross_apply(f, datacube, mask = ones(size(datacube)[1], size(datacube)[
     end
 end
 
-function apply_mask(datacube, mask = ones(Float16, (size(datacube)[1], size(datacube)[2])))
+function apply_mask(datacube::VectorOfArray{Any,3,Array{Any,1}}, mask = ones(Float16, (size(datacube)[1], size(datacube)[2])))
+    masked_datacube = copy(datacube)
+    for i in 1:size(datacube)[3]
+        masked_datacube[i] = datacube[i] .* mask
+    end
+    return masked_datacube
+end
+
+function apply_mask(datacube::Array{Any,3}, mask = ones(Float16, (size(datacube)[1], size(datacube)[2])))
     masked_datacube = copy(datacube)
     for i in 1:size(datacube)[3]
         masked_datacube[:, :, i] = datacube[:, :, i] .* mask
     end
     return masked_datacube
 end
+
