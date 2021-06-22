@@ -10,5 +10,5 @@
 
 ## To install: 
 ```Julia
- Pkg.clone("git://github.com/JuliaPlanet/NighttimeLights.jl.git")
+ add "git://github.com/JuliaPlanet/NighttimeLights.jl.git"
 ```
