@@ -21,22 +21,21 @@ julia> rand_mask = rand(0:1, 10, 10)
 julia> aggregate_timeseries(rand_datacube, rand_mask)
 ```
 """
-
-function aggregate_timeseries(datacube,mask)
-    datacube = convert(Array{Float32,3},datacube)
+function aggregate_timeseries(datacube, mask)
+    datacube = convert(Array{Float32,3}, datacube)
     datacube = sparse_cube(copy(datacube))
-    datacube = apply_mask(datacube,mask)
-    lights = cross_apply(sum,datacube)
+    datacube = apply_mask(datacube, mask)
+    lights = cross_apply(sum, datacube)
     return lights
 end
 
 """
-Computes the time series of aggregate value of datacube over a mask
+Computes the time series of aggregate value of datacube for each row of a shapefile
 # Example:
 ```
 julia> rand_datacube = rand(10, 10, 10)
-julia> rand_mask = rand(0:1, 10, 10)
-julia> aggregate_timeseries(rand_datacube, rand_mask)
+julia> shapefile_df  = load_shapefile("assets/mumbai_map/mumbai_districts.shp")
+julia> aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "District")
 ```
 """
 

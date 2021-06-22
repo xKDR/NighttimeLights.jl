@@ -17,14 +17,14 @@ function lat_to_row(geometry::CoordinateSystem, x)
     top_left        = geometry.top_left.latitude
     bottom_right    = geometry.bottom_right.latitude
     height          = geometry.height  
-    return ((x - top_left) * height / (bottom_right - top_left))
+    return round(((x - top_left) * height / (bottom_right - top_left)))
 end
 
 function long_to_column(geometry::CoordinateSystem, x)
     top_left        = geometry.top_left.longitude
     bottom_right    = geometry.bottom_right.longitude
     width           = geometry.width  
-    return ((x - top_left) * width/(bottom_right - top_left))
+    return round(((x - top_left) * width/(bottom_right - top_left)))
 end
 
 function row_to_lat(geometry::CoordinateSystem, x)
