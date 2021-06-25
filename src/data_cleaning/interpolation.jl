@@ -8,12 +8,19 @@ function forecast_interp(arr)
 
     }"""
     array =copy(arr)
-    """
-    Applies na.interp from Rob Hyndman's package forecast in R
-    """
+    #Applies na.interp from Rob Hyndman's package forecast in R
     return convert(Array{Float16},rcall(:RInterp,array))
 end
 
+"""
+Uses linear interpolation to fill for missing values. Missing and NaN are used interchangeably.  
+# Example: 
+```
+julia> x = rand(1:10.0, 10)
+julia> x[5] = NaN
+julia> linear_interpolation(x)
+```
+"""
 function linear_interpolation(array)
     if counter_nan(array)>50
         return zero(1:length(array))

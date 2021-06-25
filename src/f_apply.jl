@@ -54,29 +54,6 @@ function cross_apply(f, datacube, mask = ones(size(datacube)[1], size(datacube)[
         return array
     end
 end
-"""
-Makes all pixels of a datacube outside a mask = 0 
-# Example:
-```
-julia> datacube = rand(1:10.0, 10,10,10)
-julia> mask = rand(0:1, 10, 10)
-julia> long_apply(sum, datacube)
-```    
-"""
-function apply_mask(datacube, mask = ones((size(datacube)[1], size(datacube)[2])))
-    #use multiple dispatch here
-    if typeof(datacube) == VectorOfArray{Any,3,Array{Any,1}}
-        masked_datacube = []
-        for i in 1:length(datacube)
-            push!(masked_datacube,datacube[i] .* mask)
-        end
-        return VectorOfArray(masked_datacube)
-    end
-    masked_datacube = copy(datacube)
-    for i in 1:size(datacube)[3]
-        masked_datacube[:, :, i] = datacube[:, :, i] .* mask
-    end
-    return masked_datacube
-end
+
 
     

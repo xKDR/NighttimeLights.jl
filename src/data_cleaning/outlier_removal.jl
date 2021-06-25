@@ -1,7 +1,7 @@
+"""
+Generates a mask of pixels with standard deviation less that the 99.9th percentile. 
+"""
 function outlier_mask(datacube,mask)
-    """
-    Generates a mask of pixels with standard deviation less that the 99.9th percentile. 
-    """
     stds = zeros(size(datacube)[1], size(datacube)[2])
     @showprogress for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
@@ -37,8 +37,7 @@ function outlier_ts(arr)
     }
     """
     array = copy(arr)
-    """
-    Applies tsclean outlier removal from Rob Hyndman's package forecast in R
-    """
+    #Applies tsclean outlier removal from Rob Hyndman's package forecast in R
+
     return convert(Array{Float16},rcall(:ROutlierRem,array))
 end

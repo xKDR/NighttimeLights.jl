@@ -1,6 +1,4 @@
 """
-    view_img(img)
-
 Displays and image in GIMP
 
 # Example:

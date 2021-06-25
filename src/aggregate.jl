@@ -1,24 +1,23 @@
 """
-Computes the aggregate value of an image over a mask
-# Example:
+The aggregate value of an image over a mask can be computed by the aggregate function. The function multiplies the image and the mask (elementwise) and then performs the summation. 
 ```
-julia> rand_image = rand(10, 10)
-julia> rand_mask = rand(0:1, 10, 10)
-julia> aggregate(rand_image, rand_mask)
+rand_image = rand(10, 10)
+rand_mask = rand(0:1, 10, 10)
+aggregate(rand_image, rand_mask)
 ```
 """
-function aggregate(image,mask)
+function aggregate(image, mask)
     masked_image = copy(image).*mask
     return sum(masked_image)
 end
 
 """
-Computes the time series of aggregate value of datacube over a mask
-# Example:
+To find the time series of aggregate values of a datacube over a mask, using the ```aggregate_timeseries``` function
+
 ```
-julia> rand_datacube = rand(10, 10, 10)
-julia> rand_mask = rand(0:1, 10, 10)
-julia> aggregate_timeseries(rand_datacube, rand_mask)
+rand_datacube = rand(10, 10, 10)
+rand_mask = rand(0:1, 10, 10)
+aggregate_timeseries(rand_datacube, rand_mask)
 ```
 """
 function aggregate_timeseries(datacube, mask)

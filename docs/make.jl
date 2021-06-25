@@ -1,5 +1,4 @@
 using Documenter
-push!(LOAD_PATH,"src/")
 using NighttimeLights
 
 DocMeta.setdocmeta!(NighttimeLights, :DocTestSetup, :(using NighttimeLights); recursive=true)
@@ -16,6 +15,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Basic concepts" => "concepts.md",
+        "Polygons and shapefiles"=> "polygons.md",
+        "Data Cleaning"=> "data_cleaning.md",
     ],
 )
 

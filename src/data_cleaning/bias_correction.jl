@@ -24,6 +24,13 @@ end
 #     eval(tmp)
 # end
 
+"""
+Corrects the attenuation in radiance due to clouds. 
+# Example: 
+```
+julia> bias_correction(radiance_timeseries, clouds_timeseries)
+```
+"""
 function bias_correction(radiance,clouds)
     if OtCorTest(radiance,clouds)>0.05
         return radiance     
@@ -46,6 +53,13 @@ function bias_correction(radiance,clouds)
     return ys   
 end
 
+"""
+Corrects the attenuation in radiance due to clouds for the entire datacube.  
+# Example: 
+```
+julia> bias_correction(radiance_datacube, clouds_datacube)
+```
+"""
 function bias_correction_datacube(radiance_datacube,clouds_datacube,mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
     rad_corrected_datacube = copy(radiance_datacube)
     @showprogress for i in 1:size(radiance_datacube)[1]
