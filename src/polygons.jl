@@ -5,7 +5,7 @@ load_shapefile("assets/mumbai_map/mumbai_districts.shp")
 ```
 """
 function load_shapefile(filepath)
-    table           = Shapefile.Table(path)                        ## Reading the shapefile
+    table           = Shapefile.Table(filepath)                        ## Reading the shapefile
     shapefile_df    = DataFrame(table)                             ## Converting to dataframe         
     geoms                        = Shapefile.shapes(table)         ## Reading shapes from the shapefile
     shapefile_df[!, "geometry"]  = geoms 
