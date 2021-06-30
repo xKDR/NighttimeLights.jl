@@ -24,21 +24,14 @@ returns the value of the image at location [1, 2] of the 3rd month.
 # Loading and saving files
 
 Images and datacubes can be be loaded and saved using the following functions. 
+
 ```@docs
 load_img(filepath)
-```
-```@docs
 save_img(filepath, image)
-```
-
-```@docs
 load_datacube(filepath)
-```
-
-
-```@docs
 save_datacube(filepath, datacube)
 ```
+
 # Mapping between earth and arrays
 
 Suppose you want to find which location has the maximum value of light in an image. You can use the findmax function in julia.
@@ -52,19 +45,9 @@ Similarly, if you were given a pair of latitude and longitude, for example, (19.
 
 ```@docs
 CoordinateSystem
-```
-
-```@docs
 lat_to_row(geometry::CoordinateSystem, x)
-```
-
-```@docs
 long_to_column(geometry::CoordinateSystem, x)
-```
-```@docs
 row_to_lat(geometry::CoordinateSystem, x)
-```
-```@docs
 column_to_long(geometry::CoordinateSystem, x)
 ```
 

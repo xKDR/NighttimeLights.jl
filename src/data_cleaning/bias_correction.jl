@@ -55,6 +55,12 @@ function bias_correction(radiance::Array{T, 1}, clouds) where T <:Real
     return ys   
 end
 
+"""
+The bias correction function can use the datacubes of radiance and the number of cloud-free observations to correct for attenuation in radiance due to low number of cloud-free observations. 
+```julia
+bias_correction(radiance, clouds)
+```
+"""
 function bias_correction(radiance_datacube::Array{T, 3}, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Real
     rad_corrected_datacube = copy(radiance_datacube)
     @showprogress for i in 1:size(radiance_datacube)[1]
