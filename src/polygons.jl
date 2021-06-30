@@ -41,13 +41,15 @@ end
 The polygon of a shapefile row can be make into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
  
 ```julia
-load_shapefile("assets/mumbai_map/mumbai_districts.shp")
+mumbai_districts = load_shapefile("assets/mumbai_map/mumbai_districts.shp")
+district1 = mumbai_dists[1,:] # Select the first district
+district1_mask = polygon_mask(my_coordinate_system, district1)
 ```
 """
 function polygon_mask(geometry::CoordinateSystem, shapefile_row)
     geoms = shapefile_row.geometry
     polygons = make_polygons(geometry,geoms)
-    points = zeros(geometry.height, geometry.width)
+    points = zeros(Int32, geometry.height, geometry.width)
     for poly in polygons
         Boundary    = BoundingBox(poly)
         iend        = Int16(round(Boundary[2][2]))

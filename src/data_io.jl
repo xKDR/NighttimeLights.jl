@@ -11,20 +11,6 @@ function load_img(filepath)
     return convert(Array{Float16,2},img_trans) 
 end
 
-function load_img(radiance_filepath,clouds_filepath)
-    radiance = load_img(radiance_filepath)
-    clouds = load_img(clouds_filepath)
-    clouds = convert(Array{Int8},clouds)
-    for i in 1:size(clouds)[1]
-        for j in 1:size(clouds)[2]
-            if clouds[i,j] == 0
-                radiance[i,j]=NaN
-            end
-        end
-    end
-    return radiance
-end
-
 """
 Images in the form of 2D arrays can be saved as tif files. 
 # Example:

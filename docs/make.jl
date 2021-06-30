@@ -2,7 +2,6 @@ using Documenter
 using NighttimeLights
 
 DocMeta.setdocmeta!(NighttimeLights, :DocTestSetup, :(using NighttimeLights); recursive=true)
-
 makedocs(;
     modules=[NighttimeLights],
     authors="Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas",
@@ -18,6 +17,7 @@ makedocs(;
         "Basic concepts" => "concepts.md",
         "Polygons and shapefiles"=> "polygons.md",
         "Data Cleaning"=> "data_cleaning.md",
+        "Tutorial" =>"tutorial.md",
     ],
 )
 

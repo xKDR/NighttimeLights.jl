@@ -6,7 +6,8 @@ CurrentModule = NighttimeLights
 
 Documentation for [NighttimeLights](https://github.com/ayushpatnaikgit/NighttimeLights.jl).
 
-National Oceanic and Atmospheric Administration (NOAA) releases nighttime lights images produced using the Visible Infrared Imaging Radiometer Suite (VIIRS) each month since April 2012. The image of India as night in April 2012 is shown below. Nighttime lights data had emerged as a useful tool to measure economic activity. Many researchers have established a correlation between prosperity and brightness of a region. In many situations, nighttime lights generates measures with accuracy, latency and geographical resolution that are superior to conventional methods of measurement, such as GDP. 
+National Oceanic and Atmospheric Administration (NOAA) releases nighttime lights images produced using the Visible Infrared Imaging Radiometer Suite (VIIRS) each month since April 2012. The image of India as night in April 2012 is shown below. Nighttime lights data had emerged as a useful tool to measure economic activity. Many researchers have established a correlation between prosperity and the brightness of a region. Doll found a strong correlation between the nighttime lights, aggregated over a geographical region of interest, with the regional GDP of 11 European Union countries, and US GDP at the state
+level. In many situations, nighttime lights generates measures with accuracy, latency and geographical resolution that are superior to conventional methods of measurement, such as GDP.
 
 Using nighttime lights for economic analysis require cleaning of data. This is the first open source implementation of cleaning procedures for nighttime lights.
 

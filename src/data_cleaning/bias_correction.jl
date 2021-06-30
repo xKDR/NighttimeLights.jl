@@ -25,13 +25,15 @@ end
 # end
 
 """
-Corrects the attenuation in radiance due to clouds. 
-# Example: 
-```
-julia> bias_correction(radiance_timeseries, clouds_timeseries)
+Clouds months tends to have lower radiance due to attenuation. The bias_correction function uses the number of cloud-free observations to adjust the radiance accordingly. 
+```julia
+bias_correction(radiance, clouds)
 ```
 """
-function bias_correction(radiance,clouds)
+function bias_correction(radiance::Array{T, 1}, clouds) where T <:Real
+    if check_nan(radiance) == true
+        return na_exclude(bias_correction, radiance, clouds)
+    end
     if OtCorTest(radiance,clouds)>0.05
         return radiance     
     end
@@ -53,14 +55,7 @@ function bias_correction(radiance,clouds)
     return ys   
 end
 
-"""
-Corrects the attenuation in radiance due to clouds for the entire datacube.  
-# Example: 
-```
-julia> bias_correction(radiance_datacube, clouds_datacube)
-```
-"""
-function bias_correction_datacube(radiance_datacube,clouds_datacube,mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
+function bias_correction(radiance_datacube::Array{T, 3}, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Real
     rad_corrected_datacube = copy(radiance_datacube)
     @showprogress for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
@@ -72,7 +67,7 @@ function bias_correction_datacube(radiance_datacube,clouds_datacube,mask=ones(In
             end
             radiance_arr = radiance_datacube[i,j,:]
             clouds_arr = clouds_datacube[i,j,:]
-            rad_corrected_datacube[i,j,:]= na_exclude(bias_correction,radiance_arr,clouds_arr)
+            rad_corrected_datacube[i,j,:]= bias_correction(radiance_arr,clouds_arr)
         end
     end
     return rad_corrected_datacube
