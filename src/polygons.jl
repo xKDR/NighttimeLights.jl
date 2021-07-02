@@ -58,7 +58,7 @@ function polygon_mask(geometry::CoordinateSystem, shapefile_row)
         i           = Int16(round(Boundary[1][2]))
         for e in i:iend
             for f in j:jend
-                if Luxor.isinside(Luxor.Point(f, e), poly, allowonedge=true) == true
+                if Luxor.isinside(Luxor.Point(f, e), poly, allowonedge = true) == true
                     points[e,f] = 1
                 end
             end
