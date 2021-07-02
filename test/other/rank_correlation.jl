@@ -1,4 +1,4 @@
-@testset "testing rank_correlation" begin
+@testset "rank_correlation" begin
     for i in 1:10
         len = rand(1:80)
         x = rand(1:100.0,len)

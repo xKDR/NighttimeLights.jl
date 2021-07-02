@@ -1,4 +1,4 @@
-@testset "testing counter_nan" begin
+@testset "counter_nan" begin
     for i in 1:10
         x = rand(10:30)
         rad = rand(20:100.0, x)
@@ -10,7 +10,7 @@
     end
 end
 
-@testset "testing max_nan" begin
+@testset "max_nan" begin
     for i in 1:10
         x = rand(10:30)
         rad = rand(20:100.0, x)

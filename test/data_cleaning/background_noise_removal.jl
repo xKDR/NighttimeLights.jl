@@ -1,4 +1,4 @@
-@testset "testing size" begin
+@testset "background noise mask" begin
     for i in 1:10
         x = rand(10:30)
         y = rand(10:30)
