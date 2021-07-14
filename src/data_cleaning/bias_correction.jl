@@ -5,35 +5,25 @@ bias_correction(radiance, clouds)
 ```
 """
 function bias_correction(radiance::Array{T, 1}, clouds) where T <: Real
+if rank_correlation_test(radiance, clouds) > 0.05 # Don't perform correction is p-value of rank correlation > 0.05
+    return radiance
+end
 R"""
-library(zoo)
-library(dplyr)
 bias_correction_R <- function(radiance, clouds)
 {
     cf                  <- clouds/max(clouds)
-    date                <- seq(as.yearmon("2012-04"), by = 1/12, length.out = length(radiance))
-    # test if any sequence of numbers gives the same result. Don't have to waste time on time. 
-    time                <- date - as.yearmon("2012-04")
-    m0                  <- lm(radiance ~ time, na.action = na.exclude)
-    ly0                 <- residuals(m0)
-    cor_test            <- cor.test(clouds, ly0, alternative = "greater", method = "spearman", exact = FALSE, na.action = na.omit)
-    if (cor_test$p.value > 0.05){
-        return          <- radiance
-    } 
+    time                <- seq(1, by=1/12, length.out = length(radiance)) # capturing time trend
     ly1                 <- log(radiance)            
     m.timetrend         <- lm(ly1 ~ time, na.action = na.exclude)
     ly2                 <- residuals(m.timetrend)           # ly2 is the residuals after removing the time trend
     m.loess             <- loess(ly2 ~ cf, na.action = "na.exclude")
-    topval              <- predict(m.loess, newdata = data.frame(cf=1, ly2=NA))
-    tocorrect.cf         <- cf < 1
-    tocorrect.ly2   <- ly2 < 0
-    tocorrect           <- as.logical(tocorrect.cf * tocorrect.ly2)
-    tocorrect[is.na(tocorrect)] <- FALSE
+    topval              <- predict(m.loess, 1)
+    tocorrect           <- ly2 < 0
     corrected           <- ly2 + topval - predict(m.loess)
     fixed.1             <- ly2
     fixed.1[tocorrect]  <- corrected[tocorrect]
-    fixed.2             <- fixed.1 + (coef(m.timetrend)[2] * time) + coef(m.timetrend)[1]
-    return              <- exp(fixed.2)
+    fixed.2             <- fixed.1 + (coef(m.timetrend)[2] * time) + coef(m.timetrend)[1] # Adding time trend
+    return              <- exp(fixed.2) # Going back from logs to levels
 }"""
 return convert(Array{T, 1}, rcall(:bias_correction_R, radiance, clouds))
 end
