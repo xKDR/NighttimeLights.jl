@@ -14,6 +14,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Installation" => "installation.md",
         "Basic concepts" => "concepts.md",
         "Polygons and shapefiles"=> "polygons.md",
         "Data Cleaning"=> "data_cleaning.md",

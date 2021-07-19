@@ -31,7 +31,7 @@ noise = background_noise_mask(datacube, clouds_datacube, 0.4)
 radiance_datacube = apply_mask(datacube, noise)
 ```
 All the pixels considered dark in the noise mask have all observations marked as 0 in the datacube.
-##### 5. Generate and outlier mask.
+##### 5. Generate an outlier mask.
 The noise_mask is used as a parameter, so only the pixels considered lit are used to estimating the outliers pixels. 
 ```
 stable_pixels = outlier_mask(radiance_datacube, noise)
