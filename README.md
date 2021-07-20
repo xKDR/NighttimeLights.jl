@@ -6,3 +6,5 @@
 ```Julia
  add "git://github.com/JuliaPlanet/NighttimeLights.jl.git"
 ```
+
+The package requires a functioning RCall with forecast package installed. 

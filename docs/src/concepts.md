@@ -29,6 +29,7 @@ Images and datacubes can be be loaded and saved using the following functions.
 load_img(filepath)
 save_img(filepath, image)
 load_datacube(filepath)
+make_datacube(folder_path)
 save_datacube(filepath, datacube)
 ```
 

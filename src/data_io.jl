@@ -1,6 +1,5 @@
 """
 NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. 
-# Example:
 ```julia
 load_img("example.tif")
 ```
@@ -13,7 +12,6 @@ end
 
 """
 Images in the form of 2D arrays can be saved as tif files. 
-# Example:
 ```julia
 save_img("example.tif", img)
 ```
@@ -24,8 +22,6 @@ end
 
 """
 NOAA provides images for each month since April 2012. Images of the same place taken at different times can be stacked together to make a 3D array representating a panel data. In this package, we refer to such arrays as datacubes. JLD files containing 3D arrays can be loaded using the load_datacube function.  
-
-# Example:
 ```julia
 load_datacube("example.jld")
 ```
@@ -37,7 +33,6 @@ end
 
 """
 3D arrays can be saved as JLD files. 
-# Example:
 ```julia
 save_datacube("example.jld", datacube)
 ```
@@ -45,3 +40,22 @@ save_datacube("example.jld", datacube)
 function save_datacube(filepath, datacube)
     save(filepath, "data", datacube)
 end
+
+"""
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. 
+```julia
+make_datacube("~/Downloads/ntl_images")
+```
+"""
+function make_datacube(folder_path)
+        files = readdir(folder_path)
+        print(files)
+        paths = folder_path .* "/".* files 
+        datacube = []
+        for path in paths
+            push!(datacube, load_img(path))
+        end
+        return convert(Array{Float16},cat(datacube...,dims = 3))
+end
+
+

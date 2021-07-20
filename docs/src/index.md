@@ -18,7 +18,7 @@ While there are packages to do image processing in Julia, the assumptions about 
 
 # Installation
 
-This Julia package uses R functions. To use it, you need a working [Rcall](https://github.com/JuliaInterop/RCall.jl). You also need to install the forecast package in R.  
+This Julia package uses R functions. To use it, you need a working [RCall](https://github.com/JuliaInterop/RCall.jl). You also need to install the forecast package in R.  
 
 Once this is done, you can install the Julia package. 
 ```
@@ -38,3 +38,9 @@ The tif files covering the entire planet are large. NOAA also provides tiled dat
 ![tile map](tile_map.png)
 
 If your region of interest is covered in one tile, then you may not need to download the full image of the planet. 
+
+# Getting help 
+
+To get enquire about the Julia package, you can join the Julia community on [slack](https://julialang.org/slack/) and post questions on the nighttime-lights channel. You can also email one of the authors of the package, [Ayush Patnaik](mailto:ayushpatnaik@gmail.com)
+
+For questions regarding nighttime lights data, you can email [Kim Baugh](mailto:Kim.Baugh@noaa.gov)
