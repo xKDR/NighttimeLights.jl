@@ -7,19 +7,19 @@ NOAA provides tif files of the nightlights images. Images in the package are rep
 ```julia
 image[1, 2]
 ```
-returns the value of the image at location [1, 2]. 1st row and 2nd column. 
+Returns the value of the image at location [1, 2]. 1st row and 2nd column. 
 ```julia
 datacube[:, :, 3]
 ```
-returns the image of the 3rd month.
+Returns the image of the 3rd month.
 ```julia
 datacube[1, 2, :]
 ```
-returns the time series values of the pixel at location [1, 2]. 
+Returns the time series values of the pixel at location [1, 2]. 
 ```julia
 datacube[1, 2, 3]
 ```
-returns the value of the image at location [1, 2] of the 3rd month. 
+Returns the value of the image at location [1, 2] of the 3rd month. 
 
 # Loading and saving files
 
@@ -98,9 +98,9 @@ mask_area(geometry::CoordinateSystem, mask)
 
 An image can be multiplied with a mask (elementwise) so that only the pixels lit in the mask are lit in the images. For example: 
 ```julia
-image .*noise_mask
+image .* noise_mask
 ```
-returns as image with 0s wherever there is background noise and the remaining values are the same as the original image. 
+Returns as image with 0s wherever there is background noise and the remaining values are the same as the original image. 
 
 ### Aggregating over masks 
 

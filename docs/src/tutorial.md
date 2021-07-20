@@ -48,11 +48,12 @@ The ```long_apply``` function applies the outlier_ts function on each pixel. Thi
 mask = noise .* stable_pixels # Mask of pixels with are lit and aren't outliers. 
 radiance_datacube = bias_correction(radiance_datacube, clouds_datacube, mask)
 ```
-attenuation correction is only done on pixels which are considered lit in both the outlier mask and the noise mask. 
+Attenuation correction is only done on pixels which are considered lit in both the outlier mask and the noise mask. 
 ##### 8. Use linear interpolation to fill the NaNs.
 ```julia
 radiance_datacube = long_apply(linear_interpolation, radiance_datacube)
 ```
+Even though this is done for all pixels, the ones considered dark in the mask will be zero. 
 
 # Generating Aggregates
 

@@ -10,7 +10,7 @@ load_shapefile(filepath)
 | 2 | Polygon(139 Points) | Mumbai Suburban | Maharashtra | 27        | 22        | 518        |
 ```
 
-each row of a shapefile dataframe contains a polygon and other information about it. 
+Each row of a shapefile dataframe contains a polygon and other information about it. 
 
 ```@docs
 polygon_mask(geometry::CoordinateSystem, shapefile_row)
