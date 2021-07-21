@@ -19,6 +19,7 @@ bias_correction_R <- function(radiance, clouds)
     m.loess             <- loess(ly2 ~ cf, na.action = "na.exclude")
     topval              <- predict(m.loess, 1)
     tocorrect           <- ly2 < 0
+    tocorrect[is.na(tocorrect)]<-FALSE
     corrected           <- ly2 + topval - predict(m.loess)
     fixed.1             <- ly2
     fixed.1[tocorrect]  <- corrected[tocorrect]
