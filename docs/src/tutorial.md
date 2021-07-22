@@ -4,16 +4,11 @@ The following example demonstrates how to use nighttime lights data for research
 
 # Cleaning Data
 
-##### 1. Load datacubes
-The datacubes for Mumbai city are provided with the package to demonstrate this tutorial. The datacubes contain 156 rows, 85 columns for 95 months. 
-
-[Radiance datacube of Mumbai](https://github.com/JuliaPlanet/NighttimeLights.jl/blob/main/assets/mumbai_ntl/datacube/mumbai_radiance.jld)
-
-[The cloud-free observations datacube of Mumbai](https://github.com/JuliaPlanet/NighttimeLights.jl/blob/main/assets/mumbai_ntl/datacube/mumbai_clouds.jld)
+##### 1. Load datasets
+```@docs
+load_example()
 ```
-radiance_datacube = load_datacube("assets/mumbai_ntl/datacube/mumbai_radiance.jld")
-radiance_clouds = load_datacube("assets/mumbai_ntl/datacube/mumbai_clouds.jld")
-```
+
 ##### 2. Replace observations with 0 cloud-free observations with NaN.
 Monthly averages with 0 measurements are marked as 0 in the radiance datacube, they should be NaN. 
 ```julia

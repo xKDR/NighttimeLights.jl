@@ -22,7 +22,7 @@ using JLD
 # import date_generator, sparse_cube
 export load_img, load_datacube, save_img, save_datacube, 
 lat_to_row, row_to_lat, lat_to_row, long_to_column, column_to_long, translate_coordinate_system, Coordinate, CoordinateSystem, INDIAN_COORDINATE_SYSTEM, MUMBAI_COORDINATE_SYSTEM,
-polygon_mask, load_shapefile, mask_area, LAT, EW, NS, MODEL_EW, MODEL_NS, long_apply, cross_apply, apply_mask, view_img, aggregate, aggregate_timeseries, aggregate_dataframe, bias_correction, bias_correction_datacube, outlier_mask, outlier_ts, linear_interpolation, threshold_datacube, background_noise_mask, sparse_cube, mark_nan, make_datacube
+polygon_mask, load_shapefile, mask_area, LAT, EW, NS, MODEL_EW, MODEL_NS, long_apply, cross_apply, apply_mask, view_img, aggregate, aggregate_timeseries, aggregate_dataframe, bias_correction, bias_correction_datacube, outlier_mask, outlier_ts, linear_interpolation, threshold_datacube, background_noise_mask, sparse_cube, mark_nan, make_datacube, load_example
 
 
 include("data_io.jl")
@@ -33,6 +33,7 @@ include("area.jl")
 include("f_apply.jl")
 include("sparse_datacube.jl")
 include("aggregate.jl")
+include("example.jl")
 include("other/nan_functions.jl")
 include("other/detrend.jl")
 include("other/rank_correlation.jl")
