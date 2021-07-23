@@ -8,7 +8,12 @@ The following example demonstrates how to use nighttime lights data for research
 ```@docs
 load_example()
 ```
-
+```
+i) Distict level shapefile of Mumbai is loaded as mumbai_map. 
+ii) Radiance datacube of Mumbai is loaded as radiance_datacube. 
+iii) Cloud-free observations data is loaded as clouds_datacube. 
+iv) MUMBAI_COORDINATE_SYSTEM should be used as the coordinate system. 
+```
 ##### 2. Replace observations with 0 cloud-free observations with NaN.
 Monthly averages with 0 measurements are marked as 0 in the radiance datacube, they should be NaN. 
 ```julia
