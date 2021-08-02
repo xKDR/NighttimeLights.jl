@@ -15,7 +15,7 @@ The datacubes and the district level shapefile for Mumbai city are provided with
         clouds_jld_path = assets_path * "/mumbai_ntl/datacube/mumbai_clouds.jld"
         
         global radiance_datacube = load_datacube(radiance_jld_path)
-        global clouds_datacube = load_datacube(radiance_jld_path)
+        global clouds_datacube = load_datacube(clouds_jld_path)
         global mumbai_map = load_shapefile(map_path)
         """
         i) Distict level shapefile of Mumbai is loaded as mumbai_map. 
