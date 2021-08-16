@@ -100,5 +100,13 @@ function translate_geometry(geometry::CoordinateSystem,top_left::Coordinate,bott
     return CoordinateSystem(top_left, bottom_right, height, width) 
 end
 
+global TILE1 = CoordinateSystem(Coordinate(75, -180), Coordinate(0, -60), 18000, 28800)
+global TILE2 = CoordinateSystem(Coordinate(75, -60), Coordinate(0, 60), 18000, 28800)
+global TILE3 = CoordinateSystem(Coordinate(75, 60), Coordinate(0, 180), 18000, 28800)
+global TILE4 = CoordinateSystem(Coordinate(0, -180), Coordinate(-65, -60), 15600, 28800)
+global TILE5 = CoordinateSystem(Coordinate(0, -60), Coordinate(-65, 60), 15600, 28800)
+global TILE6 = CoordinateSystem(Coordinate(0, 60), Coordinate(-65, 180), 15600, 28800)
+
+
 global INDIA_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
 global MUMBAI_COORDINATE_SYSTEM = translate_geometry(INDIA_COORDINATE_SYSTEM, Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187))
