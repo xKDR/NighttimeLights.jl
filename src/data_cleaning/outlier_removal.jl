@@ -12,7 +12,7 @@ function outlier_mask(datacube, mask)
             if mask[i, j]==0
                 continue
             end
-            if counter_nan(datacube[i, j, :]) > 50 # Don't do anything if there are too many NaNs
+            if counter_nan(datacube[i, j, :])/length(datacube[i, j, :]) > 0.50 # Don't do anything if there are too many NaNs
                 continue
             end
             stds[i, j] = std(detrend_ts(filter(x -> !isnan(x), datacube[i, j, :])))

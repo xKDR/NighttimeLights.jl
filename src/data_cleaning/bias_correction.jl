@@ -5,28 +5,26 @@ bias_correction(radiance, clouds)
 ```
 """
 function bias_correction(radiance::Array{T, 1}, clouds) where T <: Real
-if rank_correlation_test(radiance, clouds) > 0.05 # Don't perform correction is p-value of rank correlation > 0.05
-    return radiance
-end
-R"""
-bias_correction_R <- function(radiance, clouds)
-{
-    cf                  <- clouds/max(clouds)
-    time                <- seq(1, by=1/12, length.out = length(radiance)) # capturing time trend
-    ly1                 <- log(radiance)            
-    m.timetrend         <- lm(ly1 ~ time, na.action = na.exclude)
-    ly2                 <- residuals(m.timetrend)           # ly2 is the residuals after removing the time trend
-    m.loess             <- loess(ly2 ~ cf, na.action = "na.exclude")
-    topval              <- predict(m.loess, 1)
-    tocorrect           <- ly2 < 0
-    tocorrect[is.na(tocorrect)]<-FALSE
-    corrected           <- ly2 + topval - predict(m.loess)
-    fixed.1             <- ly2
-    fixed.1[tocorrect]  <- corrected[tocorrect]
-    fixed.2             <- fixed.1 + (coef(m.timetrend)[2] * time) + coef(m.timetrend)[1] # Adding time trend
-    return              <- exp(fixed.2) # Going back from logs to levels
-}"""
-return convert(Array{T, 1}, rcall(:bias_correction_R, radiance, clouds))
+    if rank_correlation_test(radiance, clouds) > 0.05 # Don't perform correction is p-value of rank correlation > 0.05
+        return radiance
+    end
+    log_radiance = log.(radiance) 
+    ys = log_radiance
+    ys = detrend_ts(ys)
+    time_trend = log_radiance .- ys
+    xs = clouds
+    xs = xs/maximum(xs)
+    model = loess(xs, ys)
+    vs = Loess.predict(model, xs)
+    top_val = vs[findmax(xs)[2]]
+    for i in 1:length(ys)
+        if ys[i]<top_val
+            ys[i] = ys[i] + top_val - vs[i]
+        end
+    end
+    ys = ys .+ time_trend
+    ys = exp.(ys)
+    return ys 
 end
 
 """
@@ -39,7 +37,7 @@ function bias_correction(radiance_datacube::Array{T, 3}, clouds_datacube, mask=o
     rad_corrected_datacube = copy(radiance_datacube)
     @showprogress for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
-            if counter_nan(radiance_datacube[i, j, :]) > 50 
+            if counter_nan(radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
                 continue
             end
             if mask[i, j]==0

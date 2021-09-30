@@ -1,5 +1,5 @@
 
-@test "testing input output functions" begin 
+@testset "testing input output functions" begin 
     package_path = pathof(NighttimeLights)
     path_len = length(package_path)
     assets_path = package_path[1:path_len-22] * "assets"

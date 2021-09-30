@@ -9,8 +9,8 @@ mumbai_districts = load_shapefile(map_path)
 mumbai_districts_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, radiance_datacube, mumbai_districts, "DISTRICT")
 @test sizeof(mumbai_districts_ntl) > 0
 
-district1 = mumbai_dists[1,:] # Select the first district
-district1_mask = polygon_mask(my_coordinate_system, district1)
+district1 = mumbai_districts[1,:] # Select the first district
+district1_mask = polygon_mask(MUMBAI_COORDINATE_SYSTEM, district1)
 
 @test sum(district1_mask) >=0 
 

@@ -1,6 +1,6 @@
 @testset "removing outlier observations" begin
-    for i in 1:10
-        len = rand(1:80)
+    for i in 1:1000
+        len = rand(10:80)
         x = rand(1:100.0,len)
         x[rand(1:len)] = NaN
         @test length(outlier_ts(x)) == len
