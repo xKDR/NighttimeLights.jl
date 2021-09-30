@@ -41,6 +41,9 @@ outlier_ts(sample_timeseries)
 ```
 """
 function outlier_ts(timeseries)
+    if counter_nan(timeseries)/length(timeseries)>0.50
+        return timeseries
+    end 
     R"""
     library(compiler)
     ROutlierRem <- function(x) {
@@ -49,7 +52,5 @@ function outlier_ts(timeseries)
     }
     """
     array = copy(timeseries)
-    #Applies tsclean outlier removal from Rob Hyndman's package forecast in R
-
     return convert(Array{Float16}, rcall(:ROutlierRem, array))
 end
