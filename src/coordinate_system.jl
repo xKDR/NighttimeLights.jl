@@ -83,11 +83,34 @@ function column_to_long(geometry::CoordinateSystem, x)
     width           = geometry.width  
     return((bottom_right - top_left)/width * x + top_left)
 end
+
+"""
+To convert a coordinate from earth's coordinate system to image's row number and column number, use the ```coordinate_to_image``` function. 
+# Example: 
+```julia
+coordinate_to_image(my_coordinate_system, Coordinate(19.49907, 72.721252)) 
+```
+"""
+function coordinate_to_image(geometry::CoordinateSystem, x::Coordinate)
+    return [lat_to_row(geometry, x.latitude), long_to_column(geometry, x.longitude)]
+end
+"""
+To convert a coordinate from image's row number and column number to earth's coordinate system use the ```image_to_coordinate``` function. 
+# Example: 
+```julia
+image_to_coordinate(my_coordinate_system, [4320, 1153]) 
+```
+"""
+function image_to_coordinate(geometry::CoordinateSystem, x)
+    return Coordinate(row_to_lat(geometry, x[1]), column_to_long(geometry, x[2]))
+end
+
+
 """
 Translates a coordinate system given the new top-left and bottom-right coordinates
 # Example: 
 ```julia
-column_to_long(my_coordinate_system, 100) 
+column_to_long(my_coordinate_system, Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187)) 
 ```
 """
 function translate_geometry(geometry::CoordinateSystem,top_left::Coordinate,bottom_right::Coordinate)
@@ -100,13 +123,13 @@ function translate_geometry(geometry::CoordinateSystem,top_left::Coordinate,bott
     return CoordinateSystem(top_left, bottom_right, height, width) 
 end
 
-global TILE1 = CoordinateSystem(Coordinate(75, -180), Coordinate(0, -60), 18000, 28800)
-global TILE2 = CoordinateSystem(Coordinate(75, -60), Coordinate(0, 60), 18000, 28800)
-global TILE3 = CoordinateSystem(Coordinate(75, 60), Coordinate(0, 180), 18000, 28800)
-global TILE4 = CoordinateSystem(Coordinate(0, -180), Coordinate(-65, -60), 15600, 28800)
-global TILE5 = CoordinateSystem(Coordinate(0, -60), Coordinate(-65, 60), 15600, 28800)
-global TILE6 = CoordinateSystem(Coordinate(0, 60), Coordinate(-65, 180), 15600, 28800)
-
+global TILE1_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(75, -180), Coordinate(0, -60), 18000, 28800)
+global TILE2_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(75, -60), Coordinate(0, 60), 18000, 28800)
+global TILE3_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(75, 60), Coordinate(0, 180), 18000, 28800)
+global TILE4_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(0, -180), Coordinate(-65, -60), 15600, 28800)
+global TILE5_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(0, -60), Coordinate(-65, 60), 15600, 28800)
+global TILE6_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(0, 60), Coordinate(-65, 180), 15600, 28800)
+global FULL_COORDINATE_SYSTEM  = CoordinateSystem(Coordinate(75, -180), Coordinate(-65, 180), 33600, 86400)
 
 global INDIA_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(37.5, 67.91666), Coordinate(4.166, 97.5), 8000, 7100)
 global MUMBAI_COORDINATE_SYSTEM = translate_geometry(INDIA_COORDINATE_SYSTEM, Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187))

@@ -6,7 +6,11 @@ fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
 anyerrors = false
 
-my_tests = ["aggregate.jl", "sparse_cube.jl", "polygons.jl", "data_io.jl", "data_cleaning/bias_correction.jl", "data_cleaning/interpolation.jl", "data_cleaning/outlier_removal.jl", "data_cleaning/background_noise_removal.jl", "other/nan_functions.jl", "other/rank_correlation.jl", "other/weighted_mean.jl", "other/detrend.jl"]
+my_tests = ["aggregate.jl", "coordinate_system.jl", "data_io.jl", "f_apply.jl", "mask_area.jl", "polygons.jl", "sparse_cube.jl",
+
+"data_cleaning/background_noise_removal.jl", "data_cleaning/bias_correction.jl", "data_cleaning/interpolation.jl", "data_cleaning/mark_nan.jl", "data_cleaning/outlier_removal.jl",
+
+"other/detrend.jl", "other/nan_functions.jl", "other/rank_correlation.jl", "other/weighted_mean.jl"]
 
 println("Running tests:")
 
