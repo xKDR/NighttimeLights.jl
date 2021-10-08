@@ -50,6 +50,8 @@ lat_to_row(geometry::CoordinateSystem, x)
 long_to_column(geometry::CoordinateSystem, x)
 row_to_lat(geometry::CoordinateSystem, x)
 column_to_long(geometry::CoordinateSystem, x)
+coordinate_to_image(geometry::CoordinateSystem, x::Coordinate)
+image_to_coordinate(geometry::CoordinateSystem, x)
 ```
 
 # Masks
