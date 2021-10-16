@@ -18,4 +18,6 @@ outlier_ts(timeseries)
 background_noise_mask(datacube=radiance_datacube, clouds=clouds_datacube, th=0.4)
 bias_correction(radiance::Array{T, 1}, clouds) where T <:Real
 bias_correction(radiance_datacube::Array{T, 3}, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <:Real
+conventonal_cleaning(radiance_datacube, clouds_datacube)
+PatnaikSTT2021(radiance_datacube, clouds_datacube)
 ```

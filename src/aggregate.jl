@@ -37,7 +37,6 @@ julia> shapefile_df  = load_shapefile("assets/mumbai_map/mumbai_districts.shp")
 julia> aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "District")
 ```
 """
-
 function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
     df = DataFrame()
     for i in 1:length(shapefile_df[:, 1])

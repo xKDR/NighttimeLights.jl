@@ -5,11 +5,11 @@ DocMeta.setdocmeta!(NighttimeLights, :DocTestSetup, :(using NighttimeLights); re
 makedocs(;
     modules=[NighttimeLights],
     authors="Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas",
-    repo="https://github.com/ayushpatnaikgit/NighttimeLights.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/JuliaPlanet/NighttimeLights.jl/blob/{commit}{path}#{line}",
     sitename="NighttimeLights.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://ayushpatnaikgit.github.io/NighttimeLights.jl",
+        canonical="https://github.com/JuliaPlanet/NighttimeLights.jl",
         assets=String[],
     ),
     pages=[
@@ -22,5 +22,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/ayushpatnaikgit/NighttimeLights.jl",
+    repo="https://github.com/JuliaPlanet/NighttimeLights.jl",
 )
