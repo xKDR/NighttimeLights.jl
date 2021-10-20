@@ -11,11 +11,11 @@ Pixels with no economic activity may show some light due to background noise. Th
 background_noise_mask(radiance_datacube, clouds_datacube)
 ```
 """
-function background_noise_mask(datacube = radiance_datacube, clouds = clouds_datacube, th = 0.4)
+function background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
     # This function may be obsolete because Payne Institute is providing annual images for each year. 
-    last_year_rad      = datacube[:, :, (size(datacube)[3]-12):size(datacube)[3]]
-    last_year_cloud   = clouds[:, :, (size(datacube)[3]-12):size(datacube)[3]]
-    average_lastyear = copy(datacube[:, :, 1])
+    last_year_rad      = radiance_datacube[:, :, (size(radiance_datacube)[3]-12):size(radiance_datacube)[3]]
+    last_year_cloud   = clouds_datacube[:, :, (size(radiance_datacube)[3]-12):size(radiance_datacube)[3]]
+    average_lastyear = copy(radiance_datacube[:, :, 1])
     for i in 1:size(last_year_rad)[1]
         for j in 1:size(last_year_rad)[2]
             average_lastyear[i,j] = weighted_mean(last_year_rad[i, j, :], last_year_cloud[i, j, :])

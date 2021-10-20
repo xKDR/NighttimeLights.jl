@@ -4,7 +4,7 @@ The following example demonstrates how to use nighttime lights data for research
 
 # Cleaning Data
 
-##### 1. Load datasets
+##### Load datasets
 ```@docs
 load_example()
 ```
@@ -14,51 +14,19 @@ ii) Radiance datacube of Mumbai is loaded as radiance_datacube.
 iii) Cloud-free observations data is loaded as clouds_datacube. 
 iv) MUMBAI_COORDINATE_SYSTEM should be used as the coordinate system. 
 ```
-##### 2. Replace observations with 0 cloud-free observations with NaN.
-Monthly averages with 0 measurements are marked as 0 in the radiance datacube, they should be NaN. 
+##### Convention cleaning can be performed using the ```conventonal_cleaning``` function. 
 ```julia
-radiance_datacube = mark_nan(radiance_datacube, clouds_datacube) 
+cleaned_datacube = conventonal_cleaning(radiance_datacube, clouds_datacube) 
 ```
-##### 3. Replace all values below 0 with NaN
-There are negative values in the data due to cleaning procedure by NOAA. They should be replaced by NaN. 
-```julia
-radiance_datacube = replace!(x -> x < 0 ? NaN : x, radiance_datacube) 
-```
-##### 4. Generate a background noise mask. 
-All the pixels below 0.4 in the annual image of the 12 months of the data will be considered background noise. A different threshold can be chosen. 
-```
-noise = background_noise_mask(datacube, clouds_datacube, 0.4)
-radiance_datacube = apply_mask(datacube, noise)
-```
-All the pixels considered dark in the noise mask have all observations marked as 0 in the datacube.
-##### 5. Generate an outlier mask.
-The noise_mask is used as a parameter, so only the pixels considered lit are used to estimating the outliers pixels. 
-```
-stable_pixels = outlier_mask(radiance_datacube, noise)
-radiance_datacube = apply_mask(datacube, stable_pixels)
-```
-All the pixels considered outliers have all observations marked as 0 in the datacube.
-##### 6. Remove outlier observations from the remaining pixels. 
-```
-radiance_datacube = long_apply(outlier_ts, datacube)
-```
-The ```long_apply``` function applies the outlier_ts function on each pixel. This removal outlier observations from pixels which are useful. 
-##### 7. Correct of attenuation due to clouds 
-```julia
-mask = noise .* stable_pixels # Mask of pixels with are lit and aren't outliers. 
-radiance_datacube = bias_correction(radiance_datacube, clouds_datacube, mask)
-```
-Attenuation correction is only done on pixels which are considered lit in both the outlier mask and the noise mask. 
-##### 8. Use linear interpolation to fill the NaNs.
-```julia
-radiance_datacube = long_apply(linear_interpolation, radiance_datacube)
-```
-Even though this is done for all pixels, the ones considered dark in the mask will be zero. 
 
+##### Or new cleaning described in PatnaikSTT2021 can be performed using the ```PatnaikSTT2021``` function. 
+```julia
+cleaned_datacube = PatnaikSTT2021(radiance_datacube, clouds_datacube) 
+```
 # Generating Aggregates
 
 ##### 1. Make a coordinate system of Mumbai. 
-The top left pixel of the box around Mumbai datacube, which we have used so far, have coordinates (19.49907,72.721252). The bottom right pixel's coordinates are (18.849475, 73.074187). There are 156 rows and 85 columns in the datacube. The number of months of data doesn't matter in calculating the coordinate system.  
+The top left pixel of the box around Mumbai, which we have used so far, have coordinates (19.49907,72.721252). The bottom right pixel's coordinates are (18.849475, 73.074187). There are 156 rows and 85 columns in the datacube. The number of months of data doesn't matter in calculating the coordinate system.  
 
 ```julia
 MUMBAI_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(19.49907,72.721252), (18.849475, 73.074187), 156, 85)
@@ -74,5 +42,5 @@ The shapefile has a column called DISTRICT. For each district, the name of the d
 
 ##### 3. Generate the time series of aggregate radiance for each district of Mumbai. 
 ```julia
-mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, radiance_datacube, mumbai_districts, "DISTRICT")
+mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, radiance_datacube, mumbai_map, "DISTRICT")
 ``` 

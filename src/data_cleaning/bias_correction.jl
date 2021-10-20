@@ -5,26 +5,29 @@ bias_correction(radiance, clouds)
 ```
 """
 function bias_correction(radiance::Array{T, 1}, clouds) where T <: Real
-    if rank_correlation_test(radiance, clouds) > 0.05 # Don't perform correction is p-value of rank correlation > 0.05
-        return radiance
-    end
-    log_radiance = log.(radiance) 
-    ys = log_radiance
-    ys = detrend_ts(ys)
-    time_trend = log_radiance .- ys
-    xs = clouds
-    xs = xs/maximum(xs)
-    model = loess(xs, ys)
-    vs = Loess.predict(model, xs)
-    top_val = vs[findmax(xs)[2]]
-    for i in 1:length(ys)
-        if ys[i]<top_val
-            ys[i] = ys[i] + top_val - vs[i]
-        end
-    end
-    ys = ys .+ time_trend
-    ys = exp.(ys)
-    return ys 
+    R"""
+    library(zoo)
+    library(dplyr)
+    bias_correction_R <- function(radiance, clouds)
+    {
+    cf                  <- clouds/max(clouds)
+    ly1                 <- radiance            
+    time                <- seq(1, length.out = length(radiance))
+    m.timetrend         <- lm(ly1 ~ time, na.action = na.exclude)
+    ly2                 <- residuals(m.timetrend)           # ly2 is the residuals after removing the time trend
+    m                   <- loess(ly2 ~ cf, na.action = "na.exclude")
+    topval              <- max(na.omit(predict(m)))#predict(m.loess, newdata=data.frame(cf=cutoff, ly2=NA))
+    corrected           <- ly2 + topval - predict(m)
+    fixed.1             <- ly2
+    fixed.1             <- corrected 
+    fixed.2             <- fixed.1 + (coef(m.timetrend)[2] * time) + coef(m.timetrend)[1]
+    fixed.3             <- ly1 
+    tocorrect           <- fixed.2 < max(na.omit(ly1))
+    tocorrect[is.na(tocorrect)]<-FALSE
+    fixed.3[tocorrect]  <- fixed.2[tocorrect]
+    return(fixed.3)
+    }"""
+    return convert(Array{T, 1}, rcall(:bias_correction_R, radiance, clouds))
 end
 
 """
