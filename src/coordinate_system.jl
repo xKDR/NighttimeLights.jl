@@ -110,13 +110,13 @@ end
 Translates a coordinate system given the new top-left and bottom-right coordinates
 # Example: 
 ```julia
-column_to_long(my_coordinate_system, Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187)) 
+MUMBAI = translate_geometry(INDIA_COORDINATE_SYSTEM, Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187))
 ```
 """
-function translate_geometry(geometry::CoordinateSystem,top_left::Coordinate,bottom_right::Coordinate)
+function translate_geometry(geometry::CoordinateSystem, top_left::Coordinate, bottom_right::Coordinate)
     top_left_row = lat_to_row(geometry, top_left.latitude)
     bottom_right_row = lat_to_row(geometry, bottom_right.latitude)
-    bottom_right_col = long_to_column(geometry,bottom_right.longitude)
+    bottom_right_col = long_to_column(geometry, bottom_right.longitude)
     top_left_col = long_to_column(geometry, top_left.longitude)
     height = round(bottom_right_row - top_left_row)
     width = round(bottom_right_col - top_left_col)
