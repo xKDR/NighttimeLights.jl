@@ -6,8 +6,6 @@ bias_correction(radiance, clouds)
 """
 function bias_correction(radiance::Array{T, 1}, clouds) where T <: Real
     R"""
-    library(zoo)
-    library(dplyr)
     bias_correction_R <- function(radiance, clouds)
     {
     cf                  <- clouds/max(clouds)
