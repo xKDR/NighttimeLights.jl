@@ -1,17 +1,5 @@
 #Modifying impute function from https://github.com/invenia/Impute.jl/blob/master/src/imputors/interp.jl 
 
-function forecast_interp(timeseries)
-    R"""
-    library(forecast)
-    RInterp <- function(x) {
-        return<-na.interp(x)
-
-    }"""
-    timeseries =copy(timeseries)
-    #Applies na.interp from Rob Hyndman's package forecast in R
-    return convert(Array{Float16},rcall(:RInterp,timeseries))
-end
-
 """
 Uses linear interpolation to fill for missing values. Missing and NaN are used interchangeably.  
 # Example: 
@@ -22,7 +10,7 @@ linear_interpolation(x)
 ```
 """
 function linear_interpolation(timeseries)
-    if counter_nan(timeseries)>50
+    if counter_nan(timeseries)>length(timeseries) *1/2
         return zero(1:length(timeseries))
     end
     data = copy(timeseries)
@@ -49,7 +37,10 @@ function linear_interpolation(timeseries)
         i += 1
     end
     if counter_nan(data)>0 
-        data = forecast_interp(data)
+        data[1:findfirst(!isnan, data)] .= data[findfirst(!isnan, data)]
+        data = reverse(data)
+        data[1:findfirst(!isnan, data)] .= data[findfirst(!isnan, data)]
+        data = reverse(data)
     end
     return data
 end

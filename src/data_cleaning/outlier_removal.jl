@@ -40,17 +40,36 @@ sample_timeseries = datacube[1, 2, :] # The time series of pixel [1, 2]
 outlier_ts(sample_timeseries)
 ```
 """
-function outlier_ts(timeseries)
-    if counter_nan(timeseries)/length(timeseries)>0.50
-        return timeseries
-    end 
-    R"""
-    library(compiler)
-    ROutlierRem <- function(x) {
-        library(forecast)
-        return<-tsclean(x, replace.missing=FALSE)
-    }
-    """
-    array = copy(timeseries)
-    return convert(Array{Float16}, rcall(:ROutlierRem, array))
+
+function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
+    # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
+    n = length(timeseries)
+    new_series = copy(timeseries)
+    k = 1.4826 # scale factor for Gaussian distribution
+    indices = [] 
+    for i in (window_size):(n - window_size)
+        x0 = median(timeseries[(i - window_size+1):(i + window_size)]) # Use this for the time series outlier package
+        # x0 = NaN
+        S0 = k * median(abs.(timeseries[(i - window_size +1):(i + window_size)] .- x0))
+        if (abs(timeseries[i] - x0) > n_sigmas * S0)
+            new_series[i] = NaN # Can use x0   
+            push!(indices, i)
+        end
+    end
+    return new_series
 end
+
+# function outlier_ts(timeseries)
+#     if counter_nan(timeseries)/length(timeseries)>0.50
+#         return timeseries
+#     end 
+#     R"""
+#     library(compiler)
+#     ROutlierRem <- function(x) {
+#         library(forecast)
+#         return<-tsclean(x, replace.missing=FALSE)
+#     }
+#     """
+#     array = copy(timeseries)
+#     return convert(Array{Float16}, rcall(:ROutlierRem, array))
+# end
