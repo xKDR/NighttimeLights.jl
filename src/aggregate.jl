@@ -39,7 +39,7 @@ julia> aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df
 """
 function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
     df = DataFrame()
-    for i in 1:length(shapefile_df[:, 1])
+    @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
         data = aggregate_timeseries(datacube,geom_polygon)
