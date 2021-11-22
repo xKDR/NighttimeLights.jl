@@ -182,12 +182,6 @@ git-tree-sha1 = "52cb3ec90e8a8bea0e62e275ba577ad0f74821f7"
 uuid = "ed09eef8-17a6-5b46-8889-db040fac31e3"
 version = "0.3.2"
 
-[[Conda]]
-deps = ["JSON", "VersionParsing"]
-git-tree-sha1 = "299304989a5e6473d985212c28928899c74e9421"
-uuid = "8f4d0f93-b110-5947-807f-2305c1781a2d"
-version = "1.5.2"
-
 [[ConstructionBase]]
 deps = ["LinearAlgebra"]
 git-tree-sha1 = "1dc43957fb9a1574fa1b7a449e101bd1fd3a9fb7"
@@ -798,12 +792,6 @@ git-tree-sha1 = "e6ea89d915cdad8d264f7f9158c6664f879edcde"
 uuid = "d3a379c0-f9a3-5b72-a4c0-6bf4d2e8af0f"
 version = "2.9.0+0"
 
-[[Loess]]
-deps = ["Distances", "LinearAlgebra", "Statistics"]
-git-tree-sha1 = "b5254a86cf65944c68ed938e575f5c81d5dfe4cb"
-uuid = "4345ca2d-374a-55d4-8d30-97f9976e7612"
-version = "0.5.3"
-
 [[LogExpFunctions]]
 deps = ["DocStringExtensions", "LinearAlgebra"]
 git-tree-sha1 = "1ba664552f1ef15325e68dc4c05c3ef8c2d5d885"
@@ -1080,12 +1068,6 @@ git-tree-sha1 = "29c1803a9d6d1c7c2130610df5da953c49366976"
 uuid = "dca85d43-d64c-5e67-8c65-017450d5d020"
 version = "0.7.3"
 
-[[RCall]]
-deps = ["CategoricalArrays", "Conda", "DataFrames", "DataStructures", "Dates", "Libdl", "Missings", "REPL", "Random", "Requires", "StatsModels", "WinReg"]
-git-tree-sha1 = "5108a75602f6a11f7737707dff26461ef02abc66"
-uuid = "6f49c342-dc21-5d91-9882-a32aef131414"
-version = "0.13.11"
-
 [[REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets"]
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
@@ -1356,22 +1338,11 @@ git-tree-sha1 = "1a63e6eea76b291378ff9f95801f8b6d96213208"
 uuid = "b8865327-cd53-5732-bb35-84acbb429228"
 version = "1.3.0"
 
-[[VersionParsing]]
-git-tree-sha1 = "80229be1f670524750d905f8fc8148e5a8c4537f"
-uuid = "81def892-9a0e-5fdd-b105-ffc91e053289"
-version = "1.2.0"
-
 [[WeakRefStrings]]
 deps = ["DataAPI", "Random", "Test"]
 git-tree-sha1 = "28807f85197eaad3cbd2330386fac1dcb9e7e11d"
 uuid = "ea10d353-3f73-51f8-a26c-33c1cb351aa5"
 version = "0.6.2"
-
-[[WinReg]]
-deps = ["Test"]
-git-tree-sha1 = "808380e0a0483e134081cc54150be4177959b5f4"
-uuid = "1b915085-20d7-51cf-bf83-8f477d6f5128"
-version = "0.3.1"
 
 [[WoodburyMatrices]]
 deps = ["LinearAlgebra", "SparseArrays"]

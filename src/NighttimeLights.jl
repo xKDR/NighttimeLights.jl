@@ -1,23 +1,6 @@
 module NighttimeLights
 
-using Dates
-using ArchGDAL
-using GeoArrays
-using DataFrames
-using Shapefile
-using Luxor
-using GeoInterface
-using GeometricalPredicates
-using ProgressMeter
-using SparseArrays
-using StatsBase
-using Statistics
-using SmoothingSplines
-using CubicSplines
-using GLM
-using RCall
-using RecursiveArrayTools
-using JLD
+using Dates, ArchGDAL, GeoArrays, DataFrames, Shapefile, Luxor, GeoInterface, GeometricalPredicates, ProgressMeter, SparseArrays, StatsBase, Statistics, SmoothingSplines, CubicSplines, GLM, RecursiveArrayTools, JLD, Distributions, HypothesisTests
 
 export load_img, load_datacube, save_img, save_datacube, 
 lat_to_row, row_to_lat, lat_to_row, long_to_column, column_to_long, translate_geometry, Coordinate, CoordinateSystem, image_to_coordinate,
