@@ -57,6 +57,7 @@ function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
         end
     end
     return new_series
+    # Think about how this would behave in the presence of NaNs. 
 end
 
 # function outlier_ts(timeseries)

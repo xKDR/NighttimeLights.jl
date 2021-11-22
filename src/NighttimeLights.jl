@@ -12,7 +12,7 @@ using ProgressMeter
 using SparseArrays
 using StatsBase
 using Statistics
-using Loess
+using SmoothingSplines
 using CubicSplines
 using GLM
 using RCall
