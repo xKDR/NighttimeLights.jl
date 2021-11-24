@@ -1,6 +1,6 @@
 module NighttimeLights
 
-using Dates, ArchGDAL, GeoArrays, DataFrames, Shapefile, Luxor, GeoInterface, GeometricalPredicates, ProgressMeter, SparseArrays, StatsBase, Statistics, SmoothingSplines, CubicSplines, GLM, RecursiveArrayTools, JLD, Distributions, HypothesisTests
+using Dates, ArchGDAL, GeoArrays, DataFrames, Shapefile, Luxor, GeoInterface, ProgressMeter, SparseArrays, StatsBase, Statistics, SmoothingSplines, CubicSplines, GLM, RecursiveArrayTools, JLD, Distributions, HypothesisTests
 
 export load_img, load_datacube, save_img, save_datacube, 
 lat_to_row, row_to_lat, lat_to_row, long_to_column, column_to_long, translate_geometry, Coordinate, CoordinateSystem, image_to_coordinate,
@@ -22,6 +22,7 @@ include("other/detrend.jl")
 include("other/rank_correlation.jl")
 include("other/weighted_mean.jl")
 include("other/masks.jl")
+include("other/luxor_functions.jl")
 include("data_cleaning/background_noise_removal.jl")
 include("data_cleaning/outlier_removal.jl")
 include("data_cleaning/bias_correction.jl")

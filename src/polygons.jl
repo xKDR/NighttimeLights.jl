@@ -13,16 +13,13 @@ function load_shapefile(filepath)
 end
 
 function make_polygon(geometry::CoordinateSystem, coords)
-    Drawing(geometry.height, geometry.width)
-    # Make Luxor polygon from list of coordinates.
     array           = Array{Float16}[]          ## Declaring an empty array of Float32
     array           = coords[1]                 ## Accesssing n(th) polygon from the multipolgyon.
-    points_luxor    = Luxor.Point[]             ## Declaring a Luxor.Point type variable
+    poly    = []             ## Declaring a Luxor.Point type variable
     for x in array
-        push!(points_luxor, Luxor.Point(long_to_column(geometry, x[1]), lat_to_row(geometry, x[2]))) # make FLOAT16/INT16
+        push!(poly, Point(long_to_column(geometry, x[1]), lat_to_row(geometry, x[2]))) # make FLOAT16/INT16
             # We convert the long,lat to 'Luxor.Point' and store them in points_luxor 
     end
-    poly = Luxor.poly(points_luxor, :stroke) 
     return poly
 end
 
@@ -58,7 +55,7 @@ function polygon_mask(geometry::CoordinateSystem, shapefile_row)
         i           = Int16(round(Boundary[1][2]))
         for e in i:iend
             for f in j:jend
-                if Luxor.isinside(Luxor.Point(f, e), poly, allowonedge = true) == true
+                if isinside(Point(f, e), poly, allowonedge = true) == true
                     points[e,f] = 1
                 end
             end
