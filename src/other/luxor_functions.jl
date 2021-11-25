@@ -1,3 +1,6 @@
+# These are functions and structs taken from Luxor.jl: https://github.com/JuliaGraphics/Luxor.jl
+# We couldn't use Luxor.jl directly since it doesn't compile on Arm64 so far. 
+
 struct Point
     x::AbstractFloat
     y::AbstractFloat
@@ -17,7 +20,7 @@ function BoundingBox(pointlist::Array{Point, 1})
         p.x > highx && (highx = p.x)
         p.y > highy && (highy = p.y)
     end
-    return BoundingBox(Point(lowx, lowy), Point(highx, highy))
+    return [Point(lowx, lowy), Point(highx, highy)]
 end
 
 function det3p(q1::Point, q2::Point, p::Point)
