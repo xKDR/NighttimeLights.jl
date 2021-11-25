@@ -24,10 +24,10 @@ function aggregate_timeseries(datacube, mask)
     if typeof(datacube) == Array{Float16, 3}
         @warn "Float 16 may not be sufficient to aggregate."
     end
-    datacube = apply_mask(datacube, mask)
+    tmp = apply_mask(copy(datacube), mask)
     lights = []
     for i in 1:length(datacube)
-        push!(lights, sum(datacube[i]))
+        push!(lights, sum(tmp[i]))
     end
     return Float32.(lights)
 end
