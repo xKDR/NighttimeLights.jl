@@ -25,11 +25,10 @@ function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
         return data .* mask
     end
     if typeof(data) == VectorOfArray{Any,3,Array{Any,1}}
-        masked_data = []
         for i in 1:length(data)
-            push!(masked_data,data[i] .* mask)
+            data[i] = data[i] .* mask
         end
-        return VectorOfArray(masked_data)
+        return data
     end
     masked_data = copy(data)
     for i in 1:size(data)[3]
