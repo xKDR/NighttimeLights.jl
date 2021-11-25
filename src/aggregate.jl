@@ -27,7 +27,7 @@ function aggregate_timeseries(datacube, mask)
     datacube = apply_mask(datacube, mask)
     lights = []
     for i in 1:length(datacube)
-        push!(lights, sum(ts[i]))
+        push!(lights, sum(datacube[i]))
     end
     return Float32.(lights)
 end
@@ -74,7 +74,7 @@ function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shap
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
-        df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon) ./mask_area(geom_polygon)
+        df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon) ./mask_area(geometry, geom_polygon)
         i = i + 1
     end
     return df
