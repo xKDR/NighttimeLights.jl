@@ -1,44 +1,44 @@
 ## There are many NaNs in the data. Missing values are also considered NaN. The following functions help dealing with NaNs. 
-function check_nan(x)
+function check_missing(x)
     for i in x
-        if isnan(i) ==true
+        if ismissing(i) ==true
             return true
         end
     end
     return false
 end
 
-function counter_nan(x)
+function count_missing(x)
     """Counts the number of NaN in an array"""
         count = 0 
         for y in x
-            if isnan(y)==true
+            if ismissing(y)==true
             count = count+1
             end
         end
         return count
     end
     
-function max_nan(x)
-"""Finds the maximum value of a array where NaN are present.""" 
-    y = replace(copy(x), NaN => 0)
+function max_missing(x)
+"""Finds the maximum value of a array where missing are present.""" 
+    y = replace(copy(x), missing => 0)
     return(maximum(y))
 end
 
-function mean_nan(x)
-"""Finds the mean value of a array where NaN are present.""" 
+function mean_missing(x)
+"""Finds the mean value of a array where missing are present.""" 
     flat = vcat(x...)
-    nans = counter_nan(flat)
-    y = replace(x, NaN => 0)
-    return sum(y)/(length(flat)-nans)
+    missings = count_missing(flat)
+    y = replace(x, missing => 0)
+    return sum(y)/(length(flat)- missings)
 end
 
-function replace_nan(datacube,replacement = 0)
-"""Replaces all the NaN values in a 3D array with replacement value provided as a parameter."""
+function replace_missing(datacube, replacement = 0)
+"""Replaces all the missing values in a 3D array with replacement value provided as a parameter."""
     for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
             for k in 1:size(datacube)[3]
-                if isnan(datacube[i,j,k])
+                if ismissing(datacube[i,j,k])
                     datacube[i,j,k] = replacement
                 end
             end

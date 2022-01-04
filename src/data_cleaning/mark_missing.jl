@@ -3,14 +3,14 @@ For each pixe, NOAA produces monthly estimates of radiance using the mean of rad
 ```julia
 radiance = rand(1:10.0, 10, 10)
 cloud = rand(0:5, 10, 10)
-mark_nan(radiance, cloud)
+mark_missing(radiance, cloud)
 ```
 """
-function mark_nan(radiance::Array{T, 2}, clouds) where T <: Real
+function mark_missing(radiance, clouds::Array{T, 2}) where T <: Real
     for i in 1:size(clouds)[1]
         for j in 1:size(clouds)[2]
             if clouds[i,j] == 0
-                radiance[i,j]=NaN
+                radiance[i,j]= missing
             end
         end
     end
@@ -18,17 +18,17 @@ function mark_nan(radiance::Array{T, 2}, clouds) where T <: Real
 end
 
 """
-The mark_nan function also works on datacubes.  
+The mark_missing function also works on datacubes.  
 ```julia
 radiance = rand(1:10.0, 10, 10, 10)
 cloud = rand(0:5, 10, 10, 10)
-mark_nan(radiance, cloud)
+mark_missing(radiance, cloud)
 ```
-Wherever the number of cloud-free observations is 0, radiance will be marked as NaN. 
+Wherever the number of cloud-free observations is 0, radiance will be marked as missing. 
 """
-function mark_nan(radiance_datacube::Array{T, 3}, clouds_datacube) where T <: Real 
+function mark_missing(radiance_datacube, clouds_datacube::Array{T, 3}) where T <: Real 
     for i in 1:size(clouds_datacube)[3]
-        radiance_datacube[:, :, i] = mark_nan(radiance_datacube[:, :, i], clouds_datacube[:, :, i])
+        radiance_datacube[:, :, i] = mark_missing(radiance_datacube[:, :, i], clouds_datacube[:, :, i])
     end
     return radiance_datacube
 end

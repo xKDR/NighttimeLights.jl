@@ -12,10 +12,10 @@ function outlier_mask(datacube, mask)
             if mask[i, j]==0
                 continue
             end
-            if counter_nan(datacube[i, j, :])/length(datacube[i, j, :]) > 0.50 # Don't do anything if there are too many NaNs
+            if count(i->(ismissing(i)),datacube[i, j, :])/length(datacube[i, j, :]) > 0.50  # Don't do anything if there are too many NaNs
                 continue
             end
-            stds[i, j] = std(detrend_ts(filter(x -> !isnan(x), datacube[i, j, :])))
+            stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
         end
     end
     function std_mask(std, threshold)
@@ -43,34 +43,24 @@ outlier_ts(sample_timeseries)
 
 function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
-    n = length(timeseries)
-    new_series = copy(timeseries)
+    missings = findall(ismissing, timeseries)
+    new_series = Array{Union{Float64, Missing}}(filter!(!ismissing, copy(timeseries))) 
+    n = length(new_series)
     k = 1.4826 # scale factor for Gaussian distribution
     indices = [] 
     for i in (window_size):(n - window_size)
-        x0 = median(timeseries[(i - window_size+1):(i + window_size)]) # Use this for the time series outlier package
-        # x0 = NaN
-        S0 = k * median(abs.(timeseries[(i - window_size +1):(i + window_size)] .- x0))
-        if (abs(timeseries[i] - x0) > n_sigmas * S0)
-            new_series[i] = NaN # Can use x0   
+        x0 = median(new_series[(i - window_size+1):(i + window_size)]) # Use this for the time series outlier package
+        # x0 = missing
+        S0 = k * median(abs.(new_series[(i - window_size +1):(i + window_size)] .- x0))
+        if (abs(new_series[i] - x0) > n_sigmas * S0)
+            # new_series[i] = missing # Can use x0   
             push!(indices, i)
         end
     end
+    new_series[indices] .= missing
+    for i in missings #putting back the missing values
+        new_series = insert!(new_series, i, missing)
+    end
     return new_series
-    # Think about how this would behave in the presence of NaNs. 
+    # Think about how this would behave in the presence of missing. 
 end
-
-# function outlier_ts(timeseries)
-#     if counter_nan(timeseries)/length(timeseries)>0.50
-#         return timeseries
-#     end 
-#     R"""
-#     library(compiler)
-#     ROutlierRem <- function(x) {
-#         library(forecast)
-#         return<-tsclean(x, replace.missing=FALSE)
-#     }
-#     """
-#     array = copy(timeseries)
-#     return convert(Array{Float16}, rcall(:ROutlierRem, array))
-# end

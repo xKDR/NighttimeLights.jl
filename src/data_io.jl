@@ -7,7 +7,7 @@ load_img("example.tif")
 function load_img(filepath)
     img = ArchGDAL.read((ArchGDAL.read(filepath)),1)
     img_trans = img' #tif loaded using ArchGDAL needs to be transposed
-    return convert(Array{Float16,2},img_trans) 
+    return Array{Union{Missing, Float16}, 2}(img_trans) 
 end
 
 """
@@ -17,7 +17,7 @@ save_img("example.tif", img)
 ```
 """
 function save_img(filepath,img)
-    GeoArrays.write!(filepath,GeoArray(convert(Array{Float32},img')))
+    GeoArrays.write!(filepath,GeoArray(img'))
 end
 
 """
@@ -55,7 +55,7 @@ function make_datacube(folder_path)
         for path in paths
             push!(datacube, load_img(path))
         end
-        return convert(Array{Float16},cat(datacube...,dims = 3))
+        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
 end
 
 

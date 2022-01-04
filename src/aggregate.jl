@@ -26,8 +26,8 @@ function aggregate_timeseries(datacube, mask)
     end
     tmp = apply_mask(copy(datacube), mask)
     lights = []
-    for i in 1:length(datacube)
-        push!(lights, sum(tmp[i]))
+    for i in 1:size(datacube)[3]
+        push!(lights, sum(tmp[:,:,i]))
     end
     return Float32.(lights)
 end

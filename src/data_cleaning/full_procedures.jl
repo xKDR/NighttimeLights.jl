@@ -9,9 +9,9 @@ conventional_cleaning(radiance_datacube, clouds_datacube)
 ```
 """
 function conventional_cleaning(radiance_datacube, clouds_datacube)
-    tmp = mark_nan(radiance_datacube, clouds_datacube)
+    tmp = mark_missing(radiance_datacube, clouds_datacube)
     GC.gc()
-    tmp = replace!(x -> x < 0 ? NaN : x, tmp) 
+    tmp =  replace_negative(tmp)
     GC.gc()
     noise = background_noise_mask(tmp, clouds_datacube, 0.4)
     GC.gc()
@@ -38,9 +38,9 @@ PatnaikSTT2021(radiance_datacube, clouds_datacube)
 ```
 """
 function PatnaikSTT2021(radiance_datacube, clouds_datacube)
-    tmp = mark_nan(radiance_datacube, clouds_datacube)
+    tmp = mark_missing(radiance_datacube, clouds_datacube)
     GC.gc()
-    tmp = replace!(x -> x < 0 ? NaN : x, tmp) 
+    tmp = replace_negative(tmp)
     GC.gc()
     noise = background_noise_mask(tmp, clouds_datacube, 0.4)
     GC.gc()

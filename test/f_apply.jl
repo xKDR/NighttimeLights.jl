@@ -1,5 +1,5 @@
 function test_func(x)
-    max = NighttimeLights.max_nan(x)
+    max = NighttimeLights.max_missing(x)
     return x.+ max
 end
 
