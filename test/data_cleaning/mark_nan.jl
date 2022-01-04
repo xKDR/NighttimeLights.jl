@@ -4,7 +4,7 @@
         y = rand(1:30)
         image = rand(1:10.0, x, y)
         clouds = rand(0:5, x, y)
-        @test size(mark_nan(image, clouds)) == size(image) 
+        @test size(mark_missing(image, clouds)) == size(image) 
     end
 end
 
@@ -15,6 +15,6 @@ end
         z = rand(1:30)
         datacube = rand(1:10.0, x, y, z)
         clouds = rand(0:5, x, y, z)
-        @test size(mark_nan(datacube, clouds)) == size(datacube)
+        @test size(mark_missing(datacube, clouds)) == size(datacube)
     end
 end
