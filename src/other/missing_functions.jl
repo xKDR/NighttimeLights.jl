@@ -1,4 +1,4 @@
-## There are many NaNs in the data. Missing values are also considered NaN. The following functions help dealing with NaNs. 
+## There are many missing in the data. The following functions help dealing with missings. 
 function check_missing(x)
     for i in x
         if ismissing(i) ==true
@@ -9,7 +9,7 @@ function check_missing(x)
 end
 
 function count_missing(x)
-    """Counts the number of NaN in an array"""
+    """Counts the number of missing values in an array"""
         count = 0 
         for y in x
             if ismissing(y)==true
