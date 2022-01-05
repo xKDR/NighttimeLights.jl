@@ -9,9 +9,9 @@ conventional_cleaning(radiance_datacube, clouds_datacube)
 ```
 """
 function conventional_cleaning(radiance_datacube, clouds_datacube)
-    tmp = mark_nan(radiance_datacube, clouds_datacube)
+    tmp = mark_missing(radiance_datacube, clouds_datacube)
     GC.gc()
-    tmp = replace!(x -> x < 0 ? NaN : x, tmp) 
+    tmp =  replace_negative(tmp)
     GC.gc()
     noise = background_noise_mask(tmp, clouds_datacube, 0.4)
     GC.gc()
@@ -25,7 +25,7 @@ function conventional_cleaning(radiance_datacube, clouds_datacube)
     GC.gc()
     tmp = long_apply(linear_interpolation, tmp)    
     GC.gc()
-    return tmp
+    return Array{Float16}(tmp)
 end
 """
 The PatnaikSTT2021 function performs all the steps of the new cleaning procedure described in [But clouds got in my way: Bias and bias correction of VIIRS nighttime lights data in the presence of clouds, Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas](https://www.xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html) as conventional cleaning.
@@ -38,9 +38,9 @@ PatnaikSTT2021(radiance_datacube, clouds_datacube)
 ```
 """
 function PatnaikSTT2021(radiance_datacube, clouds_datacube)
-    tmp = mark_nan(radiance_datacube, clouds_datacube)
+    tmp = mark_missing(radiance_datacube, clouds_datacube)
     GC.gc()
-    tmp = replace!(x -> x < 0 ? NaN : x, tmp) 
+    tmp = replace_negative(tmp)
     GC.gc()
     noise = background_noise_mask(tmp, clouds_datacube, 0.4)
     GC.gc()
@@ -58,5 +58,5 @@ function PatnaikSTT2021(radiance_datacube, clouds_datacube)
     GC.gc()
     tmp = long_apply(linear_interpolation, tmp)    
     GC.gc()
-    return tmp  
+    return Array{Float16}(tmp)  
 end

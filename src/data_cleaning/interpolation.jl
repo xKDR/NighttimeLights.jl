@@ -1,24 +1,24 @@
 #Modifying impute function from https://github.com/invenia/Impute.jl/blob/master/src/imputors/interp.jl 
 
 """
-Uses linear interpolation to fill for missing values. Missing and NaN are used interchangeably.  
+Uses linear interpolation to fill for missing values. 
 # Example: 
 ```
 x = rand(1:10.0, 10)
-x[5] = NaN
+x[5] = missing
 linear_interpolation(x)
 ```
 """
 function linear_interpolation(timeseries)
-    if counter_nan(timeseries)>length(timeseries) *1/2
+    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *1/2
         return zero(1:length(timeseries))
     end
     data = copy(timeseries)
-    i = findfirst(!isnan, data) + 1
+    i = findfirst(!ismissing, data) + 1
     while i < length(data)
-        if isnan(data[i])
+        if ismissing(data[i])
             prev_idx = i - 1
-            next_idx = findnext(!isnan, data, i + 1)
+            next_idx = findnext(!ismissing, data, i + 1)
             if next_idx !== nothing
                 gap_sz = (next_idx - prev_idx) - 1
 
@@ -36,10 +36,10 @@ function linear_interpolation(timeseries)
         end
         i += 1
     end
-    if counter_nan(data)>0 
-        data[1:findfirst(!isnan, data)] .= data[findfirst(!isnan, data)]
+    if count(i->(ismissing(i)), data)>0 
+        data[1:findfirst(!ismissing, data)] .= data[findfirst(!ismissing, data)]
         data = reverse(data)
-        data[1:findfirst(!isnan, data)] .= data[findfirst(!isnan, data)]
+        data[1:findfirst(!ismissing, data)] .= data[findfirst(!ismissing, data)]
         data = reverse(data)
     end
     return data

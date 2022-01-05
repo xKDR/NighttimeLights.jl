@@ -5,12 +5,12 @@ function t_test(n,r)
 end 
 
 function rank_correlation_test(radiance, clouds)
-    nans = findall(isnan, radiance)
-    y = filter!(!isnan, copy(radiance))
-    x = convert(Array{Float64}, copy(clouds))
-    x[nans] .= NaN
-    x = filter!(!isnan, x)
-    y_de = detrend_ts(y)
+    missings = findall(ismissing, radiance)
+    y = filter!(!ismissing, copy(radiance))
+    x = Array{Union{Float64, Missing}}(copy(clouds))
+    x[missings] .= missing
+    x = Array{Float64}(filter!(!ismissing, x))
+    y_de = Array{Float64}(detrend_ts(y))
     r = corspearman(y_de, x)
     n = length(y_de)
     return t_test(n,r)

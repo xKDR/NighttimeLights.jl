@@ -1,29 +1,27 @@
-@testset "counter_nan" begin
+@testset "count missing" begin
     for i in 1:10
         x = rand(10:30)
-        rad = rand(20:100.0, x)
-        nans = unique(rand(1:x,rand(1:x)))
-        for j in nans
-            rad[j] = NaN
-        end
-        @test NighttimeLights.counter_nan(rad) == length(nans)
+        rad = Array{Union{Float64, Missing}}(rand(20:100.0, x))
+        missings = unique(rand(1:x,rand(1:x)))
+        rad[missings] .= missing
+        @test NighttimeLights.count_missing(rad) == length(missings)
     end
 end
 
-@testset "max_nan" begin
+@testset "max_missing" begin
     for i in 1:10
         x = rand(10:30)
-        rad = rand(20:100.0, x)
+        rad = Array{Union{Float64, Missing}}(rand(20:100.0, x))
         max = findmax(rad)
-        nans = rand(1:20)
-        for j in 1:nans
-            nan_index = rand(1:x)
-            if nan_index == max[2]
+        missings = rand(1:20)
+        for j in 1:missings
+            missing_index = rand(1:x)
+            if missing_index == max[2]
                 continue
             else
-                rad[nan_index] = NaN
+                rad[missing_index] = missing
             end
         end
-        @test NighttimeLights.max_nan(rad) == max[1]
+        @test NighttimeLights.max_missing(rad) == max[1]
     end
 end

@@ -2,7 +2,7 @@ function weighted_mean(numbers, weights)
     tmp_weights = []
     tmp_number = []
     for i in 1:length(weights)
-        if isnan(numbers[i])
+        if ismissing(numbers[i])
             continue
         else
             push!(tmp_weights, weights[i])
