@@ -5,7 +5,7 @@ Uses linear interpolation to fill for missing values.
 # Example: 
 ```
 x = rand(1:10.0, 10)
-x[5] = NaN
+x[5] = missing
 linear_interpolation(x)
 ```
 """

@@ -9,5 +9,5 @@ function view_img(img)
     run(`gimp /tmp/image.tif`)
 end
 
-## More will be added to this library. NaN can be marked with red. 
+## More will be added to this library. Missinngs can be marked with red. 
 ## Boundary layers can be added.

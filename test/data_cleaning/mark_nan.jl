@@ -1,4 +1,4 @@
-@testset "marking nans in image" begin
+@testset "marking missings in image" begin
     for i in 1:10
         x = rand(1:30)
         y = rand(1:30)
@@ -8,7 +8,7 @@
     end
 end
 
-@testset "marking nans in datacube" begin
+@testset "marking missings in datacube" begin
     for i in 1:10
         x = rand(1:30)
         y = rand(1:30)
