@@ -4,7 +4,7 @@ Clouds months tends to have lower radiance due to attenuation. The bias_correcti
 bias_correction(radiance, clouds)
 ```
 """
-function bias_correction(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Real
+function bias_correction(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
     missings = findall(ismissing, radiance)
     y = filter!(!ismissing, copy(radiance))
     x = Array{Union{Float64, Missing}}(copy(clouds))
@@ -33,7 +33,7 @@ The bias correction function can use the datacubes of radiance and the number of
 bias_correction(radiance, clouds)
 ```
 """
-function bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Real
+function bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
     rad_corrected_datacube = radiance_datacube
     @showprogress for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
