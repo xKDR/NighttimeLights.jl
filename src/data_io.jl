@@ -11,6 +11,33 @@ function load_img(filepath)
 end
 
 """
+NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. The top-left and bottom-right parameters can be used to crop the image. 
+```julia
+load_img("example.tif")
+```
+"""
+function load_img(filepath, top_left, bottom_right)
+    img = load_img(filepath)
+    img = img[top_left[1]:bottom_right[1], top_left[2]:bottom_right[2]]
+    GC.gc()
+    return img
+end
+
+
+"""
+NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. The top-left and bottom-right parameters can be used to crop the image. 
+```julia
+load_img("example.tif")
+```
+"""
+function load_img(filepath, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
+    top_left = coordinate_to_image(geometry, top_left)
+    bottom_right = coordinate_to_image(geometry, bottom_right)
+    img = load_img(filepath, top_left, bottom_right)
+    return img
+end
+
+"""
 Images in the form of 2D arrays can be saved as tif files. 
 ```julia
 save_img("example.tif", img)
@@ -47,9 +74,11 @@ Loads all images (tif files) in a folder and generates a datacube. The function 
 make_datacube("~/Downloads/ntl_images")
 ```
 """
-function make_datacube(folder_path)
+function make_datacube(folder_path, display_names = false)
         files = readdir(folder_path)
-        print(files)
+        if display_names == true
+            print(files)
+        end
         paths = folder_path .* "/".* files 
         datacube = []
         for path in paths
@@ -58,4 +87,40 @@ function make_datacube(folder_path)
         return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
 end
 
+"""
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The top_left and the bottom_right parameters can be used to crop the datacube.  
+```julia
+make_datacube("~/Downloads/ntl_images")
+```
+"""
+function make_datacube(folder_path, top_left, bottom_right, display_names = false)
+        files = readdir(folder_path)
+        if display_names == true
+            print(files)
+        end
+        paths = folder_path .* "/".* files 
+        datacube = []
+        for path in paths
+            push!(datacube, load_img(path, top_left, bottom_right))
+        end
+        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+end
 
+"""
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The top_left and the bottom_right parameters can be used to crop the datacube.  
+```julia
+make_datacube("~/Downloads/ntl_images")
+```
+"""
+function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem, display_names = false)
+        files = readdir(folder_path)
+        if display_names == true
+            print(files)
+        end
+        paths = folder_path .* "/".* files 
+        datacube = []
+        for path in paths
+            push!(datacube, load_img(path, top_left, bottom_right, geometry))
+        end
+        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+end
