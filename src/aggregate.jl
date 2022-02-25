@@ -62,14 +62,14 @@ shapefile_df  = load_shapefile("assets/mumbai_map/mumbai_districts.shp")
 aggregate_per_area_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "District")
 ```
 """
-function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
+function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute, res = 15)
     datacube = Array{Float32}(datacube)
     datacube = sparse_cube(datacube)
     df = DataFrame()
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
-        df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon) ./mask_area(geometry, geom_polygon)
+        df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon) ./mask_area(geometry, geom_polygon, res)
         i = i + 1
     end
     return df
