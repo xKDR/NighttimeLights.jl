@@ -18,7 +18,7 @@ load_img("example.tif")
 """
 function load_img(filepath, top_left, bottom_right)
     img = load_img(filepath)
-    img = img[top_left[1]:bottom_right[1], top_left[2]:bottom_right[2]]
+    img = img[top_left[1]+1:bottom_right[1], top_left[2]+1:bottom_right[2]]
     GC.gc()
     return img
 end
