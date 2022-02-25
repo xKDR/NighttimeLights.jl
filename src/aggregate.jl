@@ -7,7 +7,6 @@ aggregate(rand_image, rand_mask)
 ```
 """
 function aggregate(image, mask)
-    image = Array{Float32}(image)
     masked_image = copy(image).*mask
     return sum(masked_image)
 end
@@ -22,7 +21,6 @@ aggregate_timeseries(rand_datacube, rand_mask)
 ```
 """
 function aggregate_timeseries(datacube, mask)
-    datacube = Array{Float32}(datacube)
     tmp = apply_mask(copy(datacube), mask)
     lights = []
     for i in 1:size(datacube)[3]
@@ -41,8 +39,6 @@ aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "Dist
 ```
 """
 function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
-    datacube = Array{Float32}(datacube)
-    datacube = sparse_cube(datacube)
     df = DataFrame()
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
@@ -63,8 +59,6 @@ aggregate_per_area_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_
 ```
 """
 function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute, res = 15)
-    datacube = Array{Float32}(datacube)
-    datacube = sparse_cube(datacube)
     df = DataFrame()
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
