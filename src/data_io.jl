@@ -96,7 +96,7 @@ make_datacube("~/Downloads/ntl_images")
 function make_datacube(folder_path, top_left, bottom_right, display_names = false)
         files = readdir(folder_path)
         if display_names == true
-            print(files)
+            display(files)
         end
         paths = folder_path .* "/".* files 
         datacube = []
@@ -115,7 +115,7 @@ make_datacube("~/Downloads/ntl_images")
 function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem, display_names = false)
         files = readdir(folder_path)
         if display_names == true
-            print(files)
+            display(files)
         end
         paths = folder_path .* "/".* files 
         datacube = []
