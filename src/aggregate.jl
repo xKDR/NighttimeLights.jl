@@ -20,11 +20,29 @@ rand_mask = rand(0:1, 10, 10)
 aggregate_timeseries(rand_datacube, rand_mask)
 ```
 """
-function aggregate_timeseries(datacube, mask)
+function aggregate_timeseries(datacube::Array{T, 3}, mask) where T <: Real
     tmp = apply_mask(copy(datacube), mask)
     lights = []
     for i in 1:size(datacube)[3]
         push!(lights, sum(tmp[:,:,i]))
+    end
+    return Float32.(lights)
+end
+
+"""
+To find the time series of aggregate values of a datacube over a mask, using the ```aggregate_timeseries``` function
+
+```
+rand_datacube = rand(10, 10, 10)
+rand_mask = rand(0:1, 10, 10)
+aggregate_timeseries(rand_datacube, rand_mask)
+```
+"""
+function aggregate_timeseries(datacube::VectorOfArray{Any,3}, mask)
+    tmp = apply_mask(copy(datacube), mask)
+    lights = []
+    for i in 1:size(datacube)[3]
+        push!(lights, sum(tmp[i]))
     end
     return Float32.(lights)
 end
@@ -40,6 +58,8 @@ aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "Dist
 """
 function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
     df = DataFrame()
+    datacube = sparse_cube(datacube)
+    GC.gc()
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
@@ -60,6 +80,8 @@ aggregate_per_area_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_
 """
 function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute, res = 15)
     df = DataFrame()
+    datacube = sparse_cube(datacube)
+    GC.gc()
     @showprogress for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)

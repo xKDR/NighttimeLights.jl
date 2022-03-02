@@ -29,7 +29,7 @@ cleaned_datacube = PatnaikSTT2021(radiance_datacube, clouds_datacube)
 The top left pixel of the box around Mumbai, which we have used so far, have coordinates (19.49907,72.721252). The bottom right pixel's coordinates are (18.849475, 73.074187). There are 156 rows and 85 columns in the datacube. The number of months of data doesn't matter in calculating the coordinate system.  
 
 ```julia
-MUMBAI_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(19.49907,72.721252), (18.849475, 73.074187), 156, 85)
+MUMBAI_COORDINATE_SYSTEM = CoordinateSystem(Coordinate(19.49907,72.721252), Coordinate(18.849475, 73.074187), 156, 85)
 ```
 This coordinate system is predefined, you can just use the global variable ```MUMBAI_COORDINATE_SYSTEM```. 
 ##### 2. Load the shape file for the districts of Mumbai. 
@@ -42,5 +42,5 @@ The shapefile has a column called DISTRICT. For each district, the name of the d
 
 ##### 3. Generate the time series of aggregate radiance for each district of Mumbai. 
 ```julia
-mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, radiance_datacube, mumbai_map, "DISTRICT")
+mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, cleaned_datacube, mumbai_map, "DISTRICT")
 ``` 
