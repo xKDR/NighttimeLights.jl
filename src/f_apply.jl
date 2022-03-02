@@ -18,7 +18,7 @@ function long_apply(f, datacube::Array, mask = ones(size(datacube)[1], size(data
         return new_matrix
     else    
         new_matrix = Array{Union{Missing, Float16}}(undef, size(datacube, 1), size(datacube, 2),size(datacube)[3])
-        @showprogress for i in 1:size(datacube)[1]
+        Threads.@threads for i in 1:size(datacube)[1]
             for j in 1:size(datacube)[2]
                 if mask[i, j] == 1
                     new_matrix[i, j, :] = f(datacube[i, j, :])
