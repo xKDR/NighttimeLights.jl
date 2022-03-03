@@ -40,7 +40,7 @@ aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_df, "Dist
 """
 function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute)
     df = DataFrame()
-    @showprogress for i in 1:length(shapefile_df[:, 1])
+    Threads.@threads for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
         df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon)
@@ -60,7 +60,7 @@ aggregate_per_area_dataframe(MUMBAI_COORDINATE_SYSTEM, rand_datacube, shapefile_
 """
 function aggregate_per_area_dataframe(geometry::CoordinateSystem, datacube, shapefile_df, attribute, res = 15)
     df = DataFrame()
-    @showprogress for i in 1:length(shapefile_df[:, 1])
+    Threads.@threads for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
         df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon) ./mask_area(geometry, geom_polygon, res)
