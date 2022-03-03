@@ -4,20 +4,22 @@ There are negative observations in the data as a consequence of NOAA's cleaning 
 ```julia
 datacube = replace!(x -> x < 0 ? 0 : x, datacube) # replace all values below 0 with 0
 ```
-These values can be replaced with NaN and interpolated. 
+These values can be replaced with missing and interpolated. 
 ```julia
-datacube = replace!(x -> x < 0 ? NaN : x, datacube) # replace all values below 0 with NaN
+datacube = replace!(x -> x < 0 ? missing : x, datacube) # replace all values below 0 with missing
 ```
 
 ```@docs
-mark_nan(radiance::Array{T, 2}, clouds) where T <: Real
-mark_nan(radiance_datacube::Array{T, 3}, clouds_datacube) where T <: Real
+mark_missing(radiance, clouds::Array{T, 2}) where T <: Any
+mark_missing(radiance, clouds::Array{T, 3}) where T <: Any
 linear_interpolation(timeseries)
 outlier_mask(datacube, mask)
-outlier_ts(timeseries)
-background_noise_mask(datacube=radiance_datacube, clouds=clouds_datacube, th=0.4)
-bias_correction(radiance::Array{T, 1}, clouds) where T <:Real
-bias_correction(radiance_datacube::Array{T, 3}, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <:Real
-conventonal_cleaning(radiance_datacube, clouds_datacube)
+outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
+background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
+bias_correction(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
+bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
+conventional_cleaning(radiance_datacube, clouds_datacube)
 PatnaikSTT2021(radiance_datacube, clouds_datacube)
+
+
 ```

@@ -1,5 +1,5 @@
 """
-Polygon boundaries are usually stored in a format called shapfile. For example, the shapefile of the world will consist of country names and each country will have coordinates of the boundaries.   
+Polygon boundaries are usually stored in a format called shapefile. For example, the shapefile of the world will consist of country names and each country will have coordinates of the boundaries.   
 ```julia
 load_shapefile("assets/mumbai_map/mumbai_districts.shp")
 ```
