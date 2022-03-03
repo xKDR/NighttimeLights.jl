@@ -35,7 +35,7 @@ bias_correction(radiance, clouds)
 """
 function bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
     rad_corrected_datacube = radiance_datacube
-    @showprogress for i in 1:size(radiance_datacube)[1]
+    Threads.@threads for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
             if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
                 continue
