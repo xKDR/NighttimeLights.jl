@@ -26,7 +26,7 @@ The datacubes and the district level shapefile for Mumbai city are provided with
         println("
         Follow the tutorial on:
         
-        https://juliaplanet.github.io/NighttimeLights.jl/tutorial.html")
+        https://xkdr.github.io/NighttimeLights.jl/tutorial.html")
 
 end
 

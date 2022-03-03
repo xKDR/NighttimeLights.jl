@@ -1,5 +1,5 @@
 """
-For each pixe, NOAA produces monthly estimates of radiance using the mean of radiance measured on days considered free of clouds. Radiance on months with no cloud-free observations are marked as zero, these should be marked as missing or or not available. The mark_missing function uses the radiance and the cloud-free observations image to marks missing wherever there no 0 cloud-free observations. 
+For each pixel, NOAA produces monthly estimates of radiance using the mean of radiance measured on days considered free of clouds. Radiance on months with no cloud-free observations are marked as zero, these should be marked as missing or or not available. The mark_missing function uses the radiance and the cloud-free observations image to marks missing wherever there no 0 cloud-free observations. 
 ```julia
 radiance = rand(1:10.0, 10, 10)
 cloud = rand(0:5, 10, 10)

@@ -1,5 +1,5 @@
 """
-NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. 
+NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the ```load_img``` function. 
 ```julia
 load_img("example.tif")
 ```
@@ -11,7 +11,7 @@ function load_img(filepath)
 end
 
 """
-NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. The top-left and bottom-right parameters can be used to crop the image. 
+NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the ```load_img``` function. The top-left and bottom-right parameters can be used to crop the image. 
 ```julia
 load_img("example.tif")
 ```
@@ -48,7 +48,7 @@ function save_img(filepath,img)
 end
 
 """
-NOAA provides images for each month since April 2012. Images of the same place taken at different times can be stacked together to make a 3D array representating a panel data. In this package, we refer to such arrays as datacubes. JLD files containing 3D arrays can be loaded using the load_datacube function.  
+NOAA provides images for each month since April 2012. Images of the same place taken at different times can be stacked together to make a 3D array representating a panel data. In this package, we refer to such arrays as datacubes. JLD files containing 3D arrays can be loaded using the ```load_datacube``` function.  
 ```julia
 load_datacube("example.jld")
 ```
@@ -88,7 +88,7 @@ function make_datacube(folder_path, display_names = false)
 end
 
 """
-Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The top_left and the bottom_right parameters can be used to crop the datacube.  
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube.  
 ```julia
 make_datacube("~/Downloads/ntl_images")
 ```
@@ -107,7 +107,7 @@ function make_datacube(folder_path, top_left, bottom_right, display_names = fals
 end
 
 """
-Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The top_left and the bottom_right parameters can be used to crop the datacube.  
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube.  
 ```julia
 make_datacube("~/Downloads/ntl_images")
 ```
