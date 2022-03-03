@@ -14,7 +14,7 @@ While there are packages to do image processing in Julia, the assumptions about 
 
 ![india lights](eog.png)
 
-This package was a foundation for a research paper, "But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds" by Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas. The paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package. The details are in the paper which can be accessed from its [landing page](https://xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html) 
+This package was a foundation for a research paper, "But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds" by Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas. The paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package. The details are in the paper which can be accessed from its [landing page](https://xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html). 
 
 # Installation
 
@@ -30,7 +30,7 @@ NOAA nighttime lights data is hosted by [Payne Institute](https://payneinstitute
 
 The data is stored in tif files. These are opened as 2D matrices and for each pixel, there is a floating-point value representing the amount of light. Monthly composites are produced by taking the average of measurements produced on days free of clouds. The number of cloud-free obersation used to generate those are also in stored in tif files. 
 
-There two types of annual images, those produced using daily images and those produced using monthly composites. 
+There are two types of annual images, those produced using daily images and those produced using monthly composites. 
 
 The tif files covering the entire planet are large. NOAA also provides tiled data. The planet is divided into 6 tiles in the following manner: 
 
@@ -40,6 +40,6 @@ If your region of interest is covered in one tile, then you may not need to down
 
 # Getting help 
 
-To get enquire about the Julia package, you can join the Julia community on [slack](https://julialang.org/slack/) and post questions on the nighttime-lights channel. You can also email one of the authors of the package, [Ayush Patnaik](mailto:ayushpatnaik@gmail.com)
+To get enquire about the Julia package, you can join the Julia community on [slack](https://julialang.org/slack/) and post questions on the nighttime-lights channel. You can also email one of the authors of the package, [Ayush Patnaik](mailto:ayushpatnaik@gmail.com). 
 
 For questions regarding nighttime lights data, you can email [Kim Baugh](mailto:Kim.Baugh@noaa.gov)

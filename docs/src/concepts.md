@@ -64,7 +64,7 @@ Masks are 2D arrays consisting of 0s and 1s. The 1s determine the region of inte
 2.  If all pixels in an image below a threshold are considered background noise, such pixels can be marked as zero and the remaining can be marked as 1 to produce a background noise mask. For following code demonstrates this example. 
 ```julia
 image = rand(0:10.0, 10, 10)
-noise_threshold = function(x, threshold)
+noise_threshold = function(image, threshold)
     if x < threshold
         return 0
     else 
@@ -72,7 +72,7 @@ noise_threshold = function(x, threshold)
     end
 end
 threshold = 0.3
-mask_mask = noise_threshold.(x, threshold) 
+mask_mask = noise_threshold.(image, threshold) 
 ```
 3. The standard deviation of each pixel in a datacube can be computed. Suppose those pixels with standard deviation greater than a threshold are considered outliers. In a 2D array, these pixels can be marked as 0 and the remaining can be marked as 1 to generate an outlier mask. 
 ```julia
@@ -120,5 +120,5 @@ The aggregate function is equivalent to
 sum(image .* mask)
 ```
 ```@docs
-aggregate_timeseries(datacube, mask)
+aggregate_timeseries(datacube::Array{T, 3}, mask) where T <: Real
 ```

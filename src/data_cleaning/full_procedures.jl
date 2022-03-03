@@ -1,5 +1,5 @@
 """
-All steps of data cleaning that most researchers do can be performed using the conventional_cleaning funciton. It is described in [But clouds got in my way: Bias and bias correction of VIIRS nighttime lights data in the presence of clouds, Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas](https://www.xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html) as conventional cleaning.
+All steps of data cleaning that most researchers do can be performed using the conventional cleaning funciton.
 
 # Example
 ```julia

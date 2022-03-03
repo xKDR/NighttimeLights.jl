@@ -40,7 +40,6 @@ sample_timeseries = datacube[1, 2, :] # The time series of pixel [1, 2]
 outlier_ts(sample_timeseries)
 ```
 """
-
 function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
     missings = findall(ismissing, timeseries)
