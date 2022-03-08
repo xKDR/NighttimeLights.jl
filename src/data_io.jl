@@ -18,7 +18,7 @@ load_img("example.tif")
 """
 function load_img(filepath, top_left, bottom_right)
     img = ArchGDAL.readraster(filepath)
-    img = img[top_left[1]+1:bottom_right[1], top_left[2]+1:bottom_right[2], 1]
+    img = img[top_left[2]+1:bottom_right[2], top_left[1]+1:bottom_right[1], 1]
     GC.gc()
     return Array{Union{Missing, Float16}, 2}(img_trans')
 end
