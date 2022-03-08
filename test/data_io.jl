@@ -8,5 +8,6 @@
     radiance_img_path = assets_path * "/mumbai_ntl/img/april2012.tif"
     @test length(size(load_datacube(radiance_jld_path))) == 3
     @test length(size(load_img(radiance_img_path))) == 2
+    @test length(size(load_img(radiance_img_path ,[10, 10], [50, 50]))) == 2
     @test sizeof(load_shapefile(map_path)) > 0
 end
