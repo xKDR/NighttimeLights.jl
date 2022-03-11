@@ -22,7 +22,7 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="https://github.com/xKDR/NighttimeLights.jl",
+    repo="github.com/xKDR/NighttimeLights.jl",
     target = "build",
     devbranch="main"
 )
