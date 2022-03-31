@@ -12,7 +12,5 @@ Landing page of the paper: https://xkdr.org/wp2021-07.html
 
 ## To install: 
 ```Julia
- add "git://github.com/xKDR/NighttimeLights.jl.git"
+ add "https://github.com/xKDR/NighttimeLights.jl.git"
 ```
-
-The package requires a functioning RCall with forecast package installed. 
