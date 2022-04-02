@@ -44,6 +44,7 @@ save_img("example.tif", img)
 ```
 """
 function save_img(filepath,img)
+    img = Float64.(img)
     GeoArrays.write!(filepath,GeoArray(img'))
 end
 
