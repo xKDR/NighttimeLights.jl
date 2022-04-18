@@ -1,6 +1,7 @@
 # NighttimeLights
 
-[![dev](https://img.shields.io/badge/docs-stable-blue.svg)](https://xKDR.github.io/NighttimeLights.jl/)
+[![stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://xKDR.github.io/NighttimeLights.jl/stable)
+[![dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://xKDR.github.io/NighttimeLights.jl/dev)
 ![Build Status](https://github.com/xKDR/NighttimeLights.jl/actions/workflows/ci.yml/badge.svg)
 ![Build Status](https://github.com/xKDR/NighttimeLights.jl/actions/workflows/documentation.yml/badge.svg)
 [![codecov](https://codecov.io/gh/xKDR/NighttimeLights.jl/branch/main/graph/badge.svg?token=929G1I53PW)](https://codecov.io/gh/xKDR/NighttimeLights.jl)
