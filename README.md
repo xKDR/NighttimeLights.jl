@@ -16,5 +16,5 @@ Landing page of the paper: https://xkdr.org/wp2021-07.html
 
 ## To install: 
 ```Julia
- add "https://github.com/xKDR/NighttimeLights.jl.git"
+ add NighttimeLights
 ```
