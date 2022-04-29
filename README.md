@@ -18,3 +18,7 @@ Landing page of the paper: https://xkdr.org/wp2021-07.html
 ```Julia
  add NighttimeLights
 ```
+
+# Support
+
+We gratefully acknowledge the JuliaLab at MIT for financial support for this project.
