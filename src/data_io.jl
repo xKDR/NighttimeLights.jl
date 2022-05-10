@@ -91,10 +91,10 @@ end
 """
 Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube.  
 ```julia
-make_datacube("~/Downloads/ntl_images")
+make_datacube("~/Downloads/ntl_images", [0, 0] ,[10, 10])
 ```
 """
-function make_datacube(folder_path, top_left, bottom_right, display_names = false)
+function make_datacube(folder_path, top_left, bottom_right; display_names = false)
         files = readdir(folder_path)
         if display_names == true
             display(files)
@@ -110,10 +110,10 @@ end
 """
 Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube. You need a coordinate system in the ```top_left``` and ```bottom_right``` are coordinates of the the earth. 
 ```julia
-make_datacube("~/Downloads/ntl_images")
+make_datacube("~/Downloads/ntl_images", Coordinate(19.49907, 72.721252), Coordinate(18.849475, 73.074187), TILE3_COORDINATE_SYSTEM)
 ```
 """
-function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem, display_names = false)
+function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem; display_names = false)
         files = readdir(folder_path)
         if display_names == true
             display(files)
@@ -125,3 +125,23 @@ function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordina
         end
         return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
 end
+
+"""
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. You can use a coordinate system for cropping.  
+```julia
+make_datacube("~/Downloads/ntl_images",  TILE3_COORDINATE_SYSTEM, INDIA_COORDINATE_SYSTEM)
+```
+"""
+function make_datacube(folder_path, g1::CoordinateSystem, g2::CoordinateSystem; display_names = false)
+        files = readdir(folder_path)
+        if display_names == true
+            display(files)
+        end
+        paths = folder_path .* "/".* files 
+        datacube = []
+        for path in paths
+            push!(datacube, load_img(path, g2.top_left, g2.bottom_right, g1))
+        end
+        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+end
+

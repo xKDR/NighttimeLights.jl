@@ -30,6 +30,8 @@ load_img(filepath)
 save_img(filepath, image)
 load_datacube(filepath)
 make_datacube(folder_path)
+make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
+make_datacube(folder_path, geometry_from::CoordinateSystem, geometry_to::CoordinateSystem)
 save_datacube(filepath, datacube)
 ```
 
