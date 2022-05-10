@@ -108,7 +108,7 @@ function make_datacube(folder_path, top_left, bottom_right, display_names = fals
 end
 
 """
-Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube.  
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The ```top_left``` and the ```bottom_right``` parameters can be used to crop the datacube. You need a coordinate system in the ```top_left``` and ```bottom_right``` are coordinates of the the earth. 
 ```julia
 make_datacube("~/Downloads/ntl_images")
 ```
