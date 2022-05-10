@@ -60,7 +60,7 @@ function aggregate_dataframe(geometry::CoordinateSystem, datacube, shapefile_df,
     df = DataFrame()
     datacube = sparse_cube(datacube)
     GC.gc()
-    @showprogress for i in 1:length(shapefile_df[:, 1])
+    Threads.@threads for i in 1:length(shapefile_df[:, 1])
         shapefile_row = shapefile_df[i, :]
         geom_polygon = polygon_mask(geometry, shapefile_row)
         df[!, shapefile_df[!, attribute][i]] = aggregate_timeseries(datacube, geom_polygon)
