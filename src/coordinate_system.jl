@@ -10,6 +10,11 @@ struct Coordinate
     latitude
     longitude
 end
+
+function Base.show(io::IO, coords::Coordinate)
+    println("Latitude: ", coords.latitude)
+    print("Longitude: ", coords.longitude)
+end
 """
 The mapping between the coordinates of earth and indices of the image is needed to convert from one to another. In this package such mapping is referred to as a coordinate system. To define a coordinate system, you need to provide coordinates of the top-left and bottom-right pixels, and the height and the width of the image. 
 
@@ -30,6 +35,13 @@ struct CoordinateSystem
     bottom_right::Coordinate 
     height::Int64
     width::Int64
+end
+
+function Base.show(io::IO, geometry::CoordinateSystem)
+    println("Top left: (", geometry.top_left.latitude, ", ", geometry.top_left.longitude, ")")
+    println("Bottom right: (", geometry.bottom_right.latitude, ", ", geometry.bottom_right.longitude, ")")
+    println("Height:", geometry.height)
+    print("width: ", geometry.width)
 end
 """
 To convert from latitude to row number of an image, use the ```lat_to_row``` function. 

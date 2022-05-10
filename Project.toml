@@ -1,7 +1,7 @@
 name = "NighttimeLights"
 uuid = "4d912a30-7731-4b12-9bf5-9d9a78b4f19a"
 authors = ["Ayush Patnaik", "Ajay Shah", "Anshul Tayal", "Susan Thomas"]
-version = "0.4.31"
+version = "0.4.32"
 
 [deps]
 ArchGDAL = "c9ce4bd3-c3d5-55b8-8973-c0e20141b8c3"
