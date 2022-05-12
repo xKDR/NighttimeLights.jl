@@ -1,6 +1,8 @@
 # Taken from https://github.com/JuliaData/DataFrames.jl/blob/main/test/runtests.jl
 using NighttimeLights
 using Test
+using Dates
+using DataFrames
 
 fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
