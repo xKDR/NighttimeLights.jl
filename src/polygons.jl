@@ -100,16 +100,16 @@ function polygon_mask(geometry::CoordinateSystem, polygon::Shapefile.Polygon)
     return Mask(bounds_i, bounds_j, bounds_iend, bounds_jend, points)    
 end
 
-# """
-# The polygon of a shapefile row can be make into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
+"""
+The polygon of a shapefile row can be make into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
  
-# ```julia
-# load_example()
-# district1 = mumbai_map[1,:] # Select the first district
-# district1_mask = polygon_mask(MUMBAI_COORDINATE_SYSTEM, district1)
-# ```
-# """
-# function polygon_mask(geometry::CoordinateSystem, shapefile_row::DataFrames.DataFrameRow{DataFrames.DataFrame, DataFrames.Index})
-#     polygon_mask(geometry, shapefile_row.geometry)
-# end
+```julia
+load_example()
+district1 = mumbai_map[1,:] # Select the first district
+district1_mask = polygon_mask(MUMBAI_COORDINATE_SYSTEM, district1)
+```
+"""
+function polygon_mask(geometry::CoordinateSystem, shapefile_row::DataFrames.DataFrameRow{DataFrames.DataFrame, DataFrames.Index})
+    polygon_mask(geometry, shapefile_row.geometry)
+end
 

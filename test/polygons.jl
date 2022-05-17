@@ -11,6 +11,6 @@ mumbai_districts = load_shapefile(map_path)
 district1 = mumbai_districts[1,:] # Select the first district
 district1_mask = polygon_mask(MUMBAI_COORDINATE_SYSTEM, district1)
 
-@test sum(district1_mask) >=0 
+@test sum(district1_mask.vals) >=0 
 
 end
