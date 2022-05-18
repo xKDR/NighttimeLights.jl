@@ -24,12 +24,6 @@ function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
     if ndims(data) == 2
         return data .* mask
     end
-    if typeof(data) == VectorOfArray{Any,3,Array{Any,1}}
-        for i in 1:length(data)
-            data[i] = data[i] .* mask
-        end
-        return data
-    end
     masked_data = copy(data)
     for i in 1:size(data)[3]
         masked_data[:, :, i] = data[:, :, i] .* mask
@@ -37,7 +31,7 @@ function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
     return masked_data
 end
 
-add_masks = function(mask1, mask2)
+function add_masks(mask1, mask2)
     mask_sum =  BitArray(zeros(size(mask1)[1], size(mask2[2])))
     mask_sum           = mask1 .| BitArray(mask2)
     return sparse(Array{Int8}(mask_sum))
