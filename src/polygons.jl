@@ -40,24 +40,20 @@ function Base.show(io::IO, bbox::PolygonBoundary)
 end
 
 function bounding_box(x::Shapefile.Polygon)
-    gshp = GeoInterface.coordinates(x)
-    
+    gshp = GeoInterface.coordinates(x)    
     coords = hcat(hcat(gshp[1]...)...)
-    top = minimum(coords[2, :])
-    bottom = maximum(coords[2, :])
-    left = minimum(coords[1, :])
-    right = maximum(coords[1,: ])
-    if length(gshp) == 1
-        return PolygonBoundary(Coordinate(top, left), Coordinate(bottom, right))
-    end 
-    for i in 2:length(gshp)
-        coords = hcat(hcat(gshp[i]...)...)
-        top = minimum([top, minimum(coords[2, :])])
-        bottom = maximum([bottom, maximum(coords[2, :])])
-        left = minimum([left, minimum(coords[1, :])])
-        right = maximum([right, maximum(coords[1,: ])])
+    top = []
+    bottom = []
+    left = []
+    right = []
+    for shp in gshp
+        coords = hcat(hcat(shp...)...)
+        push!(top, maximum(coords[2, :])) 
+        push!(bottom, minimum(coords[2, :]))
+        push!(left, minimum(coords[1, :]))
+        push!(right, maximum(coords[1,: ]))
     end
-    return PolygonBoundary(Coordinate(top, left), Coordinate(bottom, right))
+    return PolygonBoundary(Coordinate(maximum(top), minimum(left)), Coordinate(minimum(bottom), maximum(right)))
 end
 
 function make_polygon(geometry::CoordinateSystem, coords)

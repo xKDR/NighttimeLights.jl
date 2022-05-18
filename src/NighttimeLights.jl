@@ -9,8 +9,9 @@ conventional_cleaning, PatnaikSTT2021, threshold_datacube, background_noise_mask
 
 
 include("coordinate_system.jl")
-include("view_image.jl")
 include("polygons.jl")
+include("coordinate_conversion.jl")
+include("view_image.jl")
 include("data_io.jl")
 include("area.jl")
 include("f_apply.jl")

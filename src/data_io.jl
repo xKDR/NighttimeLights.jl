@@ -114,16 +114,9 @@ make_datacube("~/Downloads/ntl_images", Coordinate(19.49907, 72.721252), Coordin
 ```
 """
 function make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem; display_names = false)
-        files = readdir(folder_path)
-        if display_names == true
-            display(files)
-        end
-        paths = folder_path .* "/".* files 
-        datacube = []
-        for path in paths
-            push!(datacube, load_img(path, top_left, bottom_right, geometry))
-        end
-        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+        top_left = coordinate_to_image(geometry, top_left)
+        bottom_right = coordinate_to_image(geometry, bottom_right)
+        make_datacube(folder_path, top_left, bottom_right, display_names)
 end
 
 """
@@ -133,16 +126,7 @@ make_datacube("~/Downloads/ntl_images",  TILE3_COORDINATE_SYSTEM, INDIA_COORDINA
 ```
 """
 function make_datacube(folder_path, g1::CoordinateSystem, g2::CoordinateSystem; display_names = false)
-        files = readdir(folder_path)
-        if display_names == true
-            display(files)
-        end
-        paths = folder_path .* "/".* files 
-        datacube = []
-        for path in paths
-            push!(datacube, load_img(path, g2.top_left, g2.bottom_right, g1))
-        end
-        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+        return make_datacube(folder_path, g1, g2.top_left, g2.bottom_right)
 end
 
 """
@@ -151,15 +135,5 @@ Loads all images (tif files) in a folder and generates a datacube. The function 
 function make_datacube(folder_path, polygon_boundary::PolygonBoundary, 
     geometry::CoordinateSystem; display_names = false)
         top_left = polygon_boundary.top_left
-        bottom_right = polygon_boundary.bottom_right
-        files = readdir(folder_path)
-        if display_names == true
-            display(files)
-        end
-        paths = folder_path .* "/".* files 
-        datacube = []
-        for path in paths
-            push!(datacube, load_img(path, top_left, bottom_right, geometry))
-        end
-        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+    return make_datacube(folder_path, top_left, bottom_right, geometry, display_names)
 end

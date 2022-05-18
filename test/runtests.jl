@@ -8,7 +8,7 @@ fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
 anyerrors = false
 
-my_tests = ["aggregate.jl", "coordinate_system.jl", "data_io.jl", "f_apply.jl", "mask_area.jl", "polygons.jl",
+my_tests = ["aggregate.jl", "coordinate_system.jl", "coordinate_conversion.jl", "data_io.jl", "f_apply.jl", "mask_area.jl", "polygons.jl",
 
 "data_cleaning/background_noise_removal.jl", "data_cleaning/bias_correction.jl", "data_cleaning/interpolation.jl", "data_cleaning/mark_nan.jl", "data_cleaning/outlier_removal.jl", "data_cleaning/full_procedures.jl",
 
