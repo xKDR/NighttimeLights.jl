@@ -29,6 +29,37 @@ function load_shapefile(filepath)
     return shapefile_df
 end
 
+struct PolygonBoundary
+    top_left::Coordinate
+    bottom_right::Coordinate
+end
+
+function Base.show(io::IO, bbox::PolygonBoundary)
+    println("Top left: \n", bbox.top_left)
+    print("Bottom right: \n", bbox.bottom_right)
+end
+
+function bounding_box(x::Shapefile.Polygon)
+    gshp = GeoInterface.coordinates(x)
+    
+    coords = hcat(hcat(gshp[1]...)...)
+    top = minimum(coords[2, :])
+    bottom = maximum(coords[2, :])
+    left = minimum(coords[1, :])
+    right = maximum(coords[1,: ])
+    if length(gshp) == 1
+        return PolygonBoundary(Coordinate(top, left), Coordinate(bottom, right))
+    end 
+    for i in 2:length(gshp)
+        coords = hcat(hcat(gshp[i]...)...)
+        top = minimum([top, minimum(coords[2, :])])
+        bottom = maximum([bottom, maximum(coords[2, :])])
+        left = minimum([left, minimum(coords[1, :])])
+        right = maximum([right, maximum(coords[1,: ])])
+    end
+    return PolygonBoundary(Coordinate(top, left), Coordinate(bottom, right))
+end
+
 function make_polygon(geometry::CoordinateSystem, coords)
     array           = Array{Float16}[]          ## Declaring an empty array of Float32
     array           = coords[1]                 ## Accesssing n(th) polygon from the multipolgyon.
