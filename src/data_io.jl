@@ -145,3 +145,21 @@ function make_datacube(folder_path, g1::CoordinateSystem, g2::CoordinateSystem; 
         return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
 end
 
+"""
+Loads all images (tif files) in a folder and generates a datacube. The function prints the file names to you the order in which they are loaded. The bounding box of a Polygon can be used to crop the datacube. You also need a coordinate reference system. 
+"""
+function make_datacube(folder_path, polygon_boundary::PolygonBoundary, 
+    geometry::CoordinateSystem; display_names = false)
+        top_left = polygon_boundary.top_left
+        bottom_right = polygon_boundary.bottom_right
+        files = readdir(folder_path)
+        if display_names == true
+            display(files)
+        end
+        paths = folder_path .* "/".* files 
+        datacube = []
+        for path in paths
+            push!(datacube, load_img(path, top_left, bottom_right, geometry))
+        end
+        return Array{Union{Missing, Float16}, 3}(cat(datacube...,dims = 3))
+end
