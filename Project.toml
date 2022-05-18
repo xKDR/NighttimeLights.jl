@@ -5,7 +5,6 @@ version = "0.41.0"
 
 [deps]
 ArchGDAL = "c9ce4bd3-c3d5-55b8-8973-c0e20141b8c3"
-ArraysOfArrays = "65a8f2f4-9b39-5baf-92e2-a9cc46fdf018"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CubicSplines = "9c784101-8907-5a6d-9be6-98f00873c89b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
