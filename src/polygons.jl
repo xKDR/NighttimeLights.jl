@@ -39,6 +39,13 @@ function Base.show(io::IO, bbox::PolygonBoundary)
     print("Bottom right: \n", bbox.bottom_right)
 end
 
+"""
+Find the bounding box of a polygon extracted from a shapefile. Such a bounding boxes are useful for cropping. 
+```julia
+load_example() # this loads mumbai_map, the shapefile of districts of mumbai
+bounding_box(mumbai_map[1, :].geometry) # we find the bounding box of the first district
+```
+"""
 function bounding_box(x::Shapefile.Polygon)
     gshp = GeoInterface.coordinates(x)    
     coords = hcat(hcat(gshp[1]...)...)
@@ -52,6 +59,27 @@ function bounding_box(x::Shapefile.Polygon)
         push!(bottom, minimum(coords[2, :]))
         push!(left, minimum(coords[1, :]))
         push!(right, maximum(coords[1,: ]))
+    end
+    return PolygonBoundary(Coordinate(maximum(top), minimum(left)), Coordinate(minimum(bottom), maximum(right)))
+end
+
+"""
+Find the bounding box of a shapefile. Such a bounding boxes are useful for cropping. 
+```julia
+load_example() # this loads mumbai_map, the shapefile of districts of mumbai
+bounding_box(mumbai_map) 
+```
+"""
+function bounding_box(shp::DataFrame)
+    top = []
+    bottom = []
+    left = []
+    right = []
+    for row in eachrow(shp)
+        push!(top, bounding_box(row.geometry).top_left.latitude)
+        push!(bottom, bounding_box(row.geometry).bottom_right.latitude)
+        push!(left, bounding_box(row.geometry).top_left.longitude)
+        push!(right, bounding_box(row.geometry).bottom_right.longitude)
     end
     return PolygonBoundary(Coordinate(maximum(top), minimum(left)), Coordinate(minimum(bottom), maximum(right)))
 end
