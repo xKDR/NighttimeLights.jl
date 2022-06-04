@@ -65,5 +65,5 @@ The shapefile has a column called ```DISTRICT```. For each district, the name of
 
 2. Generate the time series of aggregate radiance for each district of Mumbai. 
 ```julia
-mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, cleaned_datacube, mumbai_map, "DISTRICT")
+mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, cleaned_datacube, mumbai_map)
 ``` 
