@@ -1,13 +1,13 @@
 
 """
 load_example()
-table = mumbai_map
-random = rand(Int8, length(table.geometry))
-plot_chloropleth(table, random)
+code=mumbai_map.censuscode
+plot_chloropleth(mumbai_map, code, :DISTRICT)
 """
-function plot_chloropleth(geoms, data)
+function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symbol)
     n=length(geoms.geometry)
     colors=Array{String,2}(undef,1,n)
+    hovers=Array{String,2}(undef,1,n)
     M=maximum(data)
     m=minimum(data)
     k=M/6-m/6
@@ -26,9 +26,17 @@ function plot_chloropleth(geoms, data)
         else
             colors[i]="#FFA07A"
         end
+        hovers[i]=geoms[!,string(names)][i]*": "*string(data[i])
     end
-
-    plot(geoms.geometry,color=colors,lw=0.1)
+        
+    plotlyjs()
+    plot(geoms.geometry,color=colors,hover=hovers,lw=0.3)
 end
 
-
+"""
+load_example()
+plot_chloropleth(mumbai_map, :censuscode, :DISTRICT)
+"""
+function plot_chloropleth(geoms::DataFrames.DataFrame, data::Symbol, names::Symbol)
+    plot_chloropleth(geoms, geoms[!,string(data)], names)
+end
