@@ -74,7 +74,7 @@ end
 
 """
 load_example()
-plot_img(radiance_datacube, MUMBAI_COORDINATE_SYSTEM)
+plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM)
 """
 function plot_datacube(datacube, coordinate_system)
     month=["April, ", "May, ", "June, ", "July, ", "August, ", "September, ", "October, ", "November, ", "December, ", "January, ", "February, ", "March, "]
