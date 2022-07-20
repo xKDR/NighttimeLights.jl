@@ -100,7 +100,7 @@ function plot_datacube(datacube, coordinate_system)
         xcs=[lon(c,1,b), lon(c,1,2*b), lon(c,1,3*b), lon(c,1,4*b)]
         ycs=[lat(c,a,1), lat(c,2*a,1), lat(c,3*a,1), lat(c,4*a,1), lat(c,5*a,1)]
         
-        if (mod(i,12)>0) 
+        if (mod(i,12) > 0)
             s=month[Int64(mod(i,12))]*year[Int64(ceil((i+3)/12))] 
         else 
             s=month[12]*year[Int64(ceil((i+3)/12))] 
