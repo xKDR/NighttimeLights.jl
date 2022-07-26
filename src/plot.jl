@@ -104,7 +104,7 @@ function plot_datacube(datacube, coordinate_system, time)
         plot!(xc, seriestype=:vline, xticks = (xc,xcs), label="", color=:red, linestyle=:dot)
         plot!(yc, seriestype=:hline, yticks = (yc,ycs), label="", color=:red, linestyle=:dot)
 
-        append!(map, [p])
+        append!(map,[p])
     end
     
     for i in 1:size(datacube)[3]
