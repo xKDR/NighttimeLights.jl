@@ -74,11 +74,10 @@ end
 
 """
 load_example()
-plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM)
+dates = collect(Date(2012,4):Month(1):Date(2020, 02))
+plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates))
 """
-function plot_datacube(datacube, coordinate_system)
-    month=["April, ", "May, ", "June, ", "July, ", "August, ", "September, ", "October, ", "November, ", "December, ", "January, ", "February, ", "March, "]
-    year=["2012","2013","2014","2015","2016","2017","2018","2019","2020"]
+function plot_datacube(datacube, coordinate_system, time)
     map=[]
 
     function plot_img(img, coordinate_system, i)
@@ -99,14 +98,8 @@ function plot_datacube(datacube, coordinate_system)
         yc=[a, 2*a, 3*a, 4*a, 5*a]
         xcs=[lon(c,1,b), lon(c,1,2*b), lon(c,1,3*b), lon(c,1,4*b)]
         ycs=[lat(c,a,1), lat(c,2*a,1), lat(c,3*a,1), lat(c,4*a,1), lat(c,5*a,1)]
-        
-        if (mod(i,12) > 0)
-            s=month[Int64(mod(i,12))]*year[Int64(ceil((i+3)/12))] 
-        else 
-            s=month[12]*year[Int64(ceil((i+3)/12))] 
-        end
 
-        p=plot(Gray.(img), title=s, xlabel="longitude", ylabel="latitude")
+        p=plot(Gray.(img), title=time[i], xlabel="longitude", ylabel="latitude")
         plot!(xc, seriestype=:vline, xticks = (xc,xcs), label="", color=:red, linestyle=:dot)
         plot!(yc, seriestype=:hline, yticks = (yc,ycs), label="", color=:red, linestyle=:dot)
 
