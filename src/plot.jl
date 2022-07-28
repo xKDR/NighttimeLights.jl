@@ -78,7 +78,7 @@ load_example()
 dates = collect(Date(2012,4):Month(1):Date(2020, 02))
 plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates))
 """
-function plot_datacube(datacube, coordinate_system, time)
+function plot_datacube(datacube, coordinate_system, date)
     map=[]
 
     function plot_img(img, coordinate_system, i)
@@ -100,7 +100,7 @@ function plot_datacube(datacube, coordinate_system, time)
         xcs=[lon(c,1,b), lon(c,1,2*b), lon(c,1,3*b), lon(c,1,4*b)]
         ycs=[lat(c,a,1), lat(c,2*a,1), lat(c,3*a,1), lat(c,4*a,1), lat(c,5*a,1)]
 
-        p=plot(Gray.(img), title=time[i], xlabel="longitude", ylabel="latitude")
+        p=plot(Gray.(img), title=date[i], xlabel="longitude", ylabel="latitude")
         plot!(xc, seriestype=:vline, xticks = (xc,xcs), label="", color=:red, linestyle=:dot)
         plot!(yc, seriestype=:hline, yticks = (yc,ycs), label="", color=:red, linestyle=:dot)
 
