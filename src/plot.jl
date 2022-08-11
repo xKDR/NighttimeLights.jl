@@ -73,6 +73,7 @@ function plot_img(img, coordinate_system)
 end
 
 """
+using Dates
 load_example()
 dates = collect(Date(2012,4):Month(1):Date(2020, 02))
 plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates), "Mumbai.pdf")
