@@ -73,12 +73,11 @@ function plot_img(img, coordinate_system)
 end
 
 """
-using Dates
 load_example()
 dates = collect(Date(2012,4):Month(1):Date(2020, 02))
-plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates))
+plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates), "Mumbai.pdf")
 """
-function plot_datacube(datacube, coordinate_system, date)
+function plot_datacube(datacube, coordinate_system, date, filename)
     map=[]
 
     function plot_img(img, coordinate_system, i)
@@ -112,7 +111,7 @@ function plot_datacube(datacube, coordinate_system, date)
         plot_img(img, coordinate_system, i)
     end
 
-    Plots.GR.beginprint("mumbai.pdf")
+    Plots.GR.beginprint(filename)
     gr(show=true)
     for i in 1:size(datacube)[3]
         plot(map[i])
