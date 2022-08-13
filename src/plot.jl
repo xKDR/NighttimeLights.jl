@@ -1,8 +1,10 @@
 
 """
+```julia
 load_example()
 code=mumbai_map.censuscode
 plot_chloropleth(mumbai_map, code, :DISTRICT)
+```
 """
 function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symbol)
     n=length(geoms.geometry)
@@ -34,17 +36,21 @@ function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symb
 end
 
 """
+```julia
 load_example()
 plot_chloropleth(mumbai_map, :censuscode, :DISTRICT)
+```
 """
 function plot_chloropleth(geoms::DataFrames.DataFrame, data::Symbol, names::Symbol)
     plot_chloropleth(geoms, geoms[!,string(data)], names)
 end
 
 """
+```julia
 load_example()
 april2012=radiance_datacube[:,:,1]
 plot_img(april2012, MUMBAI_COORDINATE_SYSTEM)
+```
 """
 function plot_img(img, coordinate_system)
 
@@ -73,10 +79,12 @@ function plot_img(img, coordinate_system)
 end
 
 """
+```julia
 using Dates
 load_example()
 dates = collect(Date(2012,4):Month(1):Date(2020, 02))
 plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates), "Mumbai.pdf")
+```
 """
 function plot_datacube(datacube, coordinate_system, date, filename)
     map=[]
