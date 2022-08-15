@@ -1,8 +1,11 @@
-
 """
+`plot_chloropleth` paints an interactive chloropleth map on a given shapefile. The data provided can be a vector or a colunm of the data frame. 
+
+```
 load_example()
-code=mumbai_map.censuscode
+code = mumbai_map.censuscode
 plot_chloropleth(mumbai_map, code, :DISTRICT)
+```
 """
 function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symbol)
     n=length(geoms.geometry)
@@ -34,17 +37,23 @@ function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symb
 end
 
 """
+```
 load_example()
 plot_chloropleth(mumbai_map, :censuscode, :DISTRICT)
+```
 """
 function plot_chloropleth(geoms::DataFrames.DataFrame, data::Symbol, names::Symbol)
     plot_chloropleth(geoms, geoms[!,string(data)], names)
 end
 
 """
+`plot_image` plots an image. It marks the axis using a `CoordinateSystem` that should be provided.   
+
+```
 load_example()
-april2012=radiance_datacube[:,:,1]
+april2012 =radiance_datacube[:,:,1]
 plot_img(april2012, MUMBAI_COORDINATE_SYSTEM)
+```
 """
 function plot_img(img, coordinate_system)
 
@@ -73,12 +82,17 @@ function plot_img(img, coordinate_system)
 end
 
 """
+plot_datacube plots images of a datacube in a PDF file. It marks the axis using a `CoordinateSystem` that should be provided.   
+
+```
 using Dates
 load_example()
 dates = collect(Date(2012,4):Month(1):Date(2020, 02))
-plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates))
+plot_datacube(radiance_datacube, MUMBAI_COORDINATE_SYSTEM, string.(dates); filename="mumbai_radiance_datacube.pdf")
+```
+If you are on a server, please use: `ENV["GKSwstype"]="nul"` before the plot function. 
 """
-function plot_datacube(datacube, coordinate_system, date)
+function plot_datacube(datacube, coordinate_system, date; filename = "datacube_plot.pdf")
     map=[]
 
     function plot_img(img, coordinate_system, i)
@@ -112,7 +126,7 @@ function plot_datacube(datacube, coordinate_system, date)
         plot_img(img, coordinate_system, i)
     end
 
-    Plots.GR.beginprint("mumbai.pdf")
+    Plots.GR.beginprint(filename)
     gr(show=true)
     for i in 1:size(datacube)[3]
         plot(map[i])
