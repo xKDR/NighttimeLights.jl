@@ -60,3 +60,14 @@ function PSTT2021(radiance_datacube, clouds_datacube)
     GC.gc()
     return Array{Float16}(tmp)  
 end
+
+
+"""
+The
+function `clean_complete()` will represent our views on an optimal set of steps for pre-
+processing in the future (for the period for which this package is actively maintained). As
+of today, it is identical to `PSTT2021()``
+"""
+function clean_complete(radiance_datacube, clouds_datacube)
+    return PSTT2021
+end
