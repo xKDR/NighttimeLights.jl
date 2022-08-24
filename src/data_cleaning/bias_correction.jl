@@ -1,10 +1,10 @@
 """
-Clouds months tends to have lower radiance due to attenuation. The bias_correction function uses the number of cloud-free observations to adjust the radiance accordingly. 
+Clouds months tends to have lower radiance due to attenuation. The PSTT2021_biascorrect function uses the number of cloud-free observations to adjust the radiance accordingly. 
 ```julia
-bias_correction(radiance, clouds)
+PSTT2021_biascorrect(radiance, clouds)
 ```
 """
-function bias_correction(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
+function PSTT2021_biascorrect(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
     missings = findall(ismissing, radiance)
     y = filter!(!ismissing, copy(radiance))
     x = Array{Union{Float64, Missing}}(copy(clouds))
@@ -30,10 +30,10 @@ end
 """
 The bias correction function can use the datacubes of radiance and the number of cloud-free observations to correct for attenuation in radiance due to low number of cloud-free observations. 
 ```julia
-bias_correction(radiance, clouds)
+PSTT2021_biascorrect(radiance, clouds)
 ```
 """
-function bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
+function PSTT2021_biascorrect(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
     rad_corrected_datacube = radiance_datacube
     Threads.@threads for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
@@ -49,7 +49,7 @@ function bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=o
             clouds_arr[missings] .= missing
             clouds_arr = filter!(!ismissing, clouds_arr)
             if rank_correlation_test(radiance_arr, clouds_arr) <0.05
-                rad_corrected_datacube[i, j, :]= bias_correction(copy(radiance_datacube[i, j, :]), copy(clouds_datacube[i , j, :]))
+                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect(copy(radiance_datacube[i, j, :]), copy(clouds_datacube[i , j, :]))
             else
                 rad_corrected_datacube[i, j, :]= radiance_datacube[i, j, :]
             end

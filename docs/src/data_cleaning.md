@@ -16,10 +16,10 @@ linear_interpolation(timeseries)
 outlier_mask(datacube, mask)
 outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
 background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
-bias_correction(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
-bias_correction(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
-conventional_cleaning(radiance_datacube, clouds_datacube)
-PatnaikSTT2021(radiance_datacube, clouds_datacube)
+PSTT2021_biascorrect(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
+PSTT2021_biascorrect(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
+PSTT2021_conventional(radiance_datacube, clouds_datacube)
+PSTT2021(radiance_datacube, clouds_datacube)
 
 
 ```

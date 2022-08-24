@@ -47,9 +47,9 @@ Convention cleaning can be performed using the ```conventonal_cleaning``` functi
 cleaned_datacube = conventonal_cleaning(radiance_datacube, clouds_datacube) 
 ```
 
-Or new cleaning described in PatnaikSTT2021 can be performed using the ```PatnaikSTT2021``` function. 
+Or new cleaning described in PSTT2021 can be performed using the ```PSTT2021``` function. 
 ```julia
-cleaned_datacube = PatnaikSTT2021(radiance_datacube, clouds_datacube) 
+cleaned_datacube = PSTT2021(radiance_datacube, clouds_datacube) 
 ```
 ## 5. Generating Aggregates
 
