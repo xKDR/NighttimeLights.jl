@@ -1,3 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 NighttimeLights = "4d912a30-7731-4b12-9bf5-9d9a78b4f19a"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"

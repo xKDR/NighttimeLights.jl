@@ -105,7 +105,15 @@ function make_polygons(geometry::CoordinateSystem, geoms)
     end
     return polygons
 end
-
+"""
+The polygon of a shapefile polygon can be made into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
+ 
+```julia
+load_example()
+district1 = mumbai_map[1,:].geometry # Select the first district
+district1_mask = polygon_mask(MUMBAI_COORDINATE_SYSTEM, district1)
+```
+"""
 function polygon_mask(geometry::CoordinateSystem, polygon::Shapefile.Polygon)
     geoms = polygon
     polygons = make_polygons(geometry,geoms)
@@ -156,7 +164,7 @@ function polygon_mask(geometry::CoordinateSystem, polygon::Shapefile.Polygon)
 end
 
 """
-The polygon of a shapefile row can be make into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
+The polygon of a shapefile row can be made into a mask. This means all the points inside the polygon will be marked as 1, while the points outside will be marked as 0.
  
 ```julia
 load_example()

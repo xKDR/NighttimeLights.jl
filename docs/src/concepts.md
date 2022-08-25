@@ -23,21 +23,22 @@ Returns the value of the image at location [1, 2] of the 3rd month.
 
 # Loading and saving files
 
-Images and datacubes can be be loaded and saved using the following functions. 
+Images and datacubes can be loaded and saved using the following functions. 
 
 ```@docs
-load_img(filepath)
-save_img(filepath, image)
-load_datacube(filepath)
-make_datacube(folder_path)
-make_datacube(folder_path, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
-make_datacube(folder_path, geometry_from::CoordinateSystem, geometry_to::CoordinateSystem)
-save_datacube(filepath, datacube)
+load_img(filepath::String)
+load_img(filepath::String, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
+save_img(filepath::String, image)
+load_datacube(filepath::String)
+make_datacube(folder_path::String)
+make_datacube(folder_path::String, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
+make_datacube(folder_path::String, geometry_from::CoordinateSystem, geometry_to::CoordinateSystem)
+save_datacube(filepath::String, datacube)
 ```
 
 # Mapping between earth and arrays
 
-Suppose you want to find which location has the maximum value of light in an image. You can use the findmax function in julia.
+Suppose you want to find which location has the maximum value of light in an image. You can use the findmax function in Julia.
 
 ```julia
 findmax(my_image)
@@ -90,7 +91,7 @@ for i in 1:10
 end
 ```
 
-If you multiply (elementwise) the 3 masks, you get a mask that represents the pixels above the threshold, which are inside India and which are not outliers. 
+If you multiply (element-wise) the 3 masks, you get a mask that represents the pixels above the threshold, which are inside India and which are not outliers. 
 
 To find the number of pixels in a mask, one simply needs to do: 
 ```julia
@@ -98,10 +99,10 @@ sum(mask)
 ```
 To find the area of the mask, the mask_area function of the package can be used. 
 ```@docs
-mask_area(geometry::CoordinateSystem, mask)
+mask_area(geometry::CoordinateSystem, mask::Array{T, 2}, res) where T <: Real
 ```
 
-An image can be multiplied with a mask (elementwise) so that only the pixels lit in the mask are lit in the images. For example: 
+An image can be multiplied with a mask (element-wise) so that only the pixels lit in the mask are lit in the images. For example: 
 ```julia
 image .* noise_mask
 ```
@@ -111,10 +112,10 @@ Returns as image with 0s wherever there is background noise and the remaining va
 
 While using nighttime lights, you may need to find the total lit of an image over a mask.  
 
-For example, if you have a background noise mask (where pixels considered noise are marked as 0 and the remaining at marked as 1), you may need to find the the total of an image over the lit pixels of the mask. 
+For example, if you have a background noise mask (where pixels considered noise are marked as 0 and the remaining at marked as 1), you may need to find the total of an image over the lit pixels of the mask. 
 
 ```@docs
-aggregate(image, mask)
+aggregate(image, mask::Array{T, 2}) where T <: Real
 ```
 
 The aggregate function is equivalent to 
@@ -122,5 +123,5 @@ The aggregate function is equivalent to
 sum(image .* mask)
 ```
 ```@docs
-aggregate_timeseries(datacube::Array{T, 3}, mask) where T <: Real
+aggregate_timeseries(datacube, mask::Array{T, 2}) where T <: Real
 ```
