@@ -1,8 +1,9 @@
 
 """
+Plots a chloropleth map using a vector of values and a shapefile. A symbol indiciating the column which contains the names of the polygons (or any column) should be passed to the function. 
 ```julia
 load_example()
-code=mumbai_map.censuscode
+code = rand(2)
 plot_chloropleth(mumbai_map, code, :DISTRICT)
 ```
 """
@@ -36,6 +37,8 @@ function plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symb
 end
 
 """
+The `plot_chloropleth` can use a column name to plot instead of a vector of values. 
+
 ```julia
 load_example()
 plot_chloropleth(mumbai_map, :censuscode, :DISTRICT)
@@ -46,9 +49,10 @@ function plot_chloropleth(geoms::DataFrames.DataFrame, data::Symbol, names::Symb
 end
 
 """
+The `plot_img` function plots a 2D matrix and paints a grid of latitudes and longitudes using the specified coordinate system. 
 ```julia
 load_example()
-april2012=radiance_datacube[:,:,1]
+april2012 = radiance_datacube[:,:,1]
 plot_img(april2012, MUMBAI_COORDINATE_SYSTEM)
 ```
 """
@@ -79,6 +83,8 @@ function plot_img(img, coordinate_system)
 end
 
 """
+The `plot_datacube` function plots the individual images of a datacube and paints a grid of latitudes and longitudes using the specified coordinate system. It compiles all the images in a PDF file. It uses a vector of dates to put a title on each image. 
+
 ```julia
 using Dates
 load_example()

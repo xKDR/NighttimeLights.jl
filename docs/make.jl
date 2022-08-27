@@ -1,5 +1,6 @@
 using Documenter
 using NighttimeLights
+using DataFrames
 
 DocMeta.setdocmeta!(NighttimeLights, :DocTestSetup, :(using NighttimeLights); recursive=true)
 makedocs(;
@@ -18,6 +19,7 @@ makedocs(;
         "Polygons and shapefiles"=> "polygons.md",
         "Data Cleaning"=> "data_cleaning.md",
         "Tutorial" =>"tutorial.md",
+        "Plots" => "plots.md"
     ],
 )
 

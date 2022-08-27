@@ -5,7 +5,7 @@
             rad[rand(1:100)] = missing
         end
         clouds = rand(1:31, 100)
-        @test length(bias_correction(rad, clouds)) == length(rad)
+        @test length(PSTT2021_biascorrect(rad, clouds)) == length(rad)
     end
 end
 
@@ -21,7 +21,7 @@ end
         end
         clouds = rand(1:30, x, y, z)
         mask = rand(0:1, x, y)
-        @test size(bias_correction(rad, clouds, mask)) == (x, y, z)
+        @test size(PSTT2021_biascorrect(rad, clouds, mask)) == (x, y, z)
     end
 end
 
