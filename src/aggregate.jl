@@ -1,6 +1,6 @@
 """
 The aggregate value of an image over a mask can be computed by the aggregate function. The function multiplies the image and the mask (elementwise) and then performs the summation. 
-```
+```julia
 rand_image = rand(10, 10)
 rand_mask = rand(0:1, 10, 10)
 aggregate(rand_image, rand_mask)
@@ -19,7 +19,7 @@ end
 """
 To find the time series of aggregate values of a datacube over a mask, using the ```aggregate_timeseries``` function
 
-```
+```julia
 rand_datacube = rand(10, 10, 10)
 rand_mask = rand(0:1, 10, 10)
 aggregate_timeseries(rand_datacube, rand_mask)

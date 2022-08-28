@@ -115,7 +115,7 @@ While using nighttime lights, you may need to find the total lit of an image ove
 For example, if you have a background noise mask (where pixels considered noise are marked as 0 and the remaining at marked as 1), you may need to find the total of an image over the lit pixels of the mask. 
 
 ```@docs
-aggregate(image, mask::Array{T, 2}) where T <: Real
+NighttimeLights.aggregate(image, mask::Array{T, 2}) where T <: Real
 ```
 
 The aggregate function is equivalent to 
