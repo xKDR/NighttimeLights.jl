@@ -37,6 +37,17 @@ function load_img(filepath::String, top_left::Coordinate, bottom_right::Coordina
 end
 
 """
+NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the load_img function. A coordinate system can be used to crop the image. 
+```julia
+load_img("example.tif", TILE3_COORDINATE_SYSTEM, INDIA_COORDINATE_SYSTEM)
+```
+"""
+function load_img(filepath::String, g1::CoordinateSystem, g2::CoordinateSystem)
+    load_img(filepath, g2.top_left, g2.bottom_right, g1)
+end
+
+
+"""
 NOAA provides nighttime lights images as tif files. They can be opened as 2D arrays using the ```load_img``` function. A bounding box of a polygon can used to crop the image. 
 ```julia
 load_img("example.tif", [10, 10], [50, 50])
