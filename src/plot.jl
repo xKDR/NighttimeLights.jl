@@ -82,6 +82,38 @@ function plot_img(img, coordinate_system)
     ylabel!("latitude")
 end
 
+
+"""
+If user wants to specify lat-long to put a crosshair inside the graph then the variable coordinate = Coordinate(lat,long) should be used
+"""
+
+function plot_img(img, coordinate_system,coordinate::Coordinate)
+
+function lat(c, a, b)
+return round(image_to_coordinate(c, [a, b]).latitude; digits=2)
+end
+function lon(c, a, b)
+return round(image_to_coordinate(c, [a, b]).longitude; digits=2)
+end
+a=size(img)[1]/6
+b=size(img)[2]/5
+c=coordinate_system
+
+xc=[b, 2*b, 3*b, 4*b]
+yc=[a, 2*a, 3*a, 4*a, 5*a]
+xcs=[lon(c,1,b), lon(c,1,2*b), lon(c,1,3*b), lon(c,1,4*b)]
+ycs=[lat(c,a,1), lat(c,2*a,1), lat(c,3*a,1), lat(c,4*a,1), lat(c,5*a,1)]
+
+Plots.plot(Gray.(img))
+plot!(xc, seriestype="vline", xticks = (xc,xcs), label="", color=:red, linestyle=:dot)
+plot!(yc, seriestype="hline", yticks = (yc,ycs), label="", color=:red, linestyle=:dot)
+scatter!((coordinate.latitude,coordinate.longitude),markersize = 10,label ="",markershape =:cross,markercolor =:red)
+xlabel!("longitude")
+ylabel!("latitude")
+end
+
+
+
 """
 The `plot_datacube` function plots the individual images of a datacube and paints a grid of latitudes and longitudes using the specified coordinate system. It compiles all the images in a PDF file. It uses a vector of dates to put a title on each image. 
 
