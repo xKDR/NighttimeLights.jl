@@ -5,9 +5,7 @@ load_img("example.tif")
 ```
 """
 function load_img(filepath::String)
-    img = ArchGDAL.read((ArchGDAL.read(filepath)),1)
-    img_trans = img' #tif loaded using ArchGDAL needs to be transposed
-    return Array{Union{Missing, Float16}, 2}(img_trans) 
+    return Raster(filepath)
 end
 
 """
@@ -53,8 +51,7 @@ save_img("example.tif", img)
 ```
 """
 function save_img(filepath::String, img)
-    img = Float64.(img)
-    GeoArrays.write!(filepath, GeoArray(img'))
+    write(filepath, img)
 end
 
 """
