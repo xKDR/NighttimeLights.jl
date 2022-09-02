@@ -165,3 +165,50 @@ function plot_datacube(datacube, coordinate_system, date, filename)
     end
     Plots.GR.endprint()
 end
+
+""" 
+If User wants to put put a red crosshair on any point of all the nighttime lights images that are there in the output pdf then this version
+of the function will be called
+
+"""
+
+function plot_datacube(datacube, coordinate_system, date,coordinate::Coordinate, filename)
+    map=[]
+
+    function plot_img(img, coordinate_system,i,coordinate::Coordinate)
+
+        function lat(c, a, b)
+        return round(image_to_coordinate(c, [a, b]).latitude; digits=2)
+        end
+        function lon(c, a, b)
+        return round(image_to_coordinate(c, [a, b]).longitude; digits=2)
+        end
+        a=size(img)[1]/6
+        b=size(img)[2]/5
+        c=coordinate_system
+        
+        xc=[b, 2*b, 3*b, 4*b]
+        yc=[a, 2*a, 3*a, 4*a, 5*a]
+        xcs=[lon(c,1,b), lon(c,1,2*b), lon(c,1,3*b), lon(c,1,4*b)]
+        ycs=[lat(c,a,1), lat(c,2*a,1), lat(c,3*a,1), lat(c,4*a,1), lat(c,5*a,1)]
+        
+        p = plot(Gray.(img), title=date[i], xlabel="longitude", ylabel="latitude")
+        plot!(xc, seriestype="vline", xticks = (xc,xcs), label="", color=:red, linestyle=:dot)
+        plot!(yc, seriestype="hline", yticks = (yc,ycs), label="", color=:red, linestyle=:dot)
+        scatter!((coordinate.latitude,coordinate.longitude),markersize = 10,label ="",markershape =:cross,markercolor =:red)
+        
+        append!(map,[p])
+    end
+    
+    for i in 1:size(datacube)[3]
+        img=datacube[:, :, i]
+        plot_img(img, coordinate_system, i,coordinate)
+    end
+
+    Plots.GR.beginprint(filename)
+    gr(show=true)
+    for i in 1:size(datacube)[3]
+        plot(map[i])
+    end
+    Plots.GR.endprint()
+end
