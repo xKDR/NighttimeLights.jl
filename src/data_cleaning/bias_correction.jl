@@ -4,7 +4,7 @@ Clouds months tends to have lower radiance due to attenuation. The PSTT2021_bias
 PSTT2021_biascorrect(radiance, clouds)
 ```
 """
-function PSTT2021_biascorrect(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
+function PSTT2021_biascorrect_pixel(radiance, clouds, smoothing_parameter=10.0)
     missings = findall(ismissing, radiance)
     y = filter!(!ismissing, copy(radiance))
     x = Array{Union{Float64, Missing}}(copy(clouds))
@@ -33,25 +33,26 @@ The bias correction function can use the datacubes of radiance and the number of
 PSTT2021_biascorrect(radiance, clouds)
 ```
 """
-function PSTT2021_biascorrect(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
+function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
     rad_corrected_datacube = radiance_datacube
-    Threads.@threads for i in 1:size(radiance_datacube)[1]
+    for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
-            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
+            if count(i->(ismissing(i)),radiance_datacube[i, j, 1,:])/length(radiance_datacube[i, j, 1,:]) > 0.50 
                 continue
             end
-            if mask[i, j]==0
+            if ismissing(mask[i, j])
                 continue
             end
-            missings = findall(ismissing, radiance_datacube[i, j, :])
-            radiance_arr = filter!(!ismissing, copy(radiance_datacube[i, j, :])) 
-            clouds_arr = Array{Union{Float64, Missing}}(copy(clouds_datacube[i , j, :]))
+            missings = findall(ismissing, radiance_datacube[i, j, 1,:])
+            radiance_arr = filter!(!ismissing, copy(Array(radiance_datacube[i, j, 1,:])) )
+            clouds_arr = copy(Array(clouds_datacube[i , j, 1,:]))
+            clouds_arr = Array{Union{Missing, Int}}(clouds_arr)
             clouds_arr[missings] .= missing
             clouds_arr = filter!(!ismissing, clouds_arr)
             if rank_correlation_test(radiance_arr, clouds_arr) <0.05
-                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect(copy(radiance_datacube[i, j, :]), copy(clouds_datacube[i , j, :]))
+                rad_corrected_datacube[i, j, 1, :]= PSTT2021_biascorrect_pixel(copy(radiance_datacube[i, j, 1,:]), copy(clouds_datacube[i , j, 1,:]))
             else
-                rad_corrected_datacube[i, j, :]= radiance_datacube[i, j, :]
+                rad_corrected_datacube[i, j, 1, :]= radiance_datacube[i, j, 1, :]
             end
         end
     end
