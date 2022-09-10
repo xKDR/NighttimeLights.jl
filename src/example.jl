@@ -9,13 +9,13 @@ The datacubes and the district level shapefile for Mumbai city are provided with
         package_path = pathof(NighttimeLights)
         path_len = length(package_path)
         assets_path = package_path[1:path_len-22] * "assets"
-        # map_path = assets_path * "/mumbai_map/mumbai_districts.shp"
+        map_path = assets_path * "/mumbai_map/mumbai_districts.shp"
         radiance_path = assets_path * "/mumbai_ntl/datacube/mumbai_radiance.nc"
         clouds_path = assets_path * "/mumbai_ntl/datacube/mumbai_clouds.nc"
         
-        global radiance_datacube = read(Raster(radiance_path))
-        global clouds_datacube = read(Raster(clouds_path))
-        # global mumbai_map = load_shapefile(map_path)
+        global radiance_datacube = read(Raster(radiance_path))[:,:,1,:]
+        global clouds_datacube = read(Raster(clouds_path))[:,:,1,:]
+        global mumbai_map = Shapefile.Table(map_path)
         """
         i) Distict level shapefile of Mumbai is loaded as mumbai_map. 
         ii) Radiance datacube of Mumbai is loaded as radiance_datacube. 

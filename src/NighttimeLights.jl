@@ -3,12 +3,13 @@ module NighttimeLights
 using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distributions, HypothesisTests, Plots
 
 ## Utilities 
-export Raster, load_example, radiance_datacube, clouds_datacube
+export Raster, load_example, radiance_datacube, clouds_datacube, long_apply, apply_mask, mumbai_map
 
 ## cleaning methods
 export background_noise_mask, PSTT2021_biascorrect, PSTT2021_conventional, PSTT2021, clean_complete, linear_interpolation, mark_missing, outlier_mask, outlier_ts, replace_negative
 
 include("other/detrend.jl")
+include("f_apply.jl")
 include("other/rank_correlation.jl")
 include("other/weighted_mean.jl")
 include("data_cleaning/background_noise_removal.jl")

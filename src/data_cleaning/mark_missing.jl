@@ -27,11 +27,12 @@ mark_missing(radiance, cloud)
 Wherever the number of cloud-free observations is 0, radiance will be marked as missing. 
 """
 function mark_missing(radiance_datacube, clouds_datacube) 
-    for i in 1:size(clouds_datacube)[4]
-        radiance_datacube[:, :, 1, i] = mark_missing_img(radiance_datacube[:, :, 1, i], clouds_datacube[:, :, 1, i])
+    radiance_datacube = rebuild(radiance_datacube; missingval = nothing)
+    radiance_datacube = replace_missing(radiance_datacube, missing)
+    radiance_datacube = Raster(convert(Array{Union{Missing, Float64}}, radiance_datacube), dims(radiance_datacube))
+    for i in 1:size(clouds_datacube)[3]
+        radiance_datacube[:, :, i] = mark_missing_img(radiance_datacube[:, :, i], clouds_datacube[:, :, i])
     end
     return radiance_datacube
 end
-
-function mark_missing_dc(radiance_datacube, clouds_datacube)
     

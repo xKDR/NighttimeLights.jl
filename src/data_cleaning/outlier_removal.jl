@@ -19,10 +19,10 @@ function outlier_mask(datacube, mask=ones(Int8, (size(radiance_datacube)[1],size
             if ismissing(mask[i, j])
                 continue
             end
-            if count(i->(ismissing(i)),datacube[i, j, 1, :])/length(datacube[i, j, 1, :]) > 0.50  # Don't do anything if there are too many missings
+            if count(i->(ismissing(i)),datacube[i, j, :])/length(datacube[i, j, :]) > 0.50  # Don't do anything if there are too many missings
                 continue
             end
-            stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, 1, :])))
+            stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
         end
     end
     threshold   = quantile(skipmissing([(stds .* mask)...]), 0.999)
@@ -40,6 +40,7 @@ outlier_ts(sample_timeseries)
 ```
 """
 function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
+    timeseries = Array(timeseries)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
     missings = findall(ismissing, timeseries)
     new_series = Array{Union{Float64, Missing}}(filter!(!ismissing, copy(timeseries))) 
