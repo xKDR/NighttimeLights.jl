@@ -5,7 +5,7 @@
             rad[rand(1:100)] = missing
         end
         clouds = rand(1:31, 100)
-        @test length(PSTT2021_biascorrect(rad, clouds)) == length(rad)
+        @test length(NighttimeLights.PSTT2021_biascorrect_pixel(rad, clouds)) == length(rad)
     end
 end
 

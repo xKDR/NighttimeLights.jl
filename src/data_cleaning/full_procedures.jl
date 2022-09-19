@@ -25,7 +25,7 @@ function PSTT2021_conventional(radiance_datacube, clouds_datacube)
     GC.gc()
     tmp = long_apply(linear_interpolation, tmp)    
     GC.gc()
-    return Array{Float16}(tmp)
+    return tmp
 end
 """
 The PSTT2021 function performs all the steps of the new cleaning procedure described in [But clouds got in my way: Bias and bias correction of VIIRS nighttime lights data in the presence of clouds, Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas](https://www.xkdr.org/releases/PatnaikShahTayalThomas_2021_PSTT2021_biascorrect_nighttime_lights.html) as conventional cleaning.
@@ -58,7 +58,7 @@ function PSTT2021(radiance_datacube, clouds_datacube)
     GC.gc()
     tmp = long_apply(linear_interpolation, tmp)    
     GC.gc()
-    return Array{Float16}(tmp)  
+    return tmp  
 end
 
 
@@ -69,5 +69,5 @@ processing in the future (for the period for which this package is actively main
 of today, it is identical to `PSTT2021()``
 """
 function clean_complete(radiance_datacube, clouds_datacube)
-    return PSTT2021
+    return PSTT2021(radiance_datacube, clouds_datacube)
 end

@@ -3,16 +3,24 @@ using NighttimeLights
 using Test
 using Dates
 using DataFrames
+using Rasters
 
 fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
 anyerrors = false
 
-my_tests = ["aggregate.jl", "coordinate_system.jl", "coordinate_conversion.jl", "data_io.jl", "f_apply.jl", "mask_area.jl", "polygons.jl",
-
-"data_cleaning/background_noise_removal.jl", "data_cleaning/bias_correction.jl", "data_cleaning/interpolation.jl", "data_cleaning/mark_nan.jl", "data_cleaning/outlier_removal.jl", "data_cleaning/full_procedures.jl",
-
-"other/detrend.jl", "other/nan_functions.jl", "other/rank_correlation.jl", "other/weighted_mean.jl"]
+my_tests = ["f_apply.jl",
+"data_cleaning/background_noise_removal.jl",
+"data_cleaning/bias_correction.jl", 
+"data_cleaning/interpolation.jl",
+"data_cleaning/mark_missing.jl",
+"data_cleaning/outlier_removal.jl",
+"data_cleaning/full_procedures.jl",
+"other/detrend.jl", 
+"other/rank_correlation.jl",
+"other/weighted_mean.jl", 
+"other/date_to_int.jl"
+]
 
 println("Running tests:")
 

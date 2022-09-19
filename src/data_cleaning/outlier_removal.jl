@@ -1,3 +1,10 @@
+function std_mask(std, threshold)
+    if std < threshold
+        return 1
+    else 
+        return missing
+    end
+end
 """
 There are extremely high values in the data due to fires, gas flare etc. You may find some values even greater than the aggregate radiance of large cities. Such pixels also have high standard deviation. These pixels may not be of importantance from the point of view of measureming prosperity. The ```outlier_mask``` function generates a mask of pixels with standard deviation less that the 99.9th percentile. Essentially, this function can be used to removed top 1 percent of pixels by standard deviation. A mask can be provided to the function, so that it calculates the percentile based on the lit pixel of the mask. For example, if the datacube is a box around India and the mask is the polygon mask of India, the outlier_mask function will calculate the 99th percentile of the standard deviation of the pixels inside India's boundary. 
 
@@ -5,11 +12,11 @@ There are extremely high values in the data due to fires, gas flare etc. You may
 outlier_mask(datacube, mask)
 ```
 """
-function outlier_mask(datacube, mask)
+function outlier_mask(datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
     stds = zeros(size(datacube)[1], size(datacube)[2])
-    @showprogress for i in 1:size(datacube)[1]
+    for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
-            if mask[i, j]==0
+            if ismissing(mask[i, j])
                 continue
             end
             if count(i->(ismissing(i)),datacube[i, j, :])/length(datacube[i, j, :]) > 0.50  # Don't do anything if there are too many missings
@@ -18,17 +25,9 @@ function outlier_mask(datacube, mask)
             stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
         end
     end
-    function std_mask(std, threshold)
-        if std < threshold
-            return 1
-        else 
-            return 0
-        end
-    end
-    threshold   = quantile(mask_vals(stds, mask), 0.999)
+    threshold   = quantile(skipmissing([(stds .* mask)...]), 0.999)
     outlierMask = std_mask.(stds, threshold)
     outlierMask = outlierMask.*mask
-    outlierMask = convert(Array{Int8, 2}, outlierMask)
     return outlierMask
 end
 
@@ -41,6 +40,7 @@ outlier_ts(sample_timeseries)
 ```
 """
 function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
+    timeseries = Array(timeseries)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
     missings = findall(ismissing, timeseries)
     new_series = Array{Union{Float64, Missing}}(filter!(!ismissing, copy(timeseries))) 
