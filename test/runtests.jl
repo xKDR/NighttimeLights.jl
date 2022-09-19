@@ -18,7 +18,9 @@ my_tests = ["f_apply.jl",
 "data_cleaning/full_procedures.jl",
 "other/detrend.jl", 
 "other/rank_correlation.jl",
-"other/weighted_mean.jl"]
+"other/weighted_mean.jl", 
+"other/date_to_int.jl"
+]
 
 println("Running tests:")
 

@@ -1,6 +1,6 @@
 module NighttimeLights
 
-using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distributions, HypothesisTests, Plots
+using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distributions, HypothesisTests, Plots, Dates
 
 ## Utilities 
 export Raster, load_example, radiance_datacube, clouds_datacube, long_apply, apply_mask, mumbai_map
@@ -20,5 +20,5 @@ include("data_cleaning/mark_missing.jl")
 include("data_cleaning/full_procedures.jl")
 include("data_cleaning/replace_negative.jl")
 include("example.jl")
-
+include("other/date_to_int.jl")
 end

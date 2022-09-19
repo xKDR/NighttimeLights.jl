@@ -1,127 +1,77 @@
 
 # Basics of nighttime lights data
 
-NOAA provides tif files of the nightlights images. Images in the package are represented as 2D arrays with floating-point values. Images of different months are stacked together to form 3D arrays. In this package, such 3D arrays are called datacubes. The following examples demonstrate how array indices work in Julia in the context of this package. 
+## Data IO
 
+NOAA provides tif files of the nightlights images. Images in the package are represented as 2D arrays with floating-point values. Images of different months are stacked together to form 3D arrays. Such 3D arrays are called datacubes. 
+
+Raster data in Julia can be loaded using the [Rasters.jl](https://github.com/rafaqz/Rasters.jl/) package. While the package has a comprehensive [documentation](https://rafaqz.github.io/Rasters.jl/dev/). This page highlights the small set of tools required to study nighttime lights. It is recommended to study the full documentation of `Rasters.jl`. 
+
+The package can be used to load 2D matrices, saved as `.tif` files, and 3D matrices. saved as `.nc` files using the `Raster` functions. 
+
+For example: 
+```julia
+using Rasters
+image = Raster("file.tif")
+datacube = Raster("file.nc")
+```
+NOAA provides images of different months in separate `.tif` files. It is often required to combined these into a single datacube. 
+A list of `.tif` files can be joined together to make a datacube using `Rasters.combine`.  
+
+For example: 
+```julia
+using Rasters
+filelist = readdir("path")
+radiances = [Raster(i, lazy = true) for i in filelist]
+timestamps = collect(1:length(radiances))
+series = RasterSeries(radiances, Ti(timestamps))
+datacube = Rasters.combine(series, Ti)
+datacube = datacube[:,:,1,:] # needed to drop dimension regarding bands, since nighttime lights data is single band. 
+```
+
+`write` function from Rasters can be used to write images into `.tif` files and datacubes into `.nc` files. 
+
+For example: 
+```julia
+write("datacube.nc", datacube)
+write("image.tif", image)
+```
+
+## Indexing
+Images can be indexed like 2D arrays and datacubes can be indexed like 3D arrays. 
+
+For example:
 
 ```julia
-image[1, 2]
+image[1, 2] # value of the image at location [1, 2]. 1st row and 2nd column 
+datacube[:, :, 3] # Image of the 3rd month.
+datacube[1, 2, :] # Time series values of the pixel at location 1, 2
+datacube[1, 2, 3] # Value of the image at location [1, 2] of the 3rd month
 ```
-Returns the value of the image at location [1, 2]. 1st row and 2nd column. 
+
+Longitude and latitude can also be used for indexing. 
+For example:
 ```julia
-datacube[:, :, 3]
-```
-Returns the image of the 3rd month.
-```julia
-datacube[1, 2, :]
-```
-Returns the time series values of the pixel at location [1, 2]. 
-```julia
-datacube[1, 2, 3]
-```
-Returns the value of the image at location [1, 2] of the 3rd month. 
-
-# Loading and saving files
-
-Images and datacubes can be loaded and saved using the following functions. 
-
-```@docs
-load_img(filepath::String)
-load_img(filepath::String, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
-save_img(filepath::String, image)
-load_datacube(filepath::String)
-make_datacube(folder_path::String)
-make_datacube(folder_path::String, top_left::Coordinate, bottom_right::Coordinate, geometry::CoordinateSystem)
-make_datacube(folder_path::String, geometry_from::CoordinateSystem, geometry_to::CoordinateSystem)
-save_datacube(filepath::String, datacube)
+image[X(Near(77.1025)), Y(Near(28.7041))] # value of image near longitude = 77.1025 and latitude = 28.7041
+datacube[X(Near(77.1025)), Y(Near(28.7041))] # timeseries of near longitude = 77.1025 and latitude = 28.7041
+datacube[X(Near(72.8284)), Y(Near(19.05)), Ti(At(201204))] # value of image near longitude = 77.1025 and latitude = 28.7041 at Time = 201204 
 ```
 
-# Mapping between earth and arrays
+In some cases, one may need to convert row and column numbers to latitude and longitude. One can use `map`. 
 
-Suppose you want to find which location has the maximum value of light in an image. You can use the findmax function in Julia.
+For example:
 
 ```julia
-findmax(my_image)
+row = 10 
+column = 10 
+longitude, latitude = map(getindex, dims(raster), [column, row]) 
 ```
-Suppose, the answer is [2000, 3000]. If you want to find the coordinates of this location, you'll need a mapping between the earth's coordinates and the image's indices. 
+In some cases, one may need to convert (longtitude, latitude) to row and column numbers. One can use `dims2indices` function from `DimensionalData.jl`. 
 
-Similarly, if you were given a pair of latitude and longitude, for example, (19.05, 73.01), and you need to find the radiance of that coordinate (approximately), you'll need to convert these number to your image's indices. 
-
-```@docs
-CoordinateSystem
-lat_to_row(geometry::CoordinateSystem, x)
-long_to_column(geometry::CoordinateSystem, x)
-row_to_lat(geometry::CoordinateSystem, x)
-column_to_long(geometry::CoordinateSystem, x)
-coordinate_to_image(geometry::CoordinateSystem, x::Coordinate)
-image_to_coordinate(geometry::CoordinateSystem, x)
-```
-
-# Masks
-
-Masks are 2D arrays consisting of 0s and 1s. The 1s determine the region of interest. The pixels with the value of 1 are referred to as lit and the ones with the value of 0 are referred to as dark. Masks are useful because they can be easily combined with one another.  
-
- To demonstrate the concept of mask, here are 3 examples:
-
-1.  If the region of interest is India, the points inside the boundary of India will be 1, while the remaining will be 0.  
-2.  If all pixels in an image below a threshold are considered background noise, such pixels can be marked as zero and the remaining can be marked as 1 to produce a background noise mask. For following code demonstrates this example. 
+For example:
 ```julia
-image = rand(0:10.0, 10, 10)
-noise_threshold = function(image, threshold)
-    if x < threshold
-        return 0
-    else 
-        return 1
-    end
-end
-threshold = 0.3
-mask_mask = noise_threshold.(image, threshold) 
-```
-3. The standard deviation of each pixel in a datacube can be computed. Suppose those pixels with standard deviation greater than a threshold are considered outliers. In a 2D array, these pixels can be marked as 0 and the remaining can be marked as 1 to generate an outlier mask. 
-```julia
-datacube = rand(0:10.0, 10, 10, 10)
-mask = zeros(10, 10)
-std_threshold = 1
-for i in 1:10
-    for j in 1:10
-        if std(datacube[i, j, :]) > std_threshold
-            mask[i, j] = 1
-        end
-    end
-end
-```
-
-If you multiply (element-wise) the 3 masks, you get a mask that represents the pixels above the threshold, which are inside India and which are not outliers. 
-
-To find the number of pixels in a mask, one simply needs to do: 
-```julia
-sum(mask)
-```
-To find the area of the mask, the mask_area function of the package can be used. 
-```@docs
-mask_area(geometry::CoordinateSystem, mask::Array{T, 2}, res) where T <: Real
-```
-
-An image can be multiplied with a mask (element-wise) so that only the pixels lit in the mask are lit in the images. For example: 
-```julia
-image .* noise_mask
-```
-Returns as image with 0s wherever there is background noise and the remaining values are the same as the original image. 
-
-### Aggregating over masks 
-
-While using nighttime lights, you may need to find the total lit of an image over a mask.  
-
-For example, if you have a background noise mask (where pixels considered noise are marked as 0 and the remaining at marked as 1), you may need to find the total of an image over the lit pixels of the mask. 
-
-```@docs
-NighttimeLights.aggregate(image, mask::Array{T, 2}) where T <: Real
-```
-
-The aggregate function is equivalent to 
-```julia
-sum(image .* mask)
-```
-```@docs
-aggregate_timeseries(datacube, mask::Array{T, 2}) where T <: Real
+using Rasters
+using DimensionalData
+DimensionalData.dims2indices(dims(raster)[1], X(Near(72.7625))) # column number corresponding to longitude
+DimensionalData.dims2indices(dims(raster)[2], Y(Near(19.4583))) # row number corresponding to latitude
 ```
