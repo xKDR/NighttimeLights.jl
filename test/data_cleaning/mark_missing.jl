@@ -15,8 +15,8 @@ end
         x = rand(1:30)
         y = rand(1:30)
         z = rand(1:30)
-        datacube = Raster(rand(84,155,123), Rasters.dims(radiance_datacube))
-        clouds = rand(0:5, x, y, z)
+        datacube = Raster(rand(84,155,1,123), Rasters.dims(radiance_datacube))
+        clouds = rand(0:5, x, y,1, z)
         @test size(mark_missing(datacube, clouds)) == size(datacube)
     end
 end

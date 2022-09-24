@@ -12,20 +12,20 @@ There are extremely high values in the data due to fires, gas flare etc. You may
 outlier_mask(datacube, mask)
 ```
 """
-function outlier_mask(datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
+function outlier_mask(datacube, mask=ones(Int8, (size(datacube)[1],size(datacube)[2])))
     stds = zeros(size(datacube)[1], size(datacube)[2])
     for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
             if ismissing(mask[i, j])
                 continue
             end
-            if count(i->(ismissing(i)),datacube[i, j, :])/length(datacube[i, j, :]) > 0.50  # Don't do anything if there are too many missings
+            if count(i->(ismissing(i)),datacube[i, j,1, :])/length(datacube[i, j,1, :]) > 0.50  # Don't do anything if there are too many missings
                 continue
             end
-            stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
+            stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j,1, :])))
         end
     end
-    threshold   = quantile(skipmissing([(stds .* mask)...]), 0.999)
+    threshold   = quantile(skipmissing(vec(stds .* mask)), 0.999)
     outlierMask = std_mask.(stds, threshold)
     outlierMask = outlierMask.*mask
     return outlierMask
