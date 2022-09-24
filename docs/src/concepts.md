@@ -57,7 +57,7 @@ datacube[X(Near(77.1025)), Y(Near(28.7041))] # timeseries of near longitude = 77
 datacube[X(Near(72.8284)), Y(Near(19.05)), Ti(At(201204))] # value of image near longitude = 77.1025 and latitude = 28.7041 at Time = 201204 
 ```
 
-In some cases, one may need to convert row and column numbers to latitude and longitude. One can use `map`. 
+It is often required to convert row and column numbers to latitude and longitude. One can use `map`. 
 
 For example:
 
@@ -66,7 +66,7 @@ row = 10
 column = 10 
 longitude, latitude = map(getindex, dims(raster), [column, row]) 
 ```
-In some cases, one may need to convert (longtitude, latitude) to row and column numbers. One can use `dims2indices` function from `DimensionalData.jl`. 
+It is often required to convert (longtitude, latitude) to row and column numbers. One can use `dims2indices` function from `DimensionalData.jl`. 
 
 For example:
 ```julia
@@ -75,3 +75,18 @@ using DimensionalData
 DimensionalData.dims2indices(dims(raster)[1], X(Near(72.7625))) # column number corresponding to longitude
 DimensionalData.dims2indices(dims(raster)[2], Y(Near(19.4583))) # row number corresponding to latitude
 ```
+
+## Cropping
+Due the large size of raster files, cropping is often required. Cropping of raster files can be done creating bounds.
+
+```julia
+bounds = X(Rasters.Between(72.721252, 73.074187)), Y(Rasters.Between(18.849475, 19.49907))
+raster[bounds...]
+```
+This works for both images and datacubes. 
+
+They can also be done 
+
+
+
+Raster image can also be cropped using polygons from [Shapefiles](@ref). 
