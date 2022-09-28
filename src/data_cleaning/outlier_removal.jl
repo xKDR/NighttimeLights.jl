@@ -12,7 +12,8 @@ There are extremely high values in the data due to fires, gas flare etc. You may
 outlier_mask(datacube, mask)
 ```
 """
-function outlier_mask(datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
+function outlier_mask(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
+    datacube = Array(view(dc, Band(1)))
     stds = zeros(size(datacube)[1], size(datacube)[2])
     for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]

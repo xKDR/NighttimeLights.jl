@@ -9,16 +9,17 @@ julia> long_apply(x, datacube)
 ```    
 """
 function long_apply(f, datacube, mask = ones(size(datacube)[1], size(datacube)[2]))
-    for i in 1:size(datacube)[1]
-        for j in 1:size(datacube)[2]
+    dc = Array(view(datacube, Band(1)))
+    for i in 1:size(dc)[1]
+        for j in 1:size(dc)[2]
             if ismissing(mask[i, j])
                 continue
             else 
-                datacube[i, j, :] = f(datacube[i, j, :])
+                dc[i, j, :] = f(dc[i, j, :])
             end
         end
     end
-    return datacube
+    return Raster(add_dim(dc), dims(datacube))
 end
 
 """
@@ -31,9 +32,5 @@ apply_mask(datacube, mask)
 ```    
 """
 function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
-    masked_data = copy(data)
-    for i in 1:size(data)[3]
-        masked_data[:, :, i] = data[:, :, i] .* mask
-    end
-    return masked_data
+   mask .* data
 end

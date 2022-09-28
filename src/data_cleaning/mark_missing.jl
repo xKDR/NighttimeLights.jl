@@ -29,10 +29,12 @@ Wherever the number of cloud-free observations is 0, radiance will be marked as 
 function mark_missing(radiance_datacube, clouds_datacube) 
     radiance_datacube = rebuild(radiance_datacube; missingval = nothing)
     radiance_datacube = replace_missing(radiance_datacube, missing)
-    radiance_datacube = Raster(convert(Array{Union{Missing, Float64}}, radiance_datacube), dims(radiance_datacube))
-    for i in 1:size(clouds_datacube)[3]
-        radiance_datacube[:, :, i] = mark_missing_img(radiance_datacube[:, :, i], clouds_datacube[:, :, i])
+    radiance_datacube = Raster(convert(Array{Union{Missing, Float16}}, radiance_datacube), dims(radiance_datacube))
+    r_dc = Array(view(radiance_datacube, Band(1)))
+    cf_dc = Array(view(clouds_datacube, Band(1)))
+    for i in 1:size(cf_dc)[3]
+        r_dc[:, :, i] = mark_missing_img(r_dc[:, :, i], cf_dc[:, :, i])
     end
-    return radiance_datacube
+    return Raster(add_dim(r_dc), dims(radiance_datacube))
 end
     

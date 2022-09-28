@@ -34,27 +34,28 @@ PSTT2021_biascorrect(radiance, clouds)
 ```
 """
 function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
-    rad_corrected_datacube = radiance_datacube
-    for i in 1:size(radiance_datacube)[1]
-        for j in 1:size(radiance_datacube)[2]
-            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
+    rad_corrected_datacube = Array(view(radiance_datacube, Band(1)))
+    cf_dc = Array(view(clouds_datacube, Band(1)))
+    for i in 1:size(rad_corrected_datacube)[1]
+        for j in 1:size(rad_corrected_datacube)[2]
+            if count(i->(ismissing(i)),rad_corrected_datacube[i, j, :])/length(rad_corrected_datacube[i, j, :]) > 0.50 
                 continue
             end
             if ismissing(mask[i, j])
                 continue
             end
-            missings = findall(ismissing, radiance_datacube[i, j, :])
-            radiance_arr = filter!(!ismissing, copy(Array(radiance_datacube[i, j, :])) )
-            clouds_arr = copy(Array(clouds_datacube[i , j, :]))
+            missings = findall(ismissing, rad_corrected_datacube[i, j, :])
+            radiance_arr = filter!(!ismissing, copy(Array(rad_corrected_datacube[i, j, :])) )
+            clouds_arr = copy(Array(cf_dc[i , j, :]))
             clouds_arr = Array{Union{Missing, Int}}(clouds_arr)
             clouds_arr[missings] .= missing
             clouds_arr = filter!(!ismissing, clouds_arr)
             if rank_correlation_test(radiance_arr, clouds_arr) <0.05
-                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect_pixel(copy(radiance_datacube[i, j, :]), copy(clouds_datacube[i , j, :]))
+                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect_pixel(copy(rad_corrected_datacube[i, j, :]), copy(cf_dc[i , j, :]))
             else
-                rad_corrected_datacube[i, j, :]= radiance_datacube[i, j, :]
+                rad_corrected_datacube[i, j, :]= rad_corrected_datacube[i, j, :]
             end
         end
     end
-    return rad_corrected_datacube
+    return Raster(add_dim(rad_corrected_datacube), dims(radiance_datacube))
 end
