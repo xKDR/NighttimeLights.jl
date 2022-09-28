@@ -25,7 +25,7 @@ function outlier_mask(datacube, mask=ones(Int8, (size(radiance_datacube)[1],size
             stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
         end
     end
-    threshold   = quantile(skipmissing([(stds .* mask)...]), 0.999)
+    threshold   = quantile(skipmissing(vec(stds .* mask)), 0.999)
     outlierMask = std_mask.(stds, threshold)
     outlierMask = outlierMask.*mask
     return outlierMask
