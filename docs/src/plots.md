@@ -1,16 +1,14 @@
-```julia
-using Plots
-plot(raster)
+```@docs
+plot_chloropleth(geoms::DataFrames.DataFrame, data::Vector, names::Symbol)
+plot_chloropleth(geoms::DataFrames.DataFrame, data::Symbol, names::Symbol)
 ```
-![raster](rasterworld.png)
+![chloropleth](chloropleth.png)
 
-```julia
-mumbaibox_radiance = crop(raster; to = mumbai_map.geometry)
-plot(mumbaibox_radiance)
+
+```@docs
+plot_img(img, coordinate_system)
 ```
-![raster](mumbaibox.png)
-```julia
-mumbai_radiance = mask(mumbaibox_radiance, with = mumbai_map.geometry)
-plot(mumbai_radiance)
+
+```@docs
+plot_datacube(datacube, coordinate_system, date, filename)
 ```
-![raster](mumbai_radiance.png)

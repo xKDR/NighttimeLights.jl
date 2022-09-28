@@ -14,7 +14,7 @@ function long_apply(f, datacube, mask = ones(size(datacube)[1], size(datacube)[2
             if ismissing(mask[i, j])
                 continue
             else 
-                datacube[i, j, 1, :] = f(datacube[i, j,1, :])
+                datacube[i, j, :] = f(datacube[i, j, :])
             end
         end
     end
@@ -32,8 +32,8 @@ apply_mask(datacube, mask)
 """
 function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
     masked_data = copy(data)
-    for i in 1:size(data)[4]
-        masked_data[:, :, 1, i] = data[:, :, 1, i] .* mask
+    for i in 1:size(data)[3]
+        masked_data[:, :, i] = data[:, :, i] .* mask
     end
     return masked_data
 end

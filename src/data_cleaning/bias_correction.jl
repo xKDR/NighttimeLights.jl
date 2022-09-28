@@ -37,22 +37,22 @@ function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8
     rad_corrected_datacube = radiance_datacube
     for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
-            if count(i->(ismissing(i)),radiance_datacube[i, j,1, :])/length(radiance_datacube[i, j,1, :]) > 0.50 
+            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
                 continue
             end
             if ismissing(mask[i, j])
                 continue
             end
-            missings = findall(ismissing, radiance_datacube[i, j,1, :])
-            radiance_arr = filter!(!ismissing, copy(Array(radiance_datacube[i, j,1, :])) )
-            clouds_arr = copy(Array(clouds_datacube[i , j,1, :]))
+            missings = findall(ismissing, radiance_datacube[i, j, :])
+            radiance_arr = filter!(!ismissing, copy(Array(radiance_datacube[i, j, :])) )
+            clouds_arr = copy(Array(clouds_datacube[i , j, :]))
             clouds_arr = Array{Union{Missing, Int}}(clouds_arr)
             clouds_arr[missings] .= missing
             clouds_arr = filter!(!ismissing, clouds_arr)
             if rank_correlation_test(radiance_arr, clouds_arr) <0.05
-                rad_corrected_datacube[i, j,1, :]= PSTT2021_biascorrect_pixel(copy(radiance_datacube[i, j,1, :]), copy(clouds_datacube[i , j,1, :]))
+                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect_pixel(copy(radiance_datacube[i, j, :]), copy(clouds_datacube[i , j, :]))
             else
-                rad_corrected_datacube[i, j,1, :]= radiance_datacube[i, j,1, :]
+                rad_corrected_datacube[i, j, :]= radiance_datacube[i, j, :]
             end
         end
     end
