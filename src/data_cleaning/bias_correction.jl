@@ -34,8 +34,8 @@ PSTT2021_biascorrect(radiance, clouds)
 ```
 """
 function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
-    rad_corrected_datacube = Array(view(radiance_datacube, Band(1)))
-    cf_dc = Array(view(clouds_datacube, Band(1)))
+    rad_corrected_datacube = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
+    cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
     for i in 1:size(rad_corrected_datacube)[1]
         for j in 1:size(rad_corrected_datacube)[2]
             if count(i->(ismissing(i)),rad_corrected_datacube[i, j, :])/length(rad_corrected_datacube[i, j, :]) > 0.50 
@@ -57,5 +57,7 @@ function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8
             end
         end
     end
+    cf_dc = 0 
+    GC.gc()
     return Raster(add_dim(rad_corrected_datacube), dims(radiance_datacube))
 end

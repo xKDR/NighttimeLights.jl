@@ -13,8 +13,8 @@ background_noise_mask(radiance_datacube, clouds_datacube)
 """
 function background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
     # This function may be obsolete because Payne Institute is providing annual images for each year. 
-    r_dc = Array(view(radiance_datacube, Band(1)))
-    cf_dc = Array(view(clouds_datacube, Band(1)))
+    r_dc = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
+    cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
     last_year_rad      = r_dc[:, :, (size(r_dc)[3]-11):size(r_dc)[3]]
 
     last_year_cloud   = cf_dc[:, :, (size(r_dc)[3]-11):size(r_dc)[3]]
