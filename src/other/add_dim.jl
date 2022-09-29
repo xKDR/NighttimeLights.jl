@@ -1,1 +1,1 @@
-add_dim(x) = Array(reshape(x, (size(x)[1:2]...,1,size(x)[3])))
+add_dim(x) = reshape(x, (size(x)[1:2]...,1,size(x)[3]))
