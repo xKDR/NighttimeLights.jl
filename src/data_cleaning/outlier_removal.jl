@@ -13,7 +13,7 @@ outlier_mask(datacube, mask)
 ```
 """
 function outlier_mask(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
-    datacube = Array(view(dc, Band(1)))
+    datacube = convert(Array{Union{Missing, Float16}}, view(dc, Band(1)))
     stds = zeros(size(datacube)[1], size(datacube)[2])
     for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
