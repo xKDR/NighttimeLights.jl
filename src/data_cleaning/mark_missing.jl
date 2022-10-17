@@ -6,8 +6,7 @@ cloud = rand(0:5, 10, 10)
 mark_missing(radiance, cloud)
 ```
 """
-function mark_missing(radiance, clouds::Array{T, 2}) where T <: Any
-    radiance = Array{Union{Float16, Missing}}(radiance)
+function mark_missing_img(radiance, clouds)
     for i in 1:size(clouds)[1]
         for j in 1:size(clouds)[2]
             if clouds[i,j] == 0
@@ -27,10 +26,16 @@ mark_missing(radiance, cloud)
 ```
 Wherever the number of cloud-free observations is 0, radiance will be marked as missing. 
 """
-function mark_missing(radiance_datacube, clouds_datacube::Array{T, 3}) where T <: Any 
-    radiance_datacube = Array{Union{Float16, Missing}}(radiance_datacube)
-    for i in 1:size(clouds_datacube)[3]
-        radiance_datacube[:, :, i] = mark_missing(radiance_datacube[:, :, i], clouds_datacube[:, :, i])
+function mark_missing(radiance_datacube, clouds_datacube) 
+    radiance_datacube = rebuild(radiance_datacube; missingval = nothing)
+    radiance_datacube = replace_missing(radiance_datacube, missing)
+    r_dc = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
+    cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
+    for i in 1:size(cf_dc)[3]
+        r_dc[:, :, i] = mark_missing_img(r_dc[:, :, i], cf_dc[:, :, i])
     end
-    return radiance_datacube
+    cf_dc = 0 
+    GC.gc()
+    return Raster(add_dim(r_dc), dims(radiance_datacube))
 end
+    
