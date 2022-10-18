@@ -1,6 +1,6 @@
 module NighttimeLights
 
-using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distributions, HypothesisTests, Plots, Dates, DimensionalData, CubicSplines
+using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distributions, HypothesisTests, Plots, Dates, DimensionalData, CubicSplines, SparseArrays
 
 ## Utilities 
 export Raster, load_example, radiance_datacube, clouds_datacube, long_apply, apply_mask, mumbai_map, add_dim, annular_ring, centre_of_mass
