@@ -9,6 +9,8 @@ fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
 anyerrors = false
 
+load_example()
+
 my_tests = ["f_apply.jl",
 "data_cleaning/background_noise_removal.jl",
 "data_cleaning/bias_correction.jl", 

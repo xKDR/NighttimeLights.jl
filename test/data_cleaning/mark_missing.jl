@@ -10,7 +10,6 @@
 end
 
 @testset "marking missings in datacube" begin
-    load_example()
     for i in 1:10
         x = size(radiance_datacube)[1]
         y = size(radiance_datacube)[2]

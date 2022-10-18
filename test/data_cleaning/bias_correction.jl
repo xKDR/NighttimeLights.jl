@@ -9,7 +9,6 @@
     end
 end
 
-load_example()
 @testset "bias correction for datacube" begin
     for i in 1:10
         x = size(radiance_datacube)[1]
