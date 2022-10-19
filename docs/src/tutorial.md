@@ -21,7 +21,8 @@ This tutorial shows how to:
 Create data cubes for radiance and cloud-free observations.
 ```julia
 using NighttimeLights
-using Raster
+using Rasters
+using Dates
 ```
 
 ```julia
@@ -35,7 +36,6 @@ radiances = [Raster(i, lazy = true) for i in filelist]
 timestamps = collect(1:length(radiances))
 series = RasterSeries(radiances, Ti(timestamps))
 radiance_datacube = Rasters.combine(series, Ti)
-radiance_datacube= radiance_datacube[:,:,1,:]
 ```
 
 ```julia
@@ -44,7 +44,6 @@ radiances = [Raster(i, lazy = true) for i in filelist]
 timestamps = collect(1:length(radiances))
 series = RasterSeries(radiances, Ti(timestamps))
 clouds_datacube = Rasters.combine(series, Ti)
-clouds_datacube = clouds_datacube[:,:,1,:]
 ```
 
 If you haven't downloaded the data, and you want to run the remaining code, you can use `load_example()` to load the datacubes of radiance and the number of cloud-free observations around Mumbai 
