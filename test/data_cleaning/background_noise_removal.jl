@@ -1,4 +1,3 @@
-load_example()
 @testset "background noise mask" begin
     for i in 1:10
         x = size(radiance_datacube)[1]
