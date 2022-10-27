@@ -6,12 +6,12 @@ function noise_threshold(x,th = 0.4)
     end
 end
 """
-Pixels with no economic activity may show some light due to background noise. These pixels could be in forests, oceans, deserts etc. The ```background_noise_mask``` function generates a background moise mask such that those pixels which are considered dark are marked as 0 and those considered lit are marked as 1. The function uses the datacubes of radiance and clouds to generate annual image of the last year the data. The function considers all the pixels below a provided threshold as dark and remaining to be lit. 
+Pixels with no economic activity may show some light due to background noise. These pixels could be in forests, oceans, deserts etc. The ```bgnoise_PSTT2021``` function generates a background moise mask such that those pixels which are considered dark are marked as 0 and those considered lit are marked as 1. The function uses the datacubes of radiance and clouds to generate annual image of the last year the data. The function considers all the pixels below a provided threshold as dark and remaining to be lit. 
 ```julia
-background_noise_mask(radiance_datacube, clouds_datacube)
+bgnoise_PSTT2021(radiance_datacube, clouds_datacube)
 ```
 """
-function background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
+function bgnoise_PSTT2021(radiance_datacube, clouds_datacube, th = 0.4)
     # This function may be obsolete because Payne Institute is providing annual images for each year. 
     r_dc = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
     cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
