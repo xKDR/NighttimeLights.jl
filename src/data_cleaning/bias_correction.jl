@@ -1,10 +1,10 @@
 """
-Clouds months tends to have lower radiance due to attenuation. The PSTT2021_biascorrect function uses the number of cloud-free observations to adjust the radiance accordingly. 
+Clouds months tends to have lower radiance due to attenuation. The bias_PSTT2021 function uses the number of cloud-free observations to adjust the radiance accordingly. 
 ```julia
-PSTT2021_biascorrect(radiance, clouds)
+bias_PSTT2021(radiance, clouds)
 ```
 """
-function PSTT2021_biascorrect_pixel(radiance, clouds, smoothing_parameter=10.0)
+function bias_PSTT2021_pixel(radiance, clouds, smoothing_parameter=10.0)
     missings = findall(ismissing, radiance)
     y = filter!(!ismissing, copy(Array(radiance)))
     x = Array{Union{Float64, Missing}}(copy(clouds))
@@ -30,10 +30,10 @@ end
 """
 The bias correction function can use the datacubes of radiance and the number of cloud-free observations to correct for attenuation in radiance due to low number of cloud-free observations. 
 ```julia
-PSTT2021_biascorrect(radiance, clouds)
+bias_PSTT2021(radiance, clouds)
 ```
 """
-function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
+function bias_PSTT2021(radiance_datacube, clouds_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
     rad_corrected_datacube = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
     cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
     for i in 1:size(rad_corrected_datacube)[1]
@@ -51,7 +51,7 @@ function PSTT2021_biascorrect(radiance_datacube, clouds_datacube, mask=ones(Int8
             clouds_arr[missings] .= missing
             clouds_arr = filter!(!ismissing, clouds_arr)
             if rank_correlation_test(radiance_arr, clouds_arr) <0.05
-                rad_corrected_datacube[i, j, :]= PSTT2021_biascorrect_pixel(copy(rad_corrected_datacube[i, j, :]), copy(cf_dc[i , j, :]))
+                rad_corrected_datacube[i, j, :]= bias_PSTT2021_pixel(copy(rad_corrected_datacube[i, j, :]), copy(cf_dc[i , j, :]))
             else
                 rad_corrected_datacube[i, j, :]= rad_corrected_datacube[i, j, :]
             end

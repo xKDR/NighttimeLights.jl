@@ -1,18 +1,18 @@
-function std_mask(std, threshold)
-    if std < threshold
-        return 1
-    else 
-        return missing
-    end
-end
 """
-There are extremely high values in the data due to fires, gas flare etc. You may find some values even greater than the aggregate radiance of large cities. Such pixels also have high standard deviation. These pixels may not be of importantance from the point of view of measureming prosperity. The ```outlier_mask``` function generates a mask of pixels with standard deviation less that the 99.9th percentile. Essentially, this function can be used to removed top 1 percent of pixels by standard deviation. A mask can be provided to the function, so that it calculates the percentile based on the lit pixel of the mask. For example, if the datacube is a box around India and the mask is the polygon mask of India, the outlier_mask function will calculate the 99th percentile of the standard deviation of the pixels inside India's boundary. 
+There are extremely high values in the data due to fires, gas flare etc. You may find some values even greater than the aggregate radiance of large cities. Such pixels also have high standard deviation. These pixels may not be of importantance from the point of view of measureming prosperity. The ```outlier_variance``` function generates a mask of pixels with standard deviation less that the 99.9th percentile. Essentially, this function can be used to removed top 1 percent of pixels by standard deviation. A mask can be provided to the function, so that it calculates the percentile based on the lit pixel of the mask. For example, if the datacube is a box around India and the mask is the polygon mask of India, the outlier_variance function will calculate the 99th percentile of the standard deviation of the pixels inside India's boundary. 
 
 ```julia
-outlier_mask(datacube, mask)
+outlier_variance(datacube, mask)
 ```
 """
-function outlier_mask(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
+function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
+    function std_mask(std, threshold)
+        if std < threshold
+            return 1
+        else 
+            return missing
+        end
+    end
     datacube = convert(Array{Union{Missing, Float16}}, view(dc, Band(1)))
     stds = zeros(size(datacube)[1], size(datacube)[2])
     for i in 1:size(datacube)[1]
@@ -33,14 +33,14 @@ function outlier_mask(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
 end
 
 """
-The time series of a pixel may show a few outliers, but as a whole the pixel may be of importantance in measuring economic activity. The outlier_ts function uses replaces the outlier observations with interpolated values. This is done using the tsclean function the forecast package of R.
+The time series of a pixel may show a few outliers, but as a whole the pixel may be of importantance in measuring economic activity. The outlier_hampel function uses replaces the outlier observations with interpolated values. This is done using the tsclean function the forecast package of R.
 
 ```julia
 sample_timeseries = datacube[1, 2, :] # The time series of pixel [1, 2]
-outlier_ts(sample_timeseries)
+outlier_hampel(sample_timeseries)
 ```
 """
-function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
+function outlier_hampel(timeseries, window_size = 5, n_sigmas = 3)
     timeseries = Array(timeseries)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
     missings = findall(ismissing, timeseries)
@@ -58,9 +58,8 @@ function outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
         end
     end
     new_series[indices] .= missing
-    for i in missings #putting back the missing values
+    for i in missings # putting back the missing values
         new_series = insert!(new_series, i, missing)
     end
     return new_series
-    # Think about how this would behave in the presence of missing. 
 end

@@ -12,10 +12,10 @@ anyerrors = false
 load_example()
 
 my_tests = ["f_apply.jl",
-"data_cleaning/background_noise_removal.jl",
+"data_cleaning/bgnoise.jl",
 "data_cleaning/bias_correction.jl", 
 "data_cleaning/interpolation.jl",
-"data_cleaning/mark_missing.jl",
+"data_cleaning/na_recode.jl",
 "data_cleaning/outlier_removal.jl",
 "data_cleaning/full_procedures.jl",
 "other/detrend.jl", 

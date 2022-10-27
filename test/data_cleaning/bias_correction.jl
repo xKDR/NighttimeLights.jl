@@ -5,7 +5,7 @@
             rad[rand(1:100)] = missing
         end
         clouds = rand(1:31, 100)
-        @test length(NighttimeLights.PSTT2021_biascorrect_pixel(rad, clouds)) == length(rad)
+        @test length(NighttimeLights.bias_PSTT2021_pixel(rad, clouds)) == length(rad)
     end
 end
 
@@ -23,7 +23,7 @@ end
         clouds = rand(1:30, x,y,1,z)
         clouds = Raster(clouds, dims(radiance_datacube))
         mask = rand(0:1, x, y)
-        @test size(PSTT2021_biascorrect(rad, clouds, mask)) == (x, y, 1, z)
+        @test size(bias_PSTT2021(rad, clouds, mask)) == (x, y, 1, z)
     end
 end
 

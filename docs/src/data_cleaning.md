@@ -10,14 +10,14 @@ datacube = replace!(x -> x < 0 ? missing : x, datacube) # replace all values bel
 ```
 
 ```@docs
-mark_missing(radiance, clouds::Array{T, 2}) where T <: Any
-mark_missing(radiance, clouds::Array{T, 3}) where T <: Any
-linear_interpolation(timeseries)
-outlier_mask(datacube, mask)
-outlier_ts(timeseries, window_size = 5, n_sigmas = 3)
-background_noise_mask(radiance_datacube, clouds_datacube, th = 0.4)
-PSTT2021_biascorrect(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
-PSTT2021_biascorrect(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
+na_recode(radiance, clouds::Array{T, 2}) where T <: Any
+na_recode(radiance, clouds::Array{T, 3}) where T <: Any
+na_interp_linear(timeseries)
+outlier_variance(datacube, mask)
+outlier_hampel(timeseries, window_size = 5, n_sigmas = 3)
+bgnoise_PSTT2021(radiance_datacube, clouds_datacube, th = 0.4)
+bias_PSTT2021(radiance, clouds::Array{T, 1}, smoothing_parameter=10.0) where T <: Any
+bias_PSTT2021(radiance_datacube, clouds_datacube::Array{T, 3}, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2]))) where T <: Any
 PSTT2021_conventional(radiance_datacube, clouds_datacube)
 PSTT2021(radiance_datacube, clouds_datacube)
 

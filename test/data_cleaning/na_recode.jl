@@ -5,7 +5,7 @@
         image = rand(1:10.0, x, y)
         image = convert(Array{Union{Float64, Missing}}, image)
         clouds = rand(0:5, x, y)
-        @test size(NighttimeLights.mark_missing_img(image, clouds)) == size(image) 
+        @test size(NighttimeLights.na_recode_img(image, clouds)) == size(image) 
     end
 end
 
@@ -18,6 +18,6 @@ end
         clouds = rand(0:3, x,y,1,z)
         rad = Raster(rad, dims(radiance_datacube))
         clouds = Raster(clouds, dims(radiance_datacube))
-        @test size(mark_missing(rad, clouds)) == size(rad)
+        @test size(na_recode(rad, clouds)) == size(rad)
     end
 end
