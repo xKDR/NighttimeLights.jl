@@ -1,4 +1,3 @@
-load_example()
 img = view(radiance_datacube, Ti(At(201204)))
 res = 15
 R1 = 5

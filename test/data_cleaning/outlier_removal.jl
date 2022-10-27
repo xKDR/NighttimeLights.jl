@@ -3,12 +3,11 @@
         len = rand(10:80)
         x = Array{Union{Float64, Missing}}(rand(1:100.0,len))
         x[rand(1:len)] = missing
-        @test length(outlier_ts(x)) == len
+        @test length(outlier_hampel(x)) == len
     end
 end
 
 @testset "generating outlier mask" begin
-    load_example()
     for i in 1:10
         x = size(radiance_datacube)[1]
         y = size(radiance_datacube)[2]
@@ -20,6 +19,6 @@ end
         end
         rad = Raster(rad, dims(radiance_datacube))
         mask = rand(0:1, x, y)
-        @test size(outlier_mask(rad, mask)) == (x, y)
+        @test size(outlier_variance(rad, mask)) == (x, y)
     end
 end

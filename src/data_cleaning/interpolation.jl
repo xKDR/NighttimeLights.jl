@@ -6,10 +6,10 @@ Uses linear interpolation to fill for missing values.
 ```
 x = rand(1:10.0, 10)
 x[5] = missing
-linear_interpolation(x)
+na_interp_linear(x)
 ```
 """
-function linear_interpolation(timeseries)
+function na_interp_linear(timeseries)
     if  count(i->(ismissing(i)), timeseries) > length(timeseries) *1/2
         return zero(1:length(timeseries))
     end
