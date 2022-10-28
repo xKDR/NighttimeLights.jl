@@ -16,10 +16,8 @@ makedocs(;
     pages=[
         "Home" => "index.md",
         "Basic concepts" => "concepts.md",
-        "Polygons and shapefiles"=> "polygons.md",
         "Data Cleaning"=> "data_cleaning.md",
         "Tutorial" =>"tutorial.md",
-        "Plots" => "plots.md"
     ],
 )
 

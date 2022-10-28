@@ -54,17 +54,3 @@ A single function, `clean_complete`, can be used on `radiance_datacube` and `clo
 ```julia
 cleaned_datacube = clean_complete(radiance_datacube, clouds_datacube) 
 ```
-## 5. Zonal statistics
-
-1. Load the shape file for the districts of Mumbai. 
-You can download the [district level shapefile of Mumbai](https://github.com/xKDR/NighttimeLights.jl/tree/main/assets/mumbai_map) or load it using ```load_example()```. 
-
-```julia
-mumbai_map = Shapefile.Table("~Downloads/mumbai_map.shp")
-```
-These have been created from the Data{Meet}'s [district level shapefile](https://github.com/datameet/maps/tree/master/Districts/Census_2011) of India, based on census 2011. 
-
-2. Generate the time series of aggregate radiance for each district of Mumbai. 
-```julia
-mumbai_district_ntl = aggregate_dataframe(MUMBAI_COORDINATE_SYSTEM, cleaned_datacube, mumbai_map)
-``` 
