@@ -1,7 +1,7 @@
 name = "NighttimeLights"
 uuid = "4d912a30-7731-4b12-9bf5-9d9a78b4f19a"
 authors = ["Ayush Patnaik", "Ajay Shah", "Anshul Tayal", "Susan Thomas"]
-version = "0.5.0"
+version = "0.6.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
