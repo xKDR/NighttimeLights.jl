@@ -14,27 +14,15 @@ While there are packages to do image processing in Julia, the assumptions about 
 
 ![india lights](eog.png)
 
-This package was a foundation for a research paper, "But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds" by Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas. The paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package. The details are in the paper which can be accessed from its [landing page](https://xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html). 
+This package was a foundation for a research paper, "[But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds]((https://xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html))" by Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas. The paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package.
+
+The package is built on top of [Rasters.jl](https://github.com/rafaqz/Rasters.jl/), which provides cutting edge features to study raster data and perform routine tasks such as zonal statistics and plotting. 
 
 # Installation
 
 ```
 pkg> add NighttimeLights
 ```
-
-# Downloading data
-
-The monthly nighttime lights data is hosted by [Payne Institute](https://payneinstitute.mines.edu/eog/nighttime-lights/) at the [Earth Observation Group](https://eogdata.mines.edu/products/vnl/). 
-
-The data is stored in `.tif` files. These are opened as 2D matrices and for each pixel, there is a floating-point value representing the amount of light. Monthly composites are produced by taking the average of measurements produced on days free of clouds. The number of cloud-free observations used to generate those are also in stored in `.tif` files. 
-
-There are two types of annual images, those produced using daily images and those produced using monthly composites. 
-
-The `.tif` files covering the entire planet are large. NOAA also provides tiled data. The planet is divided into 6 tiles in the following manner: 
-
-![tile map](tile_map.png)
-
-If your region of interest is covered in one tile, then you may not need to download the full image of the planet. 
 
 # Getting help 
 
