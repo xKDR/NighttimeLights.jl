@@ -11,7 +11,7 @@ Pixels with no economic activity may show some light due to background noise. Th
 bgnoise_PSTT2021(radiance_datacube, clouds_datacube)
 ```
 """
-function bgnoise_PSTT2021(radiance_datacube, clouds_datacube, th = 0.4)
+function bgnoise_PSTT2021(radiance_datacube, clouds_datacube; th = 0.4)
     # This function may be obsolete because Payne Institute is providing annual images for each year. 
     r_dc = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
     cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
