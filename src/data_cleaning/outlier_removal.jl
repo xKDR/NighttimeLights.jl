@@ -1,15 +1,15 @@
 """
-There are extremely high values in the data due to fires, gas flare etc. You may find some values even greater than the aggregate radiance of large cities. Such pixels also have high standard deviation. These pixels may not be of importantance from the point of view of measureming prosperity. The ```outlier_variance``` function generates a mask of pixels with standard deviation less than a certain cutoff, that defaults to the 99.9th percentile. Essentially, this function can be used to removed top pixels by standard deviation. A mask can be provided to the function, so that it calculates the percentile based on the lit pixel of the mask.
+There are extremely high values in the data due to fires, gas flare etc. You may find some values even greater than the aggregate radiance of large cities. Such pixels also have high standard deviation. These pixels may not be of importantance from the point of view of measureming prosperity. The ```outlier_variance``` function generates a mask of pixels with standard deviation less than a certain threshold, that defaults to the 0.999 quantile. Essentially, this function can be used to removed top pixels by standard deviation. A mask can be provided to the function, so that it calculates the percentile based on the lit pixel of the mask.
 
-The `cutoff` keyword argument should be a number between 0 and 1. 
+The `threshold` keyword argument should be a number between 0 and 1. 
 
 ```julia
-outlier_variance(datacube, mask; cutoff=0.99)
+outlier_variance(datacube, mask; threshold=0.99)
 ```
 """
-function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])); cutoff = 0.999)
-    function std_mask(std, threshold)
-        if std < threshold
+function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])); threshold = 0.999)
+    function std_mask(std, th)
+        if std < th
             return 1
         else 
             return missing
@@ -28,8 +28,8 @@ function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])); cutoff
             stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), datacube[i, j, :])))
         end
     end
-    threshold   = quantile(skipmissing(vec(stds .* mask)), cutoff)
-    outlierMask = std_mask.(stds, threshold)
+    th   = quantile(skipmissing(vec(stds .* mask)), threshold)
+    outlierMask = std_mask.(stds, th)
     outlierMask = outlierMask.*mask
     return outlierMask
 end
@@ -42,7 +42,7 @@ sample_timeseries = datacube[1, 2, :] # The time series of pixel [1, 2]
 outlier_hampel(sample_timeseries)
 ```
 """
-function outlier_hampel(timeseries, window_size = 5, n_sigmas = 3)
+function outlier_hampel(timeseries; window_size = 5, n_sigmas = 3)
     timeseries = Array(timeseries)
     # Credit: https://gist.github.com/erykml/d15525855f2ef455bd7969240f6f4073#file-hampel_filter_forloop-py
     missings = findall(ismissing, timeseries)
