@@ -5,12 +5,5 @@ timestamps = yearmon.(dates)
 ```
 """
 function yearmon(x)                                                                                                                        
-    function two_digit_month(x)                                                                                                                
-        if length(string(month(x))) == 1                                                                                                       
-            return "0" * string(month(x))                                                                                                      
-        else                                                                                                                                   
-            return string(month(x))                                                                                                            
-        end                                                                                                                                    
-    end
-    parse(Int, string(year(x)) * two_digit_month(x))                                                                                           
+    Dates.format(x, Dates.dateformat"YYYYmm")                                                                                   
 end
