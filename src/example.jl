@@ -12,15 +12,13 @@ The datacubes and the district level shapefile for Mumbai city are provided with
         map_path = assets_path * "/mumbai_map/mumbai_districts.shp"
         radiance_path = assets_path * "/mumbai_ntl/datacube/mumbai_radiance.nc"
         clouds_path = assets_path * "/mumbai_ntl/datacube/mumbai_clouds.nc"
-        
-        global radiance_datacube = read(Raster(radiance_path))
-        global clouds_datacube = read(Raster(clouds_path))
+        global radiance_datacube = Raster(radiance_path)
+        global clouds_datacube = Raster(clouds_path)
         global mumbai_map = Shapefile.Table(map_path)
         """
         i) Distict level shapefile of Mumbai is loaded as mumbai_map. 
         ii) Radiance datacube of Mumbai is loaded as radiance_datacube. 
         iii) Cloud-free observations data is loaded as clouds_datacube. 
-        iv) MUMBAI_COORDINATE_SYSTEM should be used as the coordinate system. 
         """
         println("
         Follow the tutorial on:
