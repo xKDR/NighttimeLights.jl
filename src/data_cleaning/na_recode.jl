@@ -27,7 +27,6 @@ na_recode(radiance, cloud)
 Wherever the number of cloud-free observations is 0, radiance will be marked as missing. 
 """
 function na_recode(radiance_datacube, clouds_datacube; replacement = missing) 
-    print(1)
     radiance_datacube = rebuild(radiance_datacube; missingval = nothing)
     radiance_datacube = replace_missing(radiance_datacube, missing)
     for i in 1:size(radiance_datacube, 1)

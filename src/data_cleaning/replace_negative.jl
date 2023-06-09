@@ -1,8 +1,7 @@
 """
 Function replaces the negative values in a datacube with missing. 
 """
-function replace_negative(dc)
-    datacube = convert(Array{Union{Missing, Float16}}, view(dc, Band(1)))
+function replace_negative(datacube)
     for i in 1:prod(size(datacube))
         if ismissing(datacube[i]) 
             continue
@@ -12,5 +11,5 @@ function replace_negative(dc)
             continue
         end
     end
-    return Raster(add_dim(datacube), dims(dc))
+    return datacube
 end
