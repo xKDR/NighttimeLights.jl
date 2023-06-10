@@ -4,8 +4,8 @@ using Plots
 load_example()
 img = view(radiance_datacube, Ti(At(201204)))
 res = 15
-R1 = 5
-R2 = 13
+R1 = 2
+R2 = 5
 lat = 19.07
 long = 72.87
 bounds, mask = annular_ring(img, R1, R2, lat, long, res) 
@@ -82,9 +82,9 @@ end
 ```julia
 using Plots
 load_example()
-img = view(radiance_datacube, Ti(At(201204)))
+img = view(radiance_datacube, Ti(At(Date("2012-06"))))
 res = 15
-R = 10
+R = 2
 lat = 19.07
 long = 72.87
 bounds, mask = annular_ring(img, R, lat, long, res) 

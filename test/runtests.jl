@@ -21,7 +21,6 @@ my_tests = ["f_apply.jl",
 "other/detrend.jl", 
 "other/rank_correlation.jl",
 "other/weighted_mean.jl", 
-"other/date_to_int.jl",
 "other/rings.jl", 
 "other/com.jl"
 ]
