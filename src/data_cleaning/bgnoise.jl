@@ -12,18 +12,14 @@ bgnoise_PSTT2021(radiance_datacube, clouds_datacube)
 ```
 """
 function bgnoise_PSTT2021(radiance_datacube, clouds_datacube, th = 0.4)
-    # This function may be obsolete because Payne Institute is providing annual images for each year. 
-    r_dc = convert(Array{Union{Missing, Float16}}, view(radiance_datacube, Band(1)))
-    cf_dc = convert(Array{UInt8, 3}, view(clouds_datacube, Band(1)))
-    last_year_rad      = r_dc[:, :, (size(r_dc)[3]-11):size(r_dc)[3]]
-
-    last_year_cloud   = cf_dc[:, :, (size(r_dc)[3]-11):size(r_dc)[3]]
-    average_lastyear = copy(r_dc[:, :, 1])
+    last_year_rad = radiance_datacube[:, :, (size(radiance_datacube)[3]-11):size(radiance_datacube)[3]]
+    last_year_cloud   = clouds_datacube[:, :, (size(clouds_datacube)[3]-11):size(clouds_datacube)[3]]
+    average_lastyear = copy(radiance_datacube[:, :, 1])
     for i in 1:size(last_year_rad)[1]
         for j in 1:size(last_year_rad)[2]
             average_lastyear[i,j] = weighted_mean(last_year_rad[i, j, :], last_year_cloud[i, j, :])
         end
     end
     mask = noise_threshold.(average_lastyear, th)
-    return Raster(mask, dims(radiance_datacube)[1:2])
+    return Raster(Array(mask), dims(radiance_datacube)[1:2])
 end

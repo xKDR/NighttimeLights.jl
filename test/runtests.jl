@@ -4,6 +4,7 @@ using Test
 using Dates
 using DataFrames
 using Rasters
+using SparseArrays 
 
 fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
@@ -21,7 +22,6 @@ my_tests = ["f_apply.jl",
 "other/detrend.jl", 
 "other/rank_correlation.jl",
 "other/weighted_mean.jl", 
-"other/date_to_int.jl",
 "other/rings.jl", 
 "other/com.jl"
 ]

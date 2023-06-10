@@ -5,7 +5,7 @@ There are extremely high values in the data due to fires, gas flare etc. You may
 outlier_variance(datacube, mask)
 ```
 """
-function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
+function outlier_variance(datacube, mask=ones(Int8, (size(datacube)[1],size(datacube)[2])))
     function std_mask(std, threshold)
         if std < threshold
             return 1
@@ -13,7 +13,6 @@ function outlier_variance(dc, mask=ones(Int8, (size(dc)[1],size(dc)[2])))
             return missing
         end
     end
-    datacube = convert(Array{Union{Missing, Float16}}, view(dc, Band(1)))
     stds = zeros(size(datacube)[1], size(datacube)[2])
     for i in 1:size(datacube)[1]
         for j in 1:size(datacube)[2]
