@@ -3,9 +3,9 @@
 
 ## Data structure
 
-NOAA provides tif files of the nightlights images. These are represented as 2D arrays with floating-point values. Tif files can be read using the [Rasters.jl](https://github.com/rafaqz/Rasters.jl/) package. While nighttime lights images are 2D arrays, reading them as Raster files creates an extra dimension for bands, which is irrelevant for nightlights images. We will ignore the extra dimension and refer to the image as 2D arrays instead of 3D. 
+NOAA provides tif files of the nightlights images. These are represented as 2D arrays with floating-point values. Tif files can be read using the [Rasters.jl](https://github.com/rafaqz/Rasters.jl/) package. 
 
-Images of different months are stacked together to form 3D arrays. Such 3D arrays are called datacubes. Once again, there is an extra dimension for bands, which will be ignore and treat the 4D arrays as 3D. 
+Images of different months are stacked together to form 3D arrays. Such 3D arrays are called datacubes.
 
 ## Data IO
 
