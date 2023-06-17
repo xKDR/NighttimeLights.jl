@@ -10,8 +10,6 @@ National Oceanic and Atmospheric Administration (NOAA) releases nighttime lights
 
 Using nighttime lights for economic analysis require cleaning of data over regions of interest. This is the first open source implementation of these procedures for nighttime lights.
 
-![india lights](eog.png)
-
 This package was a foundation for a research paper, *[But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds](https://xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_correction_nighttime_lights.html)*. The paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package.
 
 *[Foundations for nighttime lights data analysis](https://xkdr.org/paper/foundations-for-nighttime-lights-data-analysis)* is the research paper associated with this software package. Please cite it if you use the package.
