@@ -7,12 +7,8 @@ end
 `centre_of_mass` finds the mean of coordinates weighted by nighttime lights radiance_datacube. 
 
 ```julia
-using Rasters
-using SparseArrays
-load_example()
-img = view(radiance_datacube, Ti(1))
-spaster = sparse(Array(img)[:,:,1])
-centre_of_mass(spaster, dims(img))
+spaster = sparse(Array(radiance_image)[:,:,1])
+centre_of_mass(spaster, dims(radiance_image))
 ```
 """
 function centre_of_mass(raster, dimensions)
@@ -26,10 +22,7 @@ end
 `centre_of_mass` finds the mean of coordinates weighted by nighttime lights radiance_datacube. 
 
 ```julia
-using Rasters
-load_example()
-img = view(radiance_datacube, Ti(1))
-centre_of_mass(img)
+centre_of_mass(radiance_image)
 ```
 """
 function centre_of_mass(raster)
