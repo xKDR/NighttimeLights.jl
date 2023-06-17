@@ -10,7 +10,7 @@ National Oceanic and Atmospheric Administration (NOAA) releases nighttime lights
 
 Using nighttime lights for economic analysis require cleaning of data and aggregating measurements of pixels over regions of interest. This package provides functions to clean nighttime lights data and well as some other niche functions used by reseachers in this field.
 
-This package was a foundation for a research paper, ["But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds"](https://xkdr.org/wp2021-07.html). This paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package. A detailed description of the functions of the package used for data cleaning is in the paper ["Foundations for nighttime lights data analysis"](https://papers.xkdr.org/papers/2022Patnaiketal_foundationsforNighttimelightsDataanalysis.pdf). 
+This package was a foundation for a research paper, *["But clouds got in my way: bias and bias correction of VIIRS nighttime lights data in the presence of clouds"](https://xkdr.org/wp2021-07.html)*. This paper diagnoses a source of bias in the data and responds to this problem with a bias correction scheme. Along with other mainstream methods of data cleaning, this method is also implemented in the package. A detailed description of the functions of the package used for data cleaning is in the paper *["Foundations for nighttime lights data analysis"](https://papers.xkdr.org/papers/2022Patnaiketal_foundationsforNighttimelightsDataanalysis.pdf)*. 
 
 This package is build on top of [Rasters.jl](https://github.com/rafaqz/Rasters.jl/). Nighttime lights tif/nc files can be read using `Rasters.Raster()`.  
 
@@ -19,26 +19,14 @@ This package is build on top of [Rasters.jl](https://github.com/rafaqz/Rasters.j
  add NighttimeLights
 ```
 
-## Basic usage
-
-```Julia
-using Rasters
-using NighttimeLights
-
-radiance = Raster("sample_ntl_radiance.nc")
-ncfobs = Raster("sample_ntl_ncfobs.nc")
-
-clean_complete(radiance, ncfobs)
-```
-
 ## Citing NighttimeLights.jl
 
-To cite NighttimeLights.jl, please reference the [paper](https://papers.xkdr.org/papers/2022Patnaiketal_foundationsforNighttimelightsDataanalysis.pdf). Sample Bibtex is given below:
+To cite NighttimeLights.jl, please cite the package's corresponding [paper](https://papers.xkdr.org/papers/2022Patnaiketal_foundationsforNighttimelightsDataanalysis.pdf). The bib entry is given below:
 
 ```bibtex
 @techreport{patnaik2022foundations,
   title={Foundations for nighttime lights data analysis},
-  author={Patnaik, Ayush and Shah, Ajay and Thomas, Susan and others},
+  author={Patnaik, Ayush and Shah, Ajay and Thomas, Susan},
   year={2022}
 }
 ```
