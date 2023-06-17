@@ -4,8 +4,8 @@
         y = rand(1:30)
         image = rand(1:10.0, x, y)
         image = convert(Array{Union{Float64, Missing}}, image)
-        clouds = rand(0:5, x, y)
-        @test size(NighttimeLights.na_recode_img(image, clouds)) == size(image) 
+        ncfobs = rand(0:5, x, y)
+        @test size(NighttimeLights.na_recode_img(image, ncfobs)) == size(image) 
     end
 end
 
@@ -15,9 +15,9 @@ end
         y = size(radiance_datacube)[2]
         z = size(radiance_datacube)[3]
         rad = rand(20:100.0, x,y,z)
-        clouds = rand(0:3, x,y,z)
+        ncfobs = rand(0:3, x,y,z)
         rad = Raster(rad, dims(radiance_datacube))
-        clouds = Raster(clouds, dims(radiance_datacube))
-        @test size(na_recode(rad, clouds)) == size(rad)
+        ncfobs = Raster(ncfobs, dims(radiance_datacube))
+        @test size(na_recode(rad, ncfobs)) == size(rad)
     end
 end
