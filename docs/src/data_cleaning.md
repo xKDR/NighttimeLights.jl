@@ -1,4 +1,6 @@
-Using nighttime lights for economic inference needs cleaning of the data.   
+For accurate economic inference using nighttime lights data, it's essential to perform thorough data cleaning. The rationale behind this process is elaborated in the work `"But clouds got in my way: Bias and bias correction of VIIRS nighttime lights data in the presence of clouds" by Patnaik, Ayush et al. (2021)`
+
+Additionally, a comprehensive description of the API can be found in the paper `"Foundations for nighttime lights data analysis" by Patnaik, Ayush, Ajay Shah, and Susan Thomas (2022)`
 
 ```@docs
 na_recode(radiance, ncfobs; replacement)
