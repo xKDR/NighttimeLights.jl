@@ -27,7 +27,7 @@ For example:
 using Rasters
 filelist = readdir("path")
 radiances = [Raster(i, lazy = true) for i in filelist]
-timestamps = collect(1:length(radiances))
+timestamps = DateTime.(collect(range(start = Date("2012-04"), step = Month(1), length = length(radiances)))) 
 series = RasterSeries(radiances, Ti(timestamps))
 datacube = Rasters.combine(series, Ti)
 ```
@@ -46,20 +46,18 @@ The dimension regarding bands can be hidden using `view` as nighttime lights are
 For example:
 
 ```julia
-image = view(image, Band(1))
-image[1, 2] # value of the image at location [1, 2]. 1st row and 2nd column 
-datacube = view(datacube, Band(1))
-datacube[:, :, 3] # Image of the 3rd month.
-datacube[1, 2, :] # Time series values of the pixel at location 1, 2
-datacube[1, 2, 3] # Value of the image at location [1, 2] of the 3rd month
+radiance_image[1, 2] # value of the image at location [1, 2]. 1st row and 2nd column 
+radiance_datacube[:, :, 3] # Image of the 3rd month.
+radiance_datacube[1, 2, :] # Time series values of the pixel at location 1, 2
+radiance_datacube[1, 2, 3] # Value of the image at location [1, 2] of the 3rd month
 ```
 
 Longitude and latitude can also be used for indexing. 
 For example:
 ```julia
-image[X(Near(77.1025)), Y(Near(28.7041))] # value of image near longitude = 77.1025 and latitude = 28.7041
-datacube[X(Near(77.1025)), Y(Near(28.7041))] # timeseries of near longitude = 77.1025 and latitude = 28.7041
-datacube[X(Near(72.8284)), Y(Near(19.05)), Ti(At(201204))] # value of image near longitude = 77.1025 and latitude = 28.7041 at Time = 201204 
+radiance_image[X(Near(77.1025)), Y(Near(28.7041))] # value of image near longitude = 77.1025 and latitude = 28.7041
+radiance_datacube[X(Near(77.1025)), Y(Near(28.7041))] # timeseries of near longitude = 77.1025 and latitude = 28.7041
+radiance_datacube[X(Near(72.8284)), Y(Near(19.05)), Ti(At(Date("2012-04")))] # value of image near longitude = 77.1025 and latitude = 28.7041 at Time = Date("2012-04") 
 ```
 
 In some cases, one may need to convert row and column numbers to latitude and longitude. One can use `map`. 
@@ -69,7 +67,7 @@ For example:
 ```julia
 row = 10 
 column = 10 
-longitude, latitude = map(getindex, dims(raster), [column, row]) 
+longitude, latitude = map(getindex, dims(radiance_image), [column, row]) 
 ```
 In some cases, one may need to convert (longtitude, latitude) to row and column numbers. One can use `dims2indices` function from `DimensionalData.jl`. 
 
@@ -77,6 +75,6 @@ For example:
 ```julia
 using Rasters
 using DimensionalData
-DimensionalData.dims2indices(dims(raster)[1], X(Near(72.7625))) # column number corresponding to longitude
-DimensionalData.dims2indices(dims(raster)[2], Y(Near(19.4583))) # row number corresponding to latitude
+DimensionalData.dims2indices(dims(radiance_image)[1], X(Near(72.7625))) # column number corresponding to longitude
+DimensionalData.dims2indices(dims(radiance_image)[2], Y(Near(19.4583))) # row number corresponding to latitude
 ```
