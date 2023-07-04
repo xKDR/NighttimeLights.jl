@@ -36,7 +36,7 @@ bias_PSTT2021(radiance_datacube, ncfobs_datacube)
 function bias_PSTT2021(radiance_datacube, ncfobs_datacube, mask=ones(Int8, (size(radiance_datacube)[1],size(radiance_datacube)[2])))
     for i in 1:size(radiance_datacube)[1]
         for j in 1:size(radiance_datacube)[2]
-            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50 
+            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.90 
                 continue
             end
             if ismissing(mask[i, j])

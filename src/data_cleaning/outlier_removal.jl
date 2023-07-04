@@ -19,7 +19,7 @@ function outlier_variance(radiance_datacube, mask=ones(Int8, (size(radiance_data
             if ismissing(mask[i, j])
                 continue
             end
-            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.50  # Don't do anything if there are too many missings
+            if count(i->(ismissing(i)),radiance_datacube[i, j, :])/length(radiance_datacube[i, j, :]) > 0.90  # Don't do anything if there are too many missings
                 continue
             end
             stds[i, j] = std(detrend_ts(filter(x -> !ismissing(x), radiance_datacube[i, j, :])))
