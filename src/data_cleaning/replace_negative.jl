@@ -1,15 +1,15 @@
 """
-Function replaces the negative values in a datacube with missing. 
+Function replaces the negative values in a datacube with a user specified value. The replacement value defaults to `missing`. 
 """
-function replace_negative(datacube)
-    for i in 1:prod(size(datacube))
-        if ismissing(datacube[i]) 
+function replace_negative(radiance_datacube; replacement = missing)
+    for i in 1:prod(size(radiance_datacube))
+        if ismissing(radiance_datacube[i]) 
             continue
-        elseif datacube[i] < 0
-                datacube[i] = missing
+        elseif radiance_datacube[i] < 0
+                radiance_datacube[i] = replacement
         else
             continue
         end
     end
-    return datacube
+    return radiance_datacube
 end

@@ -4,10 +4,10 @@ function t_test(n,r)
     return pvalue(t_dist,stat,tail=:right)
 end 
 
-function rank_correlation_test(radiance, clouds)
+function rank_correlation_test(radiance, ncfobs)
     missings = findall(ismissing, radiance)
     y = filter!(!ismissing, copy(radiance))
-    x = Array{Union{Float64, Missing}}(copy(clouds))
+    x = Array{Union{Float64, Missing}}(copy(ncfobs))
     x[missings] .= missing
     x = Array{Float64}(filter!(!ismissing, x))
     y_de = Array{Float64}(detrend_ts(y))

@@ -4,8 +4,8 @@
         for j in 1:10   
             rad[rand(1:100)] = missing
         end
-        clouds = rand(1:31, 100)
-        @test length(NighttimeLights.bias_PSTT2021_pixel(rad, clouds)) == length(rad)
+        ncfobs = rand(1:31, 100)
+        @test length(NighttimeLights.bias_PSTT2021_pixel(rad, ncfobs)) == length(rad)
     end
 end
 
@@ -20,10 +20,10 @@ end
             rad[rand(1:x), rand(1:y), rand(1:z)] = missing
         end
         rad = Raster(rad, dims(radiance_datacube))
-        clouds = rand(1:30, x,y,z)
-        clouds = Raster(clouds, dims(radiance_datacube))
+        ncfobs = rand(1:30, x,y,z)
+        ncfobs = Raster(ncfobs, dims(radiance_datacube))
         mask = rand(0:1, x, y)
-        @test size(bias_PSTT2021(rad, clouds, mask)) == (x, y, z)
+        @test size(bias_PSTT2021(rad, ncfobs, mask)) == (x, y, z)
     end
 end
 
