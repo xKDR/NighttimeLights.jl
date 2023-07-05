@@ -10,7 +10,7 @@ na_interp_linear(x)
 ```
 """
 function na_interp_linear(timeseries)
-    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *1/2
+    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *0.9
         return zero(1:length(timeseries))
     end
     data = copy(timeseries)
