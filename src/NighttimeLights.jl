@@ -22,4 +22,5 @@ include("data_cleaning/replace_negative.jl")
 include("example.jl")
 include("other/rings.jl")
 include("other/com.jl")
+include("readnl.jl")
 end
