@@ -24,6 +24,6 @@ jobs:
               run: julia --project=. -e 'using Pkg; Pkg.test("NighttimeLights", coverage=true)'
             - name: Codecov
               env:
-                CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                CODECOV_TOKEN: ${{ secrets.CODECOV }}
               run: julia --project=. -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
 
