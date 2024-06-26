@@ -66,14 +66,14 @@ Two `RasterDataCube` instances. The first contains the cropped radiance data, an
 
 # Examples
 ```julia
-using Geometries
-geom = Geometries.read("path_to_your_shapefile.shp")  # replace this with your actual shapefile
+using Shapefile
+geom = Shapefile.Table("path_to_your_shapefile.shp").geometry[1]  # replace this with your actual shapefile
 start_date = Date(2015, 01)
 end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(geom, start_date, end_date)
 ```
 """
-function readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
+function readnl(geom::Shapefile.Polygon, start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
     rad_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in rad_path .* rad_files]
