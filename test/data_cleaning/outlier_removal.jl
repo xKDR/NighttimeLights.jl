@@ -11,11 +11,11 @@ end
     for i in 1:10
         x = size(radiance_datacube)[1]
         y = size(radiance_datacube)[2]
-        z = size(radiance_datacube)[4]
+        z = size(radiance_datacube)[3]
         
-        rad = Array{Union{Float64, Missing}}(rand(20:100.0, x, y, 1, z))
+        rad = Array{Union{Float64, Missing}}(rand(20:100.0, x, y, z))
         for j in 1:rand(1:20)
-            rad[rand(1:x), rand(1:y),1,  rand(1:z)] = missing
+            rad[rand(1:x), rand(1:y), rand(1:z)] = missing
         end
         rad = Raster(rad, dims(radiance_datacube))
         mask = rand(0:1, x, y)

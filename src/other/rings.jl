@@ -1,18 +1,16 @@
 """
 ```julia
 using Plots
-load_example()
-img = view(radiance_datacube, Ti(At(201204)))
 res = 15
-R1 = 5
-R2 = 13
+R1 = 2
+R2 = 5
 lat = 19.07
 long = 72.87
-bounds, mask = annular_ring(img, R1, R2, lat, long, res) 
-plot(Rasters.mask(img[bounds...], with = mask))
+bounds, mask = annular_ring(radiance_image, R1, R2, lat, long, res) 
+plot(Rasters.mask(radiance_image[bounds...], with = mask))
 ```
 """
-function annular_ring(img, R1, R2, lat, long, res)
+function annular_ring(radiance_image, R1, R2, lat, long, res)
     if R2 < R1 
         @error "R1 must be less than R2"
     end
@@ -33,19 +31,19 @@ function annular_ring(img, R1, R2, lat, long, res)
     a2 = R2 / Δx # Δx is assumed to be constant over small distances
     b2 = R2 / Δy # Δy is assumed to be constant over small distances
 
-    xₒ = DimensionalData.dims2indices(dims(img)[1], X(Near(long)))
-    yₒ = DimensionalData.dims2indices(dims(img)[2], Y(Near(lat)))
+    xₒ = DimensionalData.dims2indices(dims(radiance_image)[1], X(Near(long)))
+    yₒ = DimensionalData.dims2indices(dims(radiance_image)[2], Y(Near(lat)))
 
     ymin = yₒ + Int(round(b2)) + 5
     ymax = yₒ - Int(round(b2)) - 5
     xmin = xₒ - Int(round(a2)) - 5
     xmax = xₒ + Int(round(a2)) + 5
 
-    longmin, latmin = map(getindex, dims(img), [xmin, ymin])
-    longmax, latmax = map(getindex, dims(img), [xmax, ymax])
+    longmin, latmin = map(getindex, dims(radiance_image), [xmin, ymin])
+    longmax, latmax = map(getindex, dims(radiance_image), [xmax, ymax])
 
     bounds = X(Rasters.Between(longmin, longmax)), Y(Rasters.Between(latmin, latmax))
-    img2 = img[bounds...]
+    img2 = radiance_image[bounds...]
 
     xₒ = DimensionalData.dims2indices(dims(img2)[1], X(Near(long)))
     yₒ = DimensionalData.dims2indices(dims(img2)[2], Y(Near(lat)))
@@ -81,17 +79,15 @@ end
 """
 ```julia
 using Plots
-load_example()
-img = view(radiance_datacube, Ti(At(201204)))
 res = 15
-R = 10
+R = 2
 lat = 19.07
 long = 72.87
-bounds, mask = annular_ring(img, R, lat, long, res) 
-plot(Rasters.mask(img[bounds...], with = mask))
+bounds, mask = annular_ring(radiance_image, R, lat, long, res) 
+plot(Rasters.mask(radiance_image[bounds...], with = mask))
 ```
 """
-function annular_ring(img, R, lat, long, res)
+function annular_ring(radiance_image, R, lat, long, res)
 
     LAT =[-90.0, -89, -86, -82, -78, -74, -70, -60, -50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 74, 78, 82, 86, 89, 90]
     EW  =[0, 16.0, 64, 133, 193, 256, 318, 465, 598, 712, 804, 872, 914, 928, 914, 872, 804, 712, 598, 465, 318, 256, 193, 133, 64, 16, 0]/1000
@@ -107,19 +103,19 @@ function annular_ring(img, R, lat, long, res)
     a = R / Δx # Δx is assumed to be constant over small distances
     b = R / Δy # Δy is assumed to be constant over small distances
 
-    xₒ = DimensionalData.dims2indices(dims(img)[1], X(Near(long)))
-    yₒ = DimensionalData.dims2indices(dims(img)[2], Y(Near(lat)))
+    xₒ = DimensionalData.dims2indices(dims(radiance_image)[1], X(Near(long)))
+    yₒ = DimensionalData.dims2indices(dims(radiance_image)[2], Y(Near(lat)))
 
     ymin = yₒ + Int(round(b)) + 5
     ymax = yₒ - Int(round(b)) - 5
     xmin = xₒ - Int(round(a)) - 5
     xmax = xₒ + Int(round(a)) + 5
 
-    longmin, latmin = map(getindex, dims(img), [xmin, ymin])
-    longmax, latmax = map(getindex, dims(img), [xmax, ymax])
+    longmin, latmin = map(getindex, dims(radiance_image), [xmin, ymin])
+    longmax, latmax = map(getindex, dims(radiance_image), [xmax, ymax])
 
     bounds = X(Rasters.Between(longmin, longmax)), Y(Rasters.Between(latmin, latmax))
-    img2 = img[bounds...]
+    img2 = radiance_image[bounds...]
 
     xₒ = DimensionalData.dims2indices(dims(img2)[1], X(Near(long)))
     yₒ = DimensionalData.dims2indices(dims(img2)[2], Y(Near(lat)))
@@ -137,5 +133,3 @@ function annular_ring(img, R, lat, long, res)
     end
     return bounds, mask
 end
-
-# plot(Rasters.mask(img2, with = (mask1 .* mask)))

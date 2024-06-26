@@ -43,14 +43,14 @@ filelist = readdir("~/Downloads/cfobs")
 radiances = [Raster(i, lazy = true) for i in filelist]
 timestamps = collect(1:length(radiances))
 series = RasterSeries(radiances, Ti(timestamps))
-clouds_datacube = Rasters.combine(series, Ti)
+ncfobs_datacube = Rasters.combine(series, Ti)
 ```
 
 If you haven't downloaded the data, and you want to run the remaining code, you can use `load_example()` to load the datacubes of radiance and the number of cloud-free observations around Mumbai 
 
 ## 3. Cleaning Data
 
-A single function, `clean_complete`, can be used on `radiance_datacube` and `clouds_datacube` to generate a cleaned datacube of radiance. 
+A single function, `clean_complete`, can be used on `radiance_datacube` and `ncfobs_datacube` to generate a cleaned datacube of radiance. 
 ```julia
-cleaned_datacube = clean_complete(radiance_datacube, clouds_datacube) 
+cleaned_datacube = clean_complete(radiance_datacube, ncfobs_datacube) 
 ```

@@ -1,16 +1,16 @@
 #Modifying impute function from https://github.com/invenia/Impute.jl/blob/master/src/imputors/interp.jl 
 
 """
-Uses linear interpolation to fill for missing values. 
-# Example: 
+Uses linear interpolation to fill for missing values. This function work for any kind of array, and not just nighttime lights radiance time series data. 
 ```
 x = rand(1:10.0, 10)
+x = Vector{Union{Missing, Float64}}(x)
 x[5] = missing
 na_interp_linear(x)
 ```
 """
 function na_interp_linear(timeseries)
-    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *1/2
+    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *0.9
         return zero(1:length(timeseries))
     end
     data = copy(timeseries)
