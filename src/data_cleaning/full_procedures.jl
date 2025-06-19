@@ -5,12 +5,12 @@ All steps of data cleaning that most researchers do can be performed using the c
 PSTT2021_conventional(radiance_datacube, ncfobs_datacube)
 ```
 """
-function PSTT2021_conventional(radiance_datacube, ncfobs_datacube)
+function PSTT2021_conventional(radiance_datacube, ncfobs_datacube; bgthreshold = 0.4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp =  replace_negative(tmp)
     GC.gc()
-    noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, 0.4)
+    noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, bgthreshold)
     GC.gc()
     tmp = apply_mask(tmp, noise)
     GC.gc()
@@ -27,16 +27,20 @@ end
 """
 The PSTT2021 function performs all the steps of the new cleaning procedure described in [But clouds got in my way: Bias and bias correction of VIIRS nighttime lights data in the presence of clouds, Ayush Patnaik, Ajay Shah, Anshul Tayal, Susan Thomas](https://www.xkdr.org/releases/PatnaikShahTayalThomas_2021_bias_PSTT2021_nighttime_lights.html) as conventional cleaning.
 
+It can optionally accept a pre-computed `noise` mask.
+
 ```julia
-PSTT2021(radiance_datacube, ncfobs_datacube)
+PSTT2021(radiance_datacube, ncfobs_datacube; noise=nothing, bgthreshold=0.4)
 ```
 """
-function PSTT2021(radiance_datacube, ncfobs_datacube)
+function PSTT2021(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 0.4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp = replace_negative(tmp)
     GC.gc()
-    noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, 0.4)
+    if isnothing(noise)
+        noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, bgthreshold)
+    end
     GC.gc()
     tmp = apply_mask(tmp, noise)
     GC.gc()
@@ -59,20 +63,23 @@ end
 """
 The function `clean_complete()` represents our views on an optimal set of steps for pre-
 processing in the future (for the period for which this package is actively maintained). As
-of today, it is identical to `PSTT2021()``
+of today, it is identical to `PSTT2021()`.
+
+It can optionally accept a pre-computed `noise` mask.
 """
-function clean_complete(radiance_datacube, ncfobs_datacube; bgnoise_clean = true)
+function clean_complete(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 0.4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp = replace_negative(tmp)
     GC.gc()
-    if bgnoise_clean == true
-        noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, 0.4)
+    if isnothing(noise)
+        noise = bgnoise_PSTT2021(tmp, ncfobs_datacube, bgthreshold)
         GC.gc()
         tmp = apply_mask(tmp, noise)
         GC.gc()
     else
-        noise = ones(size(tmp)[1:2]...)
+        tmp = apply_mask(tmp, noise)
+        GC.gc()
     end
     stable_pixels = outlier_variance(tmp)
     GC.gc()
@@ -83,6 +90,7 @@ function clean_complete(radiance_datacube, ncfobs_datacube; bgnoise_clean = true
     mask = noise .* stable_pixels 
     GC.gc()
     tmp = bias_PSTT2021(tmp, ncfobs_datacube, mask)
+    @show 1
     GC.gc()
     tmp = long_apply(na_interp_linear, tmp)    
     GC.gc()
