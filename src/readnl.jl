@@ -18,7 +18,7 @@ function sort_files_by_date(folder_path, start_date=Date(0), end_date=Date(today
 end
 
 """
-readnl(date::Date; rad_path = "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
+readnl(date::Date; rad_path = "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
 
 This function reads and loads two raster files based on a specified date. It assumes the filenames within the provided paths contain a date string in a specific format (defined by the `sort_files_by_date` function) and uses that information to identify the appropriate files for the given date.
 
@@ -27,6 +27,7 @@ This function reads and loads two raster files based on a specified date. It ass
 * `date`: A `Date` object specifying the date for which to read the rasters.
 * `rad_path` (Optional, default: "/mnt/giant-disk/nighttimelights/monthly/rad/"): The path to the directory containing the radiance data files.
 * `cf_path` (Optional, default: "/mnt/giant-disk/nighttimelights/monthly/cf/"): The path to the directory containing the cloud fraction data files.
+* `resample_factor` (Optional, default: nothing): Optional factor to resample the raster. If provided, the raster dimensions will be divided by this factor.
 
 **Return Value:**
 
@@ -42,16 +43,23 @@ A tuple containing two `Raster` objects:
 today = Date(year(), month())
 rad_data, cf_data = readnl(today)
 """
-function readnl(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
+function readnl(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, date, date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, date, date)
-    rad_raster = Raster(rad_path .* rad_files[1])
-    cf_raster = Raster(cf_path .* cf_files[1])
+    
+    rad_raster = Raster(rad_path .* rad_files[1], lazy = true)
+    cf_raster = Raster(cf_path .* cf_files[1], lazy = true)
+    
+    if !isnothing(resample_factor)
+        rad_raster = resample(rad_raster, size = Int.(round.(size(rad_raster) ./ resample_factor)))
+        cf_raster = resample(cf_raster, size = Int.(round.(size(cf_raster) ./ resample_factor)))
+    end
+    
     return rad_raster, cf_raster
 end
 
 """
-    readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01))
+    readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
 
 Read nighttime lights data from a specific directory and return two raster series representing radiance and coverage.
 
@@ -60,6 +68,7 @@ Read nighttime lights data from a specific directory and return two raster serie
 - `ylims`: An instance of `Y(Rasters.Between(min, max))`, defining the Y-coordinate limits. Default is `Y(Rasters.Between(5.34, 39.27))`.
 - `start_date`: The start date (inclusive) of the period for which to load data. Should be an instance of `Date`. Default is `Date(2012, 04)`.
 - `end_date`: The end date (inclusive) of the period for which to load data. Should be an instance of `Date`. Default is `Date(2023, 01)`.
+- `resample_factor`: Optional factor to resample the raster. If provided, the raster dimensions will be divided by this factor.
 
 # Returns
 Two data cubes. The first contains the radiance data, and the second contains the coverage data. Each data cube includes data from the start_date to the end_date, sorted in ascending order.
@@ -72,12 +81,19 @@ start_date = Date(2015, 01)
 end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(xlims, ylims, start_date, end_date)
 """
-function readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
+function readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     lims = xlims, ylims
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
-    rad_raster_list = [Raster(i, lazy = true)[lims...] for i in rad_path .* rad_files]
-    cf_raster_list = [Raster(i, lazy = true)[lims...] for i in cf_path .* cf_files]
+    
+    if !isnothing(resample_factor)
+        rad_raster_list = [resample(Raster(i, lazy = true), size = Int.(round.(size(Raster(i, lazy = true)) ./ resample_factor)))[lims...] for i in rad_path .* rad_files]
+        cf_raster_list = [resample(Raster(i, lazy = true), size = Int.(round.(size(Raster(i, lazy = true)) ./ resample_factor)))[lims...] for i in cf_path .* cf_files]
+    else
+        rad_raster_list = [Raster(i, lazy = true)[lims...] for i in rad_path .* rad_files]
+        cf_raster_list = [Raster(i, lazy = true)[lims...] for i in cf_path .* cf_files]
+    end
+    
     rad_series = RasterSeries(rad_raster_list, Ti(sorted_dates))
     cf_series = RasterSeries(cf_raster_list, Ti(sorted_dates))
     rad_datacube = Rasters.combine(rad_series, Ti)
@@ -86,7 +102,7 @@ function readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Betw
 end
 
 """
-    readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01))
+    readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
 
 Read nighttime lights data from a specific directory and return two raster data cubes representing radiance and coverage. This function also crops the rasters based on the given geometry.
 
@@ -94,6 +110,7 @@ Read nighttime lights data from a specific directory and return two raster data 
 - `geom`: A geometry object, which will be used to crop the rasters. This could be an instance of `Geometry`, `Polygon`, `MultiPolygon`, etc. from a shapefile.
 - `start_date`: The start date (inclusive) of the period for which to load data. Should be an instance of `Date`. Default is `Date(2012, 04)`.
 - `end_date`: The end date (inclusive) of the period for which to load data. Should be an instance of `Date`. Default is `Date(2023, 01)`.
+- `resample_factor`: Optional factor to resample the raster. If provided, the raster dimensions will be divided by this factor.
 
 # Returns
 Two `RasterDataCube` instances. The first contains the cropped radiance data, and the second contains the cropped coverage data. Each `RasterDataCube` includes data from the `start_date` to the `end_date`, sorted in ascending order.
@@ -107,14 +124,92 @@ end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(geom, start_date, end_date)
 ```
 """
-function readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/")
+function readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
-    rad_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in rad_path .* rad_files]
-    cf_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in cf_path .* cf_files]
+    
+    if !isnothing(resample_factor)
+        rad_raster_list = [resample(crop(Raster(i, lazy = true), to = geom), size = Int.(round.(size(crop(Raster(i, lazy = true), to = geom)) ./ resample_factor))) for i in rad_path .* rad_files]
+        cf_raster_list = [resample(crop(Raster(i, lazy = true), to = geom), size = Int.(round.(size(crop(Raster(i, lazy = true), to = geom)) ./ resample_factor))) for i in cf_path .* cf_files]
+    else
+        rad_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in rad_path .* rad_files]
+        cf_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in cf_path .* cf_files]
+    end
+    
     rad_series = RasterSeries(rad_raster_list, Ti(sorted_dates))
     cf_series = RasterSeries(cf_raster_list, Ti(sorted_dates))
     rad_datacube = Rasters.combine(rad_series, Ti)
     cf_datacube = Rasters.combine(cf_series, Ti)
     return rad_datacube, cf_datacube
 end
+
+"""
+    read_noise_mask(;path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp_2024_global_vcmslcfg_c202502261200.lit_mask.dat.tif", resample_factor = nothing)
+
+Read the noise mask file.
+
+# Arguments
+- `path`: The path to the noise mask file.
+- `resample_factor`: Optional factor to resample the raster. If provided, the raster dimensions will be divided by this factor.
+
+# Returns
+A `Raster` object of the noise mask with 0s converted to missing values.
+"""
+function read_noise_mask(;path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp_2024_global_vcmslcfg_c202502261200.lit_mask.dat.tif", resample_factor = nothing)
+    raster = Raster(path, lazy = true)
+    if !isnothing(resample_factor)
+        raster = resample(raster, size = Int.(round.(size(raster) ./ resample_factor)))
+    end
+    # Convert 0 values to missing
+    raster = Int64.(raster)
+    mask = replace(raster, 0 => missing)
+    return mask
+end
+
+"""
+    read_noise_mask(geom; kwargs...)
+
+Read and crop the noise mask file based on a geometry.
+
+# Arguments
+- `geom`: A geometry object to crop the raster.
+- `kwargs...`: Keyword arguments passed to `read_noise_mask()`, e.g., `path` or `resample_factor`.
+
+# Returns
+A cropped `Raster` object of the noise mask with 0s converted to missing values.
+"""
+function read_noise_mask(geom; path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp_2024_global_vcmslcfg_c202502261200.lit_mask.dat.tif", resample_factor = nothing, kwargs...)
+    raster = Raster(path, lazy = true)
+    cropped = crop(raster, to = geom)
+    if !isnothing(resample_factor)
+        cropped = resample(cropped, size = Int.(round.(size(cropped) ./ resample_factor)))
+    end
+    # Convert 0 values to missing
+    cropped = Int64.(cropped)
+    mask = replace(cropped, 0 => missing)
+    return mask
+end
+
+"""
+    read_noise_mask(xlims, ylims; kwargs...)
+
+Read and crop the noise mask file based on X and Y limits.
+
+# Arguments
+- `xlims`, `ylims`: X and Y coordinate limits for cropping.
+- `kwargs...`: Keyword arguments passed to `read_noise_mask()`, e.g., `path` or `resample_factor`.
+
+# Returns
+A cropped `Raster` object of the noise mask with 0s converted to missing values.
+"""
+function read_noise_mask(xlims, ylims; path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp_2024_global_vcmslcfg_c202502261200.lit_mask.dat.tif", resample_factor = nothing, kwargs...)
+    raster = Raster(path, lazy = true)
+    cropped = raster[xlims, ylims]
+    if !isnothing(resample_factor)
+        cropped = resample(cropped, size = Int.(round.(size(cropped) ./ resample_factor)))
+    end
+    # Convert 0 values to missing
+    cropped = Int64.(cropped)
+    mask = replace(cropped, 0 => missing)
+    return mask
+end 

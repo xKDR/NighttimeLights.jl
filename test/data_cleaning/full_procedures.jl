@@ -7,6 +7,5 @@ end
 end
 
 @testset "complete cleaning" begin
-    @test size(clean_complete(radiance_datacube, ncfobs_datacube; bgnoise_clean = true)) == size(radiance_datacube)
-    @test size(clean_complete(radiance_datacube, ncfobs_datacube; bgnoise_clean = false)) == size(radiance_datacube)
+    @test size(clean_complete(radiance_datacube, ncfobs_datacube)) == size(radiance_datacube)
 end

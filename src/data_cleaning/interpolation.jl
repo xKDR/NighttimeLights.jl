@@ -10,8 +10,10 @@ na_interp_linear(x)
 ```
 """
 function na_interp_linear(timeseries)
-    if  count(i->(ismissing(i)), timeseries) > length(timeseries) *0.9
-        return zero(1:length(timeseries))
+    if  count(i->(ismissing(i)), timeseries) > length(timeseries) * 0.9
+        # Always return a vector of zeros of the correct type, even if all values are missing
+        T = eltype(timeseries) === Missing ? Float64 : nonmissingtype(eltype(timeseries))
+        return fill(zero(T), length(timeseries))
     end
     data = copy(timeseries)
     i = findfirst(!ismissing, data) + 1

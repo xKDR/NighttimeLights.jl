@@ -10,6 +10,7 @@ julia> long_apply(x, datacube)
 """
 function long_apply(f, datacube, mask = ones(size(datacube)[1], size(datacube)[2]))
     for i in 1:size(datacube)[1]
+
         for j in 1:size(datacube)[2]
             if ismissing(mask[i, j])
                 continue
