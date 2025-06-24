@@ -209,7 +209,7 @@ function read_noise_mask(xlims, ylims; path = "/mnt/giant-disk/ntl/noisemask/VNL
         cropped = resample(cropped, size = Int.(round.(size(cropped) ./ resample_factor)))
     end
     # Convert 0 values to missing
-    raster = Int64.(raster)
+    cropped = Int64.(cropped)
     mask = replace(cropped, 0 => missing)
     return mask
 end 
