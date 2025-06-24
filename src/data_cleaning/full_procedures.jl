@@ -14,8 +14,17 @@ function PSTT2021_conventional(radiance_datacube, ncfobs_datacube; bgthreshold =
     GC.gc()
     tmp = apply_mask(tmp, noise)
     GC.gc()
-    stable_pixels = outlier_variance(tmp, noise)
-    GC.gc()
+    
+    # Default value for stable_pixels - will be overwritten if outlier_variance succeeds
+    stable_pixels = ones(Int8, size(tmp)[1], size(tmp)[2])
+    
+    try
+        stable_pixels = outlier_variance(tmp, noise)
+        GC.gc()
+    catch e
+        @warn "outlier_variance failed, using all pixels as stable" exception=(e, catch_backtrace())
+        # stable_pixels is already set to a default value above
+    end
     tmp = apply_mask(tmp, stable_pixels)
     GC.gc()
     tmp = long_apply(outlier_hampel, tmp)
@@ -44,8 +53,17 @@ function PSTT2021(radiance_datacube, ncfobs_datacube; noise = nothing, bgthresho
     GC.gc()
     tmp = apply_mask(tmp, noise)
     GC.gc()
-    stable_pixels = outlier_variance(tmp, noise)
-    GC.gc()
+    
+    # Default value for stable_pixels - will be overwritten if outlier_variance succeeds
+    stable_pixels = ones(Int8, size(tmp)[1], size(tmp)[2])
+    
+    try
+        stable_pixels = outlier_variance(tmp, noise)
+        GC.gc()
+    catch e
+        @warn "outlier_variance failed, using all pixels as stable" exception=(e, catch_backtrace())
+        # stable_pixels is already set to a default value above
+    end
     tmp = apply_mask(tmp, stable_pixels)
     GC.gc()
     tmp = long_apply(outlier_hampel, tmp)
@@ -81,17 +99,27 @@ function clean_complete(radiance_datacube, ncfobs_datacube; noise = nothing, bgt
         tmp = apply_mask(tmp, noise)
         GC.gc()
     end
-    stable_pixels = outlier_variance(tmp)
+    mask = noise
+    # Default value for stable_pixels - will be overwritten if outlier_variance succeeds    
+    try
+        stable_pixels = outlier_variance(tmp, noise)
+        tmp = apply_mask(tmp, stable_pixels)
+        GC.gc()
+        mask = noise .* stable_pixels 
+    catch e
+        @warn "outlier_variance failed, using all pixels as stable" exception=(e, catch_backtrace())
+        # stable_pixels is already set to a default value above
+    end
+    
     GC.gc()
-    tmp = apply_mask(tmp, stable_pixels)
-    GC.gc()
-    tmp = long_apply(outlier_hampel, tmp)
-    GC.gc()
-    mask = noise .* stable_pixels 
+    tmp = long_apply(outlier_hampel, tmp)    
     GC.gc()
     tmp = bias_PSTT2021(tmp, ncfobs_datacube, mask)
-    @show 1
     GC.gc()
+    if length(unique(tmp)) == 1 # If every value is missing. 
+        tmp = Raster(zeros(size(tmp)), dims(radiance_datacube))
+        return tmp
+    end
     tmp = long_apply(na_interp_linear, tmp)    
     GC.gc()
     return tmp
