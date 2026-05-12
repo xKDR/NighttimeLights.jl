@@ -81,7 +81,7 @@ start_date = Date(2015, 01)
 end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(xlims, ylims, start_date, end_date)
 """
-function readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl(xlims::X, ylims::Y, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     lims = xlims, ylims
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
@@ -212,4 +212,4 @@ function read_noise_mask(xlims, ylims; path = "/mnt/giant-disk/ntl/noisemask/VNL
     cropped = Int64.(cropped)
     mask = replace(cropped, 0 => missing)
     return mask
-end 
+end

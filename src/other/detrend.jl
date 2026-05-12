@@ -1,13 +1,20 @@
-
 """
-This function removes time trend from a timeseries. 
+This function removes time trend from a timeseries using direct OLS computation.
 """
 function detrend_ts(timeseries)
-    x = collect(0:1/12:1/12*(length(timeseries)-1))
-    x = convert(Array{Float64,1},x)
-    y = Array{Union{Float64, Missing}}(timeseries)
-    data = DataFrame(X=x, Y=y)
-    ols = lm(@formula(Y ~ X), data)
-    f(x) = coef(ols)[1] + coef(ols)[2]*x
-    return (timeseries - f.(x))
+    n = length(timeseries)
+    x = collect(0.0:(1/12):(1/12*(n-1)))
+    y = Array{Float64}(timeseries)
+    x̄ = sum(x) / n
+    ȳ = sum(y) / n
+    Sxy = zero(Float64)
+    Sxx = zero(Float64)
+    @inbounds for i in 1:n
+        dx = x[i] - x̄
+        Sxy += dx * (y[i] - ȳ)
+        Sxx += dx * dx
+    end
+    b = Sxy / Sxx
+    a = ȳ - b * x̄
+    return timeseries .- (a .+ b .* x)
 end

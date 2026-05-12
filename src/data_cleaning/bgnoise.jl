@@ -1,5 +1,5 @@
 """
-Pixels with no economic activity may show some light due to background noise. These pixels could be in forests, oceans, deserts etc. The ```bgnoise_PSTT2021``` function generates a background moise mask such that those pixels which are considered dark are marked as 0 and those considered lit are marked as 1. The function uses the datacubes of radiance and ncfobs to generate annual image of the last year the data. The function considers all the pixels below a provided threshold as dark and remaining to be lit. 
+Pixels with no economic activity may show some light due to background noise. These pixels could be in forests, oceans, deserts etc. The ```bgnoise_PSTT2021``` function generates a background moise mask such that those pixels which are considered dark are marked as 0 and those considered lit are marked as 1. The function uses the datacubes of radiance and ncfobs to generate annual image of the last year the data. The function considers all the pixels below a provided threshold as dark and remaining to be lit.
 ```julia
 bgnoise_PSTT2021(radiance_datacube, ncfobs_datacube)
 ```
@@ -12,8 +12,10 @@ function bgnoise_PSTT2021(radiance_datacube, ncfobs_datacube, th = 0.4)
             return 1
         end
     end
-    last_year_rad = radiance_datacube[:, :, (size(radiance_datacube)[3]-11):size(radiance_datacube)[3]]
-    last_year_cloud   = ncfobs_datacube[:, :, (size(ncfobs_datacube)[3]-11):size(ncfobs_datacube)[3]]
+    n_months = size(radiance_datacube)[3]
+    last_n = min(12, n_months)
+    last_year_rad = radiance_datacube[:, :, (n_months - last_n + 1):n_months]
+    last_year_cloud = ncfobs_datacube[:, :, (n_months - last_n + 1):n_months]
     average_lastyear = copy(radiance_datacube[:, :, 1])
     for i in 1:size(last_year_rad)[1]
         for j in 1:size(last_year_rad)[2]
