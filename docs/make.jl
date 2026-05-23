@@ -18,6 +18,7 @@ makedocs(;
         "Basic concepts" => "concepts.md",
         "Data Cleaning"=> "data_cleaning.md",
         "Tutorial" =>"tutorial.md",
+        "API Reference" => "api.md",
     ],
 )
 

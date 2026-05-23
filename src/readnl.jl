@@ -18,30 +18,24 @@ function sort_files_by_date(folder_path, start_date=Date(0), end_date=Date(today
 end
 
 """
-readnl(date::Date; rad_path = "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+    readnl(date::Date; rad_path, cf_path, resample_factor)
 
-This function reads and loads two raster files based on a specified date. It assumes the filenames within the provided paths contain a date string in a specific format (defined by the `sort_files_by_date` function) and uses that information to identify the appropriate files for the given date.
+Read and load two raster files (radiance and cloud fraction) for a specified date.
 
-**Arguments:**
+# Arguments
+- `date::Date`: The date for which to read the rasters.
+- `rad_path` (default: "/mnt/giant-disk/nighttimelights/monthly/rad/"): Path to radiance data files.
+- `cf_path` (default: "/mnt/giant-disk/nighttimelights/monthly/cf/"): Path to cloud fraction data files.
+- `resample_factor` (default: nothing): Optional factor to resample the raster dimensions.
 
-* `date`: A `Date` object specifying the date for which to read the rasters.
-* `rad_path` (Optional, default: "/mnt/giant-disk/nighttimelights/monthly/rad/"): The path to the directory containing the radiance data files.
-* `cf_path` (Optional, default: "/mnt/giant-disk/nighttimelights/monthly/cf/"): The path to the directory containing the cloud fraction data files.
-* `resample_factor` (Optional, default: nothing): Optional factor to resample the raster. If provided, the raster dimensions will be divided by this factor.
+# Returns
+A tuple of two `Raster` objects: (radiance, cloud_fraction).
 
-**Return Value:**
-
-A tuple containing two `Raster` objects:
-
-* The first element is a `Raster` object loaded from the radiance data file corresponding to the provided date.
-* The second element is a `Raster` object loaded from the cloud fraction data file corresponding to the provided date.
-
-**Example Usage:**
-
+# Example
 ```julia
-# Assuming sort_files_by_date is defined elsewhere
-today = Date(year(), month())
+today = Date(2023, 1)
 rad_data, cf_data = readnl(today)
+```
 """
 function readnl(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, date, date)
@@ -80,20 +74,21 @@ ylims = Y(Rasters.Between(5.34, 15.34))
 start_date = Date(2015, 01)
 end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(xlims, ylims, start_date, end_date)
+```
 """
-function readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl(xlims::X, ylims::Y, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     lims = xlims, ylims
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
     
     if !isnothing(resample_factor)
-        rad_raster_list = [resample(Raster(i, lazy = true), size = Int.(round.(size(Raster(i, lazy = true)) ./ resample_factor)))[lims...] for i in rad_path .* rad_files]
-        cf_raster_list = [resample(Raster(i, lazy = true), size = Int.(round.(size(Raster(i, lazy = true)) ./ resample_factor)))[lims...] for i in cf_path .* cf_files]
+        rad_raster_list = [let r = Raster(i, lazy = true); resample(r, size = Int.(round.(size(r) ./ resample_factor)))[lims...] end for i in rad_path .* rad_files]
+        cf_raster_list = [let r = Raster(i, lazy = true); resample(r, size = Int.(round.(size(r) ./ resample_factor)))[lims...] end for i in cf_path .* cf_files]
     else
         rad_raster_list = [Raster(i, lazy = true)[lims...] for i in rad_path .* rad_files]
         cf_raster_list = [Raster(i, lazy = true)[lims...] for i in cf_path .* cf_files]
     end
-    
+
     rad_series = RasterSeries(rad_raster_list, Ti(sorted_dates))
     cf_series = RasterSeries(cf_raster_list, Ti(sorted_dates))
     rad_datacube = Rasters.combine(rad_series, Ti)
@@ -124,13 +119,13 @@ end_date = Date(2020, 12)
 rad_dc, cf_dc = readnl(geom, start_date, end_date)
 ```
 """
-function readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl(geom, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
-    
+
     if !isnothing(resample_factor)
-        rad_raster_list = [resample(crop(Raster(i, lazy = true), to = geom), size = Int.(round.(size(crop(Raster(i, lazy = true), to = geom)) ./ resample_factor))) for i in rad_path .* rad_files]
-        cf_raster_list = [resample(crop(Raster(i, lazy = true), to = geom), size = Int.(round.(size(crop(Raster(i, lazy = true), to = geom)) ./ resample_factor))) for i in cf_path .* cf_files]
+        rad_raster_list = [let c = crop(Raster(i, lazy = true), to = geom); resample(c, size = Int.(round.(size(c) ./ resample_factor))) end for i in rad_path .* rad_files]
+        cf_raster_list = [let c = crop(Raster(i, lazy = true), to = geom); resample(c, size = Int.(round.(size(c) ./ resample_factor))) end for i in cf_path .* cf_files]
     else
         rad_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in rad_path .* rad_files]
         cf_raster_list = [crop(Raster(i, lazy = true), to = geom) for i in cf_path .* cf_files]
