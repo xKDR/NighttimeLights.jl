@@ -4,8 +4,8 @@ Pixels with no economic activity may show some light due to background noise. Th
 bgnoise_PSTT2021(radiance_datacube, ncfobs_datacube)
 ```
 """
-function bgnoise_PSTT2021(radiance_datacube, ncfobs_datacube, th = 0.4)
-    function noise_threshold(x, th = 0.4)
+function bgnoise_PSTT2021(radiance_datacube, ncfobs_datacube, th = 4)
+    function noise_threshold(x, th = 4)
         if x<=th
             return missing
         else
