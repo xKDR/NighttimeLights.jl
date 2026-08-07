@@ -18,7 +18,7 @@ function sort_files_by_date(folder_path, start_date=Date(0), end_date=Date(today
 end
 
 """
-    readnl(date::Date; rad_path, cf_path, resample_factor)
+    readnl_date(date::Date; rad_path, cf_path, resample_factor)
 
 Read and load two raster files (radiance and cloud fraction) for a specified date.
 
@@ -34,10 +34,10 @@ A tuple of two `Raster` objects: (radiance, cloud_fraction).
 # Example
 ```julia
 today = Date(2023, 1)
-rad_data, cf_data = readnl(today)
+rad_data, cf_data = readnl_date(today)
 ```
 """
-function readnl(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl_date(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, date, date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, date, date)
     
@@ -53,7 +53,7 @@ function readnl(date::Date; rad_path =  "/mnt/giant-disk/nighttimelights/monthly
 end
 
 """
-    readnl(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
+    readnl_rectangle(xlims = X(Rasters.Between(65.39, 99.94)), ylims = Y(Rasters.Between(5.34, 39.27)), start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
 
 Read nighttime lights data from a specific directory and return two raster series representing radiance and coverage.
 
@@ -73,10 +73,10 @@ xlims = X(Rasters.Between(65.39, 75.39))
 ylims = Y(Rasters.Between(5.34, 15.34))
 start_date = Date(2015, 01)
 end_date = Date(2020, 12)
-rad_dc, cf_dc = readnl(xlims, ylims, start_date, end_date)
+rad_dc, cf_dc = readnl_rectangle(xlims, ylims, start_date, end_date)
 ```
 """
-function readnl(xlims::X, ylims::Y, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl_rectangle(xlims::X, ylims::Y, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     lims = xlims, ylims
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
@@ -97,7 +97,7 @@ function readnl(xlims::X, ylims::Y, start_date::Date = Date(2012, 04), end_date:
 end
 
 """
-    readnl(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
+    readnl_geom(geom, start_date = Date(2012, 04), end_date = Date(2023, 01); resample_factor = nothing)
 
 Read nighttime lights data from a specific directory and return two raster data cubes representing radiance and coverage. This function also crops the rasters based on the given geometry.
 
@@ -116,10 +116,10 @@ using Shapefile
 geom = Shapefile.Table("path_to_your_shapefile.shp").geometry[1]  # replace this with your actual shapefile
 start_date = Date(2015, 01)
 end_date = Date(2020, 12)
-rad_dc, cf_dc = readnl(geom, start_date, end_date)
+rad_dc, cf_dc = readnl_geom(geom, start_date, end_date)
 ```
 """
-function readnl(geom, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
+function readnl_geom(geom, start_date::Date = Date(2012, 04), end_date::Date = Date(2023, 01); rad_path =  "/mnt/giant-disk/nighttimelights/monthly/rad/", cf_path = "/mnt/giant-disk/nighttimelights/monthly/cf/", resample_factor = nothing)
     rad_files, sorted_dates = sort_files_by_date(rad_path, start_date, end_date)
     cf_files, sorted_dates = sort_files_by_date(cf_path, start_date, end_date)
 

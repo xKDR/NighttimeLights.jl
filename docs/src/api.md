@@ -7,7 +7,9 @@ CurrentModule = NighttimeLights
 ## Reading Data
 
 ```@docs
-readnl
+readnl_geom
+readnl_rectangle
+readnl_date
 read_noise_mask
 ```
 
