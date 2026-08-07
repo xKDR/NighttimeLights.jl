@@ -5,6 +5,9 @@ using Rasters, DataFrames, Shapefile, StatsBase, SmoothingSplines, GLM, Distribu
 ## Utilities
 export Raster, load_example, radiance_datacube, ncfobs_datacube, long_apply, apply_mask, mumbai_map, add_dim, annular_ring, centre_of_mass, readnl_rectangle, readnl_date, readnl_geom, read_noise_mask, yearmon
 
+## cleaning methods
+export bgnoise_PSTT2021, bias_PSTT2021, PSTT2021_conventional, PSTT2021, clean_complete, na_interp_linear, na_recode, outlier_variance, outlier_hampel, replace_negative
+
 include("other/detrend.jl")
 include("f_apply.jl")
 include("other/rank_correlation.jl")
