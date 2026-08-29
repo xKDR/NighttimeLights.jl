@@ -5,7 +5,7 @@ All steps of data cleaning that most researchers do can be performed using the c
 PSTT2021_conventional(radiance_datacube, ncfobs_datacube)
 ```
 """
-function PSTT2021_conventional(radiance_datacube, ncfobs_datacube; bgthreshold = 0.4)
+function PSTT2021_conventional(radiance_datacube, ncfobs_datacube; bgthreshold = 4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp =  replace_negative(tmp)
@@ -39,10 +39,10 @@ The PSTT2021 function performs all the steps of the new cleaning procedure descr
 It can optionally accept a pre-computed `noise` mask.
 
 ```julia
-PSTT2021(radiance_datacube, ncfobs_datacube; noise=nothing, bgthreshold=0.4)
+PSTT2021(radiance_datacube, ncfobs_datacube; noise=nothing, bgthreshold=4)
 ```
 """
-function PSTT2021(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 0.4)
+function PSTT2021(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp = replace_negative(tmp)
@@ -85,7 +85,7 @@ of today, it is identical to `PSTT2021()`.
 
 It can optionally accept a pre-computed `noise` mask.
 """
-function clean_complete(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 0.4)
+function clean_complete(radiance_datacube, ncfobs_datacube; noise = nothing, bgthreshold = 4)
     tmp = na_recode(radiance_datacube, ncfobs_datacube)
     GC.gc()
     tmp = replace_negative(tmp)
