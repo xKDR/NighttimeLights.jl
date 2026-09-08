@@ -23,7 +23,7 @@ The datacubes and the district level shapefile for Mumbai city are provided with
         println("
         Follow the tutorial on:
         
-        https://xkdr.github.io/NighttimeLights.jl/tutorial.html
+        https://xkdr.github.io/NighttimeLights.jl/stable/tutorial/
         
         radiance_datacube, ncfobs_datacube and mumbai_map are loaded
         ")
