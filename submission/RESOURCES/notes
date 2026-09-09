@@ -1,0 +1,83 @@
+RESOURCES/notes — what the literature is and why it matters here
+================================================================
+
+Bib keys match ../DOC/paper.bib (via additional.bib symlink). Each cited
+work should have a matching <key>.pdf in this directory.
+
+Central to the method
+---------------------
+
+patnaik2021but
+  The source of the cloud-bias correction. Shows that VIIRS monthly
+  composites are biased downward in cloudy months because cloud-free
+  observations are non-randomly missing, and derives the correction that
+  NighttimeLights.jl implements as bias_PSTT2021 / the PSTT2021 pipeline.
+  This is the paper the software is the reference implementation of.
+
+uprety2019calibration
+  VIIRS DNB v2 reprocessing / calibration. Establishes the stray-light
+  ("sl") corrected product that the replication downloads and cleans.
+
+guptaEtal2017_analysisViirsDerivedNightlightOverIndia
+  VIIRS-DNB behaviour over India specifically; motivates outlier and
+  background-noise handling for the Indian context used in the example.
+
+pearson2002outliers
+  Outlier detection in process data; background for the Hampel-filter
+  outlier step (outlier_hampel).
+
+Economic-activity motivation
+----------------------------
+
+doll2006mapping
+  Early demonstration that night-light radiance maps regional economic
+  activity. Part of the "why night lights" case in the Summary.
+
+hendersonEtal2012_measuringEconomicGrowthFromOuterSpace
+  Canonical economics reference: night lights as a proxy for GDP growth
+  where official statistics are weak.
+
+donaldsonEtal2016_viewFromAboveApplicationSatelliteDataEconomics
+  Survey of satellite data in economics; frames night lights as alternative
+  data.
+
+gibson2020night
+  Critical review of night-lights sources and their pitfalls in economics —
+  supports the "not analysis-ready" argument for a cleaning package.
+
+State of the field / comparison tools
+-------------------------------------
+
+elvidge2013viirs        VIIRS superior to DMSP-OLS for night-lights mapping.
+li2020harmonized        Harmonised DMSP+VIIRS 1992-2018 series.
+marty2024blackmarbler    R package: downloads NASA Black Marble, zonal stats.
+marty2024blackmarblepy   Python counterpart of blackmarbler.
+njoku2019rnightlights    R package: DMSP-OLS / VIIRS extraction.
+gorelick2017gee          Google Earth Engine — server-side access/aggregation.
+  These four are the "existing tools" NighttimeLights.jl is distinguished
+  from: they do acquisition and spatial aggregation, not statistical
+  cleaning or cloud-bias correction.
+
+Applications built on the package
+---------------------------------
+
+hande2025shedding        Wartime economic activity, Russia-Ukraine.
+aviliani2026lights       Regional economic patterns, Java, Indonesia.
+xkdr2026indiabuiltlit    Public India Built-and-Lit cleaned NL dataset.
+
+Supporting / methods references
+-------------------------------
+
+HyndmanEtal2008_automaticTsForecatingForecastPackageR   forecast pkg (R).
+x13as2013                                               X-13ARIMA-SEATS manual.
+elvidgeEtal2017_viirsNightlight                          VIIRS DNB overview.
+zhaoEtal2019_applicationsNightlightObservation           NL remote-sensing review.
+zhaoEtal2017_improvingAccuracyofEconomicEstimatesWithVIIRS
+MaEtal2014_responsesNppViirsNightlightSocioeconomicChina
+beyerEtal2018_measuringMonthlyEcoActivityOuterSpace
+beyerEtal2020_examiningEcoImpactCovidDailyElectricityConsumptionNightlightIntensity
+blakeslee2021land
+ghani2017highways
+tveit2022using
+ishizawa2017understanding
+  TODO: one- to two-sentence relevance note each once the PDFs are filed.

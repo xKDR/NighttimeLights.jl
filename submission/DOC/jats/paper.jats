@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.2 20190208//EN"
+                  "JATS-publishing1.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.2" article-type="other">
+<front>
+<journal-meta>
+<journal-id></journal-id>
+<journal-title-group>
+<journal-title>Journal of Open Source Software</journal-title>
+<abbrev-journal-title>JOSS</abbrev-journal-title>
+</journal-title-group>
+<issn publication-format="electronic">2475-9066</issn>
+<publisher>
+<publisher-name>Open Journals</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">0</article-id>
+<article-id pub-id-type="doi">N/A</article-id>
+<title-group>
+<article-title>Foundations for nighttime lights data
+analysis</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author" equal-contrib="yes">
+<name>
+<surname>Patnaik</surname>
+<given-names>Ayush</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<contrib contrib-type="author" equal-contrib="yes">
+<name>
+<surname>Shah</surname>
+<given-names>Ajay</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<contrib contrib-type="author" equal-contrib="yes">
+<name>
+<surname>Thomas</surname>
+<given-names>Susan</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+</contrib>
+<aff id="aff-1">
+<institution-wrap>
+<institution>xKDR Forum</institution>
+</institution-wrap>
+</aff>
+</contrib-group>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2026-09-08">
+<day>8</day>
+<month>9</month>
+<year>2026</year>
+</pub-date>
+<volume>¿VOL?</volume>
+<issue>¿ISSUE?</issue>
+<fpage>¿PAGE?</fpage>
+<permissions>
+<copyright-statement>Authors of papers retain copyright and release the
+work under a Creative Commons Attribution 4.0 International License (CC
+BY 4.0)</copyright-statement>
+<copyright-year>1970</copyright-year>
+<copyright-holder>The article authors</copyright-holder>
+<license license-type="open-access" xlink:href="https://creativecommons.org/licenses/by/4.0/">
+<license-p>Authors of papers retain copyright and release the work under
+a Creative Commons Attribution 4.0 International License (CC BY
+4.0)</license-p>
+</license>
+</permissions>
+<kwd-group kwd-group-type="author">
+<kwd>Julia</kwd>
+<kwd>nighttime lights</kwd>
+<kwd>VIIRS</kwd>
+<kwd>remote sensing</kwd>
+<kwd>economic activity</kwd>
+</kwd-group>
+</article-meta>
+</front>
+<body>
+<sec id="summary">
+  <title>Summary</title>
+  <p>A remarkable development in alternative data is the use of
+  satellites that measure nighttime light radiance. From the early
+  1990s, Nightlights (NL) has been used to measure economic activity. NL
+  correlates well with standard measures of growth and development
+  (<xref alt="Doll et al., 2006" rid="ref-doll2006mapping" ref-type="bibr">Doll
+  et al., 2006</xref>), which allows measures of economic growth where
+  existing measures are either unreliable or lack the continuity and/or
+  resolution of constant satellite observation.</p>
+  <p>Raw monthly NL files are not analysis-ready. They contain missing
+  observations, negative values, outliers, background noise, and
+  cloud-related attenuation
+  (<xref alt="Jiang et al., 2017" rid="ref-rs9080798" ref-type="bibr">Jiang
+  et al., 2017</xref>;
+  <xref alt="Ma et al., 2014" rid="ref-MaEtal2014_responsesNppViirsNightlightSocioeconomicChina" ref-type="bibr">Ma
+  et al., 2014</xref>;
+  <xref alt="Uprety et al., 2019" rid="ref-uprety2019calibration" ref-type="bibr">Uprety
+  et al., 2019</xref>). As a result, every research team must
+  individually implement preprocessing, often with project-specific
+  scripts. This creates entry barriers and weakens comparability and
+  reproducibility across studies.</p>
+</sec>
+<sec id="statement-of-need">
+  <title>Statement of need</title>
+  <p><monospace>NighttimeLights.jl</monospace> is a Julia package for
+  cleaning and bias-correcting monthly nighttime lights from the Visible
+  Infrared Imaging Radiometer Suite (VIIRS). It provides a transparent
+  and reproducible workflow that implements established methods from the
+  applied literature, including cloud-related attenuation correction
+  (<xref alt="K Gupta et al., 2017" rid="ref-guptaEtal2017_analysisViirsDerivedNightlightOverIndia" ref-type="bibr">K
+  Gupta et al., 2017</xref>;
+  <xref alt="Patnaik et al., 2021" rid="ref-patnaik2021but" ref-type="bibr">Patnaik
+  et al., 2021</xref>;
+  <xref alt="Pearson, 2002" rid="ref-pearson2002outliers" ref-type="bibr">Pearson,
+  2002</xref>).</p>
+  <p>The package addresses a practical gap: many papers using NL data
+  rely on individual preprocessing pipelines, making it difficult to
+  reproduce findings or compare outcomes across studies. By
+  consolidating key cleaning steps into one standard package,
+  <monospace>NighttimeLights.jl</monospace> reduces duplicated effort
+  and standardizes core data preparation.</p>
+</sec>
+<sec id="state-of-the-field">
+  <title>State of the field</title>
+  <p>There are two dominant nighttime-lights products used in applied
+  work: annual DMSP-OLS composites (1992-2013) and monthly VIIRS
+  composites (2012-present). VIIRS has finer temporal and spatial
+  resolution and is now the primary data source for contemporary
+  analysis.</p>
+  <p>Most empirical NL workflows use combinations of missing-value
+  recoding, outlier removal, and cloud-aware filtering, but
+  implementation details vary across projects. This heterogeneity limits
+  comparability. <monospace>NighttimeLights.jl</monospace> standardizes
+  these operations while retaining modular control for users.</p>
+  <p>Several software tools already serve the nighttime-lights
+  community, but they address a different part of the workflow.
+  <monospace>BlackMarbleR</monospace>
+  (<xref alt="Marty &amp; Stefanini Vicente, 2024" rid="ref-marty2024blackmarbler" ref-type="bibr">Marty
+  &amp; Stefanini Vicente, 2024</xref>) and its Python counterpart
+  <monospace>BlackMarblePy</monospace>
+  (<xref alt="Stefanini Vicente et al., 2023" rid="ref-marty2024blackmarblepy" ref-type="bibr">Stefanini
+  Vicente et al., 2023</xref>) download NASA’s Black Marble product and
+  compute zonal statistics for administrative regions;
+  <monospace>Rnightlights</monospace>
+  (<xref alt="Njuguna, 2019" rid="ref-njoku2019rnightlights" ref-type="bibr">Njuguna,
+  2019</xref>) does the same for the NOAA DMSP-OLS and VIIRS composites,
+  though is currently unmaintained; and the VIIRS collections in Google
+  Earth Engine
+  (<xref alt="Gorelick et al., 2017" rid="ref-gorelick2017gee" ref-type="bibr">Gorelick
+  et al., 2017</xref>) provide server-side access and aggregation. These
+  tools focus on acquisition and spatial aggregation, and the Black
+  Marble product applies sensor, terrain, and atmospheric corrections
+  upstream at the pixel level. None of them implement a configurable
+  statistical cleaning pipeline for the raw NOAA monthly composites, and
+  none correct the cloud-cover attenuation bias that dominates monthly
+  series in monsoonal regions. Contributing these routines to the
+  existing packages would mean maintaining the same methods across
+  multiple language ecosystems while simultaneously overreaching their
+  remit. Providing them as a standalone Julia package, with the cleaning
+  pipeline itself as the unit of reuse, keeps the methods in one place
+  and keeps a cleaned panel reproducible from a single package
+  version.</p>
+</sec>
+<sec id="software-design">
+  <title>Software design</title>
+  <p><monospace>NighttimeLights.jl</monospace> is implemented in Julia
+  and built on <monospace>Rasters.jl</monospace> for geospatial data
+  handling. Data is represented as raster data cubes with dimensions
+  <inline-formula><alternatives>
+  <tex-math><![CDATA[(x,y,t)]]></tex-math>
+  <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mrow><mml:mo stretchy="false" form="prefix">(</mml:mo><mml:mi>x</mml:mi><mml:mo>,</mml:mo><mml:mi>y</mml:mi><mml:mo>,</mml:mo><mml:mi>t</mml:mi><mml:mo stretchy="false" form="postfix">)</mml:mo></mml:mrow></mml:math></alternatives></inline-formula>,
+  and cleaning is organized as composable functions. Core functions
+  include:</p>
+  <list list-type="bullet">
+    <list-item>
+      <p>Missing-data handling: <monospace>na_recode</monospace>,
+      <monospace>na_interp_linear</monospace></p>
+    </list-item>
+    <list-item>
+      <p>Negative-value handling:
+      <monospace>replace_negative</monospace></p>
+    </list-item>
+    <list-item>
+      <p>Outlier treatment: <monospace>outlier_hampel</monospace>,
+      <monospace>outlier_variance</monospace></p>
+    </list-item>
+    <list-item>
+      <p>Background-noise filtering:
+      <monospace>bgnoise_PSTT2021</monospace></p>
+    </list-item>
+    <list-item>
+      <p>Cloud-bias correction: <monospace>bias_PSTT2021</monospace></p>
+    </list-item>
+  </list>
+  <p>These are wrapped into high-level pipelines such as
+  <monospace>PSTT2021()</monospace>,
+  <monospace>PSTT2021_conventional()</monospace>, and
+  <monospace>clean_complete()</monospace>. This design supports both
+  method-level customization and standardized, time-consistent cleaning
+  pipelines.</p>
+  <p>Several design choices shaped the package. Primarily, cleaning is
+  exposed as a set of small composable functions rather than a single
+  opaque routine. This enlarges the API surface and requires the user to
+  respect an ordering between steps, but it allows for customization and
+  lets each stage be run, inspected, and switched out independently,
+  which is what makes the package usable for methodological work while
+  still allowing reproducability. Secondly, the package is written in
+  Julia because the core operations are per-pixel time-series
+  computations over large pixel counts. Hampel filters, LOWESS fits,
+  linear interpolation, etc. are awkward to express as fast vectorised
+  array code and would otherwise require C extensions, if not for
+  Julia’s loop performance. Finally, existing best-practices cleaning
+  and cloud-bias-corrected cleaning are kept as separately named and
+  dated pipelines (<monospace>PSTT2021_conventional</monospace> and
+  <monospace>PSTT2021</monospace>) so that results remain reproducable
+  as well as directly comparable to the large body of prior work that
+  does not correct for cloud cover.</p>
+</sec>
+<sec id="research-impact-statement">
+  <title>Research impact statement</title>
+  <p>The package has been used as infrastructure for empirical work
+  involving inference using VIIRS nighttime lights. Its main impact is
+  methodological consistency: researchers can move from raw files to
+  analysis-ready panels using explicit, shared preprocessing steps.</p>
+  <p>Because each stage is exposed as a public function,
+  <monospace>NighttimeLights.jl</monospace> also serves as a platform
+  for methodological development. Users can inspect intermediate
+  outputs, compare alternative cleaning choices, and contribute new
+  preprocessing methods while preserving reproducible workflows.</p>
+  <p>The cloud-bias correction implemented here was developed and
+  validated in Patnaik et al.
+  (<xref alt="2021" rid="ref-patnaik2021but" ref-type="bibr">2021</xref>),
+  and <monospace>NighttimeLights.jl</monospace> is the reference
+  implementation of that method. The package has been used to build
+  analysis-ready VIIRS panels for applied economic work, including a
+  study of wartime economic activity in Ukraine
+  (<xref alt="Hande et al., 2025" rid="ref-hande2025shedding" ref-type="bibr">Hande
+  et al., 2025</xref>) and an analysis of regional economic patterns
+  across Java, Indonesia
+  (<xref alt="Aviliani et al., 2026" rid="ref-aviliani2026lights" ref-type="bibr">Aviliani
+  et al., 2026</xref>). It also underpins the public India Built and Lit
+  dataset, which distributes cleaned nighttime-lights panels for India
+  (<xref alt="xKDR Forum, 2026" rid="ref-xkdr2026indiabuiltlit" ref-type="bibr">xKDR
+  Forum, 2026</xref>). Reproducibility is supported concretely: a Mumbai
+  example cube ships with the package and is loaded with
+  <monospace>load_example()</monospace>, every pipeline stage is a
+  documented public function, the package is registered in the Julia
+  General registry, and the results quoted in this paper were produced
+  with the pinned versions listed under Computational details and can be
+  regenerated with a linked Google colab notebook.</p>
+</sec>
+<sec id="computational-details">
+  <title>Computational details</title>
+  <p>Results referenced in this manuscript were generated with Julia
+  1.12.6 and <monospace>NighttimeLights.jl</monospace> 0.9.1. Julia is
+  available at
+  <ext-link ext-link-type="uri" xlink:href="https://julialang.org/">https://julialang.org/</ext-link>
+  and the package is available at
+  <ext-link ext-link-type="uri" xlink:href="https://github.com/xKDR/NighttimeLights.jl">https://github.com/xKDR/NighttimeLights.jl</ext-link>.</p>
+  <p>Installation from the General registry:</p>
+  <preformat>] add NighttimeLights</preformat>
+</sec>
+<sec id="usage-example">
+  <title>Usage example</title>
+  <fig>
+    <caption><p>Aggregate radiance of raw and cleaned nighttime lights
+    for Mumbai, January 2014 to January
+    2018.<styled-content id="figU003Aexampledata"></styled-content></p></caption>
+    <graphic mimetype="image" mime-subtype="png" xlink:href="raw_vs_cleaned.png" />
+  </fig>
+  <p><xref alt="[fig:exampledata]" rid="figU003Aexampledata">[fig:exampledata]</xref>
+  shows the aggregate radiance of raw and cleaned NL of Mumbai. The
+  notebook that produced this data can be found on google colab
+  <ext-link ext-link-type="uri" xlink:href="https://colab.research.google.com/github/xKDR/NighttimeLights.jl/blob/main/submission/SRC/replication.ipynb">here</ext-link>.
+  On the <inline-formula><alternatives>
+  <tex-math><![CDATA[y]]></tex-math>
+  <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mi>y</mml:mi></mml:math></alternatives></inline-formula>
+  axis, the lines show the aggregate raw and cleaned NL measured in
+  <inline-formula><alternatives>
+  <tex-math><![CDATA[nW\ cm^{-2}\ sr^{-1}]]></tex-math>
+  <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mrow><mml:mi>n</mml:mi><mml:mi>W</mml:mi><mml:mspace width="0.222em"></mml:mspace><mml:mi>c</mml:mi><mml:msup><mml:mi>m</mml:mi><mml:mrow><mml:mi>−</mml:mi><mml:mn>2</mml:mn></mml:mrow></mml:msup><mml:mspace width="0.222em"></mml:mspace><mml:mi>s</mml:mi><mml:msup><mml:mi>r</mml:mi><mml:mrow><mml:mi>−</mml:mi><mml:mn>1</mml:mn></mml:mrow></mml:msup></mml:mrow></mml:math></alternatives></inline-formula>.
+  The <inline-formula><alternatives>
+  <tex-math><![CDATA[x]]></tex-math>
+  <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mi>x</mml:mi></mml:math></alternatives></inline-formula>
+  axis shows time measured in months from January 2014 to January 2018.
+  Note the bias during the monsoon months (e.g. July), which is
+  significantly reduced in the cleaned data.</p>
+  <table-wrap>
+    <caption>
+      <p>Effect of cleaning on nighttime lights for Mumbai.</p>
+    </caption>
+    <table>
+      <thead>
+        <tr>
+          <th>Statistic</th>
+          <th align="right">Raw</th>
+          <th align="right">Cleaned</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Minimum</td>
+          <td align="right">-0.14</td>
+          <td align="right">0.0</td>
+        </tr>
+        <tr>
+          <td>Mean</td>
+          <td align="right">9.1</td>
+          <td align="right">9.1</td>
+        </tr>
+        <tr>
+          <td>Median</td>
+          <td align="right">3.2</td>
+          <td align="right">0.0</td>
+        </tr>
+        <tr>
+          <td>99th percentile</td>
+          <td align="right">54.0</td>
+          <td align="right">59.0</td>
+        </tr>
+        <tr>
+          <td>Maximum</td>
+          <td align="right">4300.0</td>
+          <td align="right">1700.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </table-wrap>
+  <p>The table shows some summary statistics for raw and cleaned NL for
+  Mumbai. Note the absence of negative values in the datacube. The
+  maximum value after is also lower, as some outlier values have been
+  removed. Half the values in the raw data cube are below 4, these can
+  be attributed to background noise. All these measurements have been
+  zeroed. The increase in the <inline-formula><alternatives>
+  <tex-math><![CDATA[99^{th}]]></tex-math>
+  <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:msup><mml:mn>99</mml:mn><mml:mrow><mml:mi>t</mml:mi><mml:mi>h</mml:mi></mml:mrow></mml:msup></mml:math></alternatives></inline-formula>
+  percentile value is due to the bias correction procedure.</p>
+</sec>
+<sec id="ai-usage-disclosure">
+  <title>AI usage disclosure</title>
+  <p>No generative AI tools were used in the development of the software
+  package, or the written text. AI assistance was used in formatting
+  tables in the markdown document.</p>
+</sec>
+<sec id="acknowledgements">
+  <title>Acknowledgements</title>
+  <p>We acknowledge contributions from Anshul Tayal, Siddhant
+  Chauddhary, and Hrishikesh Saikia to the codebase and package design.
+  This work received financial support from the MIT Julia Lab.</p>
+</sec>
+</body>
+<back>
+<ref-list>
+  <title></title>
+  <ref id="ref-rs9080798">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Jiang</surname><given-names>Wei</given-names></name>
+        <name><surname>He</surname><given-names>Guojin</given-names></name>
+        <name><surname>Long</surname><given-names>Tengfei</given-names></name>
+        <name><surname>Liu</surname><given-names>Huichan</given-names></name>
+      </person-group>
+      <article-title>Ongoing conflict makes yemen dark: From the perspective of nighttime light</article-title>
+      <source>Remote Sensing</source>
+      <year iso-8601-date="2017">2017</year>
+      <volume>9</volume>
+      <issue>8</issue>
+      <issn>2072-4292</issn>
+      <uri>https://www.mdpi.com/2072-4292/9/8/798</uri>
+      <pub-id pub-id-type="doi">10.3390/rs9080798</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-uprety2019calibration">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Uprety</surname><given-names>Sirish</given-names></name>
+        <name><surname>Cao</surname><given-names>Changyong</given-names></name>
+        <name><surname>Gu</surname><given-names>Yalong</given-names></name>
+        <name><surname>Shao</surname><given-names>Xi</given-names></name>
+        <name><surname>Blonski</surname><given-names>Slawomir</given-names></name>
+        <name><surname>Zhang</surname><given-names>Bin</given-names></name>
+      </person-group>
+      <article-title>Calibration improvements in s-NPP VIIRS DNB sensor data record using version 2 reprocessing</article-title>
+      <source>IEEE Transactions on Geoscience and Remote Sensing</source>
+      <publisher-name>IEEE</publisher-name>
+      <year iso-8601-date="2019">2019</year>
+      <volume>57</volume>
+      <issue>12</issue>
+      <fpage>9602</fpage>
+      <lpage>9611</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-patnaik2021but">
+    <element-citation publication-type="report">
+      <person-group person-group-type="author">
+        <name><surname>Patnaik</surname><given-names>Ayush</given-names></name>
+        <name><surname>Shah</surname><given-names>Ajay</given-names></name>
+        <name><surname>Tayal</surname><given-names>Anshul</given-names></name>
+        <name><surname>Thomas</surname><given-names>Susan</given-names></name>
+        <name><surname>others</surname></name>
+      </person-group>
+      <article-title>But clouds got in my way: Bias and bias correction of viirs nighttime lights data in the presence of clouds</article-title>
+      <year iso-8601-date="2021">2021</year>
+    </element-citation>
+  </ref>
+  <ref id="ref-doll2006mapping">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Doll</surname><given-names>Christopher NH</given-names></name>
+        <name><surname>Muller</surname><given-names>Jan-Peter</given-names></name>
+        <name><surname>Morley</surname><given-names>Jeremy G</given-names></name>
+      </person-group>
+      <article-title>Mapping regional economic activity from night-time light satellite imagery</article-title>
+      <source>Ecological Economics</source>
+      <publisher-name>Elsevier</publisher-name>
+      <year iso-8601-date="2006">2006</year>
+      <volume>57</volume>
+      <issue>1</issue>
+      <fpage>75</fpage>
+      <lpage>92</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-guptaEtal2017_analysisViirsDerivedNightlightOverIndia">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>K Gupta</surname><given-names>P</given-names></name>
+        <name><surname>K. Srivastav</surname><given-names>S.</given-names></name>
+        <name><surname>V. R. Sesha Sai</surname><given-names>M.</given-names></name>
+        <name><surname>Gharai</surname><given-names>B.</given-names></name>
+        <name><surname>Senthil Kumar</surname><given-names>A.</given-names></name>
+        <name><surname>V. N. Krishna Murthy</surname><given-names>Y.</given-names></name>
+      </person-group>
+      <article-title>Analysis of SNPP-VIIRS-DNB derived nightlights over India</article-title>
+      <source>Asian Association of Remote Sensing</source>
+      <year iso-8601-date="2017">2017</year>
+    </element-citation>
+  </ref>
+  <ref id="ref-MaEtal2014_responsesNppViirsNightlightSocioeconomicChina">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Ma</surname><given-names>Ting</given-names></name>
+        <name><surname>Zhou</surname><given-names>Chenghu</given-names></name>
+        <name><surname>Pei</surname><given-names>Tao</given-names></name>
+        <name><surname>Haynie</surname><given-names>Susan</given-names></name>
+        <name><surname>Fan</surname><given-names>Junfu</given-names></name>
+      </person-group>
+      <article-title>Responses of suomi-NPP VIIRS-derived nighttime lights to socioeconomic activity in china’s cities</article-title>
+      <source>Remote Sensing Letters</source>
+      <publisher-name>Taylor &amp; Francis</publisher-name>
+      <year iso-8601-date="2014">2014</year>
+      <volume>5</volume>
+      <issue>2</issue>
+      <fpage>165</fpage>
+      <lpage>174</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-pearson2002outliers">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Pearson</surname><given-names>Ronald K</given-names></name>
+      </person-group>
+      <article-title>Outliers in process modeling and identification</article-title>
+      <source>IEEE Transactions on control systems technology</source>
+      <publisher-name>IEEE</publisher-name>
+      <year iso-8601-date="2002">2002</year>
+      <volume>10</volume>
+      <issue>1</issue>
+      <fpage>55</fpage>
+      <lpage>63</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-marty2024blackmarbler">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Marty</surname><given-names>Robert</given-names></name>
+        <name><surname>Stefanini Vicente</surname><given-names>Gabriel</given-names></name>
+      </person-group>
+      <article-title>blackmarbler: Black Marble data and statistics</article-title>
+      <publisher-name>R package, Comprehensive R Archive Network</publisher-name>
+      <year iso-8601-date="2024">2024</year>
+    </element-citation>
+  </ref>
+  <ref id="ref-marty2024blackmarblepy">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Stefanini Vicente</surname><given-names>Gabriel</given-names></name>
+        <name><surname>Marty</surname><given-names>Robert</given-names></name>
+        <name><surname>Gadomski</surname><given-names>Pete</given-names></name>
+        <name><surname>SahitiSarva</surname></name>
+        <name><surname>Garrett</surname><given-names>Russ</given-names></name>
+      </person-group>
+      <article-title>BlackMarblePy: Georeferenced rasters and statistics of nighttime lights from NASA Black Marble</article-title>
+      <publisher-name>Python package</publisher-name>
+      <year iso-8601-date="2023">2023</year>
+      <pub-id pub-id-type="doi">10.5281/zenodo.10667907</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-njoku2019rnightlights">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Njuguna</surname><given-names>Christopher</given-names></name>
+      </person-group>
+      <article-title>Rnightlights: Satellite nightlight data extraction</article-title>
+      <publisher-name>R package version 0.2.4, Comprehensive R Archive Network (archived)</publisher-name>
+      <year iso-8601-date="2019">2019</year>
+    </element-citation>
+  </ref>
+  <ref id="ref-gorelick2017gee">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Gorelick</surname><given-names>Noel</given-names></name>
+        <name><surname>Hancher</surname><given-names>Matt</given-names></name>
+        <name><surname>Dixon</surname><given-names>Mike</given-names></name>
+        <name><surname>Ilyushchenko</surname><given-names>Simon</given-names></name>
+        <name><surname>Thau</surname><given-names>David</given-names></name>
+        <name><surname>Moore</surname><given-names>Rebecca</given-names></name>
+      </person-group>
+      <article-title>Google Earth Engine: Planetary-scale geospatial analysis for everyone</article-title>
+      <source>Remote Sensing of Environment</source>
+      <publisher-name>Elsevier</publisher-name>
+      <year iso-8601-date="2017">2017</year>
+      <volume>202</volume>
+      <fpage>18</fpage>
+      <lpage>27</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-aviliani2026lights">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Aviliani</surname><given-names>Avi</given-names></name>
+        <name><surname>Kartawinata</surname><given-names>Matthew</given-names></name>
+        <name><surname>Herawan</surname><given-names>Jonathan Ersten</given-names></name>
+        <name><surname>Parningotan</surname><given-names>Firman</given-names></name>
+        <name><surname>Komala</surname><given-names>Angelina</given-names></name>
+      </person-group>
+      <article-title>When lights tell stories: The untold economic pattern of Java island</article-title>
+      <source>Jurnal Ekonomi Indonesia</source>
+      <year iso-8601-date="2026">2026</year>
+      <volume>15</volume>
+      <issue>1</issue>
+      <pub-id pub-id-type="doi">10.52813/jei.v15i1.786</pub-id>
+      <fpage>1</fpage>
+      <lpage>18</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-hande2025shedding">
+    <element-citation publication-type="report">
+      <person-group person-group-type="author">
+        <name><surname>Hande</surname><given-names>Rounak</given-names></name>
+        <name><surname>Patnaik</surname><given-names>Ayush</given-names></name>
+        <name><surname>Shah</surname><given-names>Ajay</given-names></name>
+        <name><surname>Thomas</surname><given-names>Susan</given-names></name>
+      </person-group>
+      <article-title>Shedding light on the Russia-Ukraine war</article-title>
+      <publisher-name>xKDR Forum</publisher-name>
+      <year iso-8601-date="2025">2025</year>
+      <uri>https://www.xkdr.org/paper/shedding-light-on-the-russia-ukraine-war</uri>
+    </element-citation>
+  </ref>
+  <ref id="ref-xkdr2026indiabuiltlit">
+    <element-citation>
+      <person-group person-group-type="author">
+        <string-name>xKDR Forum</string-name>
+      </person-group>
+      <article-title>NighttimeLights and built-up volume dataset</article-title>
+      <publisher-name>https://xkdr.github.io/India-Built-and-Lit/</publisher-name>
+      <year iso-8601-date="2026">2026</year>
+    </element-citation>
+  </ref>
+</ref-list>
+</back>
+</article>
