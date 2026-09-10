@@ -1,0 +1,29 @@
+{
+  "title": "Foundations for nighttime lights data analysis",
+  "description": "NighttimeLights.jl is a Julia package for cleaning and bias-correcting monthly nighttime lights from the Visible Infrared Imaging Radiometer Suite (VIIRS). It provides composable functions for missing-value recoding, interpolation, negative-value handling, outlier removal, background-noise filtering, and cloud-cover bias correction, together with standard pipelines that compose them into analysis-ready data cubes.",
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Patnaik, Ayush",
+      "affiliation": "XKDR Forum"
+    },
+    {
+      "name": "Shah, Ajay",
+      "affiliation": "XKDR Forum"
+    },
+    {
+      "name": "Thomas, Susan",
+      "affiliation": "XKDR Forum"
+    }
+  ],
+  "keywords": [
+    "Julia",
+    "nighttime lights",
+    "VIIRS",
+    "remote sensing",
+    "economic activity",
+    "data cleaning"
+  ]
+}

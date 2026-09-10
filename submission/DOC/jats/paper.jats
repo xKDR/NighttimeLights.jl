@@ -45,7 +45,7 @@ analysis</article-title>
 </contrib>
 <aff id="aff-1">
 <institution-wrap>
-<institution>xKDR Forum</institution>
+<institution>XKDR Forum</institution>
 </institution-wrap>
 </aff>
 </contrib-group>
@@ -149,19 +149,27 @@ a Creative Commons Attribution 4.0 International License (CC BY
   though is currently unmaintained; and the VIIRS collections in Google
   Earth Engine
   (<xref alt="Gorelick et al., 2017" rid="ref-gorelick2017gee" ref-type="bibr">Gorelick
-  et al., 2017</xref>) provide server-side access and aggregation. These
-  tools focus on acquisition and spatial aggregation, and the Black
-  Marble product applies sensor, terrain, and atmospheric corrections
-  upstream at the pixel level. None of them implement a configurable
-  statistical cleaning pipeline for the raw NOAA monthly composites, and
-  none correct the cloud-cover attenuation bias that dominates monthly
-  series in monsoonal regions. Contributing these routines to the
-  existing packages would mean maintaining the same methods across
-  multiple language ecosystems while simultaneously overreaching their
-  remit. Providing them as a standalone Julia package, with the cleaning
-  pipeline itself as the unit of reuse, keeps the methods in one place
-  and keeps a cleaned panel reproducible from a single package
-  version.</p>
+  et al., 2017</xref>) provide server-side access and aggregation.
+  General-purpose raster frameworks such as
+  <monospace>GeoWombat</monospace>
+  (<xref alt="Graesser et al., 2026" rid="ref-graesser2026geowombat" ref-type="bibr">Graesser
+  et al., 2026</xref>) in Python and <monospace>Rasters.jl</monospace>
+  in Julia supply the data-cube mechanics (reading, reprojection,
+  alignment, and chunked computation) and, in the case of
+  <monospace>GeoWombat</monospace>, radiometric corrections for daytime
+  optical sensors, but they carry no nighttime-lights-specific cleaning.
+  The nighttime-lights tools focus on acquisition and spatial
+  aggregation, and the Black Marble product applies sensor, terrain, and
+  atmospheric corrections upstream at the pixel level. None of them
+  implement a configurable statistical cleaning pipeline for the raw
+  NOAA monthly composites, and none correct the cloud-cover attenuation
+  bias that dominates monthly series in monsoonal regions. Contributing
+  these routines to the existing packages would mean maintaining the
+  same methods across multiple language ecosystems while simultaneously
+  overreaching their remit. Providing them as a standalone Julia
+  package, with the cleaning pipeline itself as the unit of reuse, keeps
+  the methods in one place and keeps a cleaned panel reproducible from a
+  single package version.</p>
 </sec>
 <sec id="software-design">
   <title>Software design</title>
@@ -242,7 +250,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   (<xref alt="Aviliani et al., 2026" rid="ref-aviliani2026lights" ref-type="bibr">Aviliani
   et al., 2026</xref>). It also underpins the public India Built and Lit
   dataset, which distributes cleaned nighttime-lights panels for India
-  (<xref alt="xKDR Forum, 2026" rid="ref-xkdr2026indiabuiltlit" ref-type="bibr">xKDR
+  (<xref alt="XKDR Forum, 2026" rid="ref-xkdr2026indiabuiltlit" ref-type="bibr">XKDR
   Forum, 2026</xref>). Reproducibility is supported concretely: a Mumbai
   example cube ships with the package and is loaded with
   <monospace>load_example()</monospace>, every pipeline stage is a
@@ -272,8 +280,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
   </fig>
   <p><xref alt="[fig:exampledata]" rid="figU003Aexampledata">[fig:exampledata]</xref>
   shows the aggregate radiance of raw and cleaned NL of Mumbai. The
-  notebook that produced this data can be found on google colab
-  <ext-link ext-link-type="uri" xlink:href="https://colab.research.google.com/github/xKDR/NighttimeLights.jl/blob/main/submission/SRC/replication.ipynb">here</ext-link>.
+  notebook that produced this data can be found on Google colab
+  <ext-link ext-link-type="uri" xlink:href="https://github.com/xKDR/NighttimeLights.jl/blob/joss-submission/submission/SRC/replication.ipynb">here</ext-link>.
   On the <inline-formula><alternatives>
   <tex-math><![CDATA[y]]></tex-math>
   <mml:math display="inline" xmlns:mml="http://www.w3.org/1998/Math/MathML"><mml:mi>y</mml:mi></mml:math></alternatives></inline-formula>
@@ -526,6 +534,26 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <lpage>27</lpage>
     </element-citation>
   </ref>
+  <ref id="ref-graesser2026geowombat">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Graesser</surname><given-names>Jordan</given-names></name>
+        <name><surname>Mann</surname><given-names>Michael L.</given-names></name>
+        <name><surname>Hardtke</surname><given-names>Leonardo</given-names></name>
+        <name><surname>Denham</surname><given-names>Robert</given-names></name>
+        <name><surname>Xu</surname><given-names>Sharon</given-names></name>
+      </person-group>
+      <article-title>GeoWombat: Scalable geospatial and remote sensing analysis in Python</article-title>
+      <source>Journal of Open Source Software</source>
+      <publisher-name>The Open Journal</publisher-name>
+      <year iso-8601-date="2026">2026</year>
+      <volume>11</volume>
+      <issue>125</issue>
+      <pub-id pub-id-type="doi">10.21105/joss.10812</pub-id>
+      <fpage>10812</fpage>
+      <lpage></lpage>
+    </element-citation>
+  </ref>
   <ref id="ref-aviliani2026lights">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
@@ -554,7 +582,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
         <name><surname>Thomas</surname><given-names>Susan</given-names></name>
       </person-group>
       <article-title>Shedding light on the Russia-Ukraine war</article-title>
-      <publisher-name>xKDR Forum</publisher-name>
+      <publisher-name>XKDR Forum</publisher-name>
       <year iso-8601-date="2025">2025</year>
       <uri>https://www.xkdr.org/paper/shedding-light-on-the-russia-ukraine-war</uri>
     </element-citation>
@@ -562,7 +590,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-xkdr2026indiabuiltlit">
     <element-citation>
       <person-group person-group-type="author">
-        <string-name>xKDR Forum</string-name>
+        <string-name>XKDR Forum</string-name>
       </person-group>
       <article-title>NighttimeLights and built-up volume dataset</article-title>
       <publisher-name>https://xkdr.github.io/India-Built-and-Lit/</publisher-name>
