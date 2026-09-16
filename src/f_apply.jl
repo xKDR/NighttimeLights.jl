@@ -31,6 +31,6 @@ mask = rand([missing, 1], 10, 10)
 apply_mask(datacube, mask)
 ```
 """
-function apply_mask(data, mask = ones((size(data)[1], size(data)[2])))
+function apply_mask(data, mask = ones(Int8, (size(data)[1], size(data)[2])))
    mask .* data
 end

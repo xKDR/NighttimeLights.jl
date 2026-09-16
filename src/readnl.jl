@@ -156,7 +156,7 @@ function read_noise_mask(;path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp_2024
         raster = resample(raster, size = Int.(round.(size(raster) ./ resample_factor)))
     end
     # Convert 0 values to missing
-    raster = Int64.(raster)
+    raster = Int8.(raster)
     mask = replace(raster, 0 => missing)
     return mask
 end
@@ -180,7 +180,7 @@ function read_noise_mask(geom; path = "/mnt/giant-disk/ntl/noisemask/VNL_v22_npp
         cropped = resample(cropped, size = Int.(round.(size(cropped) ./ resample_factor)))
     end
     # Convert 0 values to missing
-    cropped = Int64.(cropped)
+    cropped = Int8.(cropped)
     mask = replace(cropped, 0 => missing)
     return mask
 end
@@ -204,7 +204,7 @@ function read_noise_mask(xlims, ylims; path = "/mnt/giant-disk/ntl/noisemask/VNL
         cropped = resample(cropped, size = Int.(round.(size(cropped) ./ resample_factor)))
     end
     # Convert 0 values to missing
-    cropped = Int64.(cropped)
+    cropped = Int8.(cropped)
     mask = replace(cropped, 0 => missing)
     return mask
 end 
