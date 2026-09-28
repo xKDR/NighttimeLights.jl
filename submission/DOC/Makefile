@@ -12,6 +12,10 @@ SHELL := /bin/bash
 #                    submitting.
 
 ENGINE ?= podman
+# Rootless podman remaps container UIDs by default, so a plain bind mount
+# looks owned by the wrong user inside the container; --userns=keep-id fixes
+# that. Docker doesn't have (or need) this problem, so skip the flag there.
+ENGINE_USERNS := $(if $(filter podman,$(ENGINE)),--userns=keep-id)
 SRC := paper.md paper.bib datacube.png raw_vs_cleaned.png
 
 all: preview
@@ -21,17 +25,15 @@ preview: paper.pdf
 paper.pdf: $(SRC)
 	pandoc -s --citeproc --pdf-engine=xelatex paper.md -o paper.pdf
 
-# --userns=keep-id maps host UID into the container so it owns the bind mount;
-# :Z relabels the mount for SELinux (Fedora) so the container can write to it.
 joss: $(SRC)
 	$(ENGINE) run --rm \
+	    $(ENGINE_USERNS) \
 	    --volume "$(CURDIR)":/data:Z \
-	    --userns=keep-id \
 	    --env JOURNAL=joss \
 	    openjournals/inara
 
 clean:
-	rm -rf paper.{aux,log,out,bbl,blg,tex} Makefile~ paper.jats paper.crossref jats media
+	rm -f paper.{aux,log,out,bbl,blg,tex} Makefile~ paper.jats paper.crossref
 
 squeaky: clean
 	rm -f paper.pdf
