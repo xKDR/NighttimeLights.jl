@@ -53,7 +53,12 @@ function PSTT2021(radiance_datacube, ncfobs_datacube; noise = nothing, bgthresho
     GC.gc()
     tmp = apply_mask(tmp, noise)
     GC.gc()
-    
+    # No pixel is lit above background, so the region is dark. The masked cube now has
+    # eltype `Missing`, which the later steps cannot write into, so return zeros here.
+    if all(ismissing, tmp)
+        return Raster(zeros(nonmissingtype(eltype(radiance_datacube)), size(tmp)), dims(radiance_datacube))
+    end
+
     # Default value for stable_pixels - will be overwritten if outlier_variance succeeds
     stable_pixels = ones(Int8, size(tmp)[1], size(tmp)[2])
     
