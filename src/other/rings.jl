@@ -48,8 +48,10 @@ function annular_ring(radiance_image, R1, R2, lat, long, res)
     xₒ = DimensionalData.dims2indices(dims(img2)[1], X(Near(long)))
     yₒ = DimensionalData.dims2indices(dims(img2)[2], Y(Near(lat)))
 
-    width_at_1(y) = Int(round(a1 * sqrt(abs((1 - (y-yₒ)^2 / b1 ^2))))) # equation of inner ellipse.
-    width_at_2(y) = Int(round(a2 * sqrt(abs((1 - (y-yₒ)^2 / b2 ^2))))) # equation of outer ellipse.
+    # guard for tiny radius resulting in division by zero
+    width_at(a, b, dy) = dy == 0 ? Int(round(a)) : Int(round(a * sqrt(abs(1 - (dy / b)^2))))
+    width_at_1(y) = width_at(a1, b1, y - yₒ) # inner ellipse
+    width_at_2(y) = width_at(a2, b2, y - yₒ) # outer ellipse
     mask2 = Raster(missings(Int64, size(img2)), dims(img2))
 
     ymin = yₒ + Int(round(b2))
