@@ -8,7 +8,7 @@
 
     @property max_examples=CHEAP function custom_replacement(c = cubes(radiance()))
         cube = only(c)
-        isequal(Array(replace_negative(as_raster(copy(cube)); replacement = 0.0)), max.(cube, 0.0))
+        isequal(Array(replace_negative(as_raster(copy(cube)); replacement = 0.0)), ifelse.(cube .< 0, 0.0, cube))
     end
 end
 

@@ -16,6 +16,7 @@ load_example()
     files = isempty(ARGS) ? [
         "f_apply.jl",
         "readnl.jl",
+        "example.jl",
         "data_cleaning/na_recode.jl",
         "data_cleaning/replace_negative.jl",
         "data_cleaning/interpolation.jl",

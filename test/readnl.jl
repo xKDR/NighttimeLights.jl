@@ -42,10 +42,16 @@ end
     @test all(==(20.0), rad[Ti = 1]) && all(==(30.0), rad[Ti = 2]) && all(==(3), cf[Ti = 2])
     @test inside(rad, (72.2, 72.5), (19.3, 19.6)) && size(rad, 1) > 0 && size(rad, 2) > 0
 
+    small, _ = readnl_rectangle(X(Rasters.Between(72.2, 72.5)), Y(Rasters.Between(19.3, 19.6)), Date(2015, 2), Date(2015, 3); paths..., resample_factor = 2)
+    @test size(small, Ti) == 2 && all(size(small)[1:2] .< size(rad)[1:2]) && all(==(30.0), small[Ti = 2])
+
     box = GeoInterface.Wrappers.Polygon([[(72.2, 19.3), (72.5, 19.3), (72.5, 19.6), (72.2, 19.6), (72.2, 19.3)]])
     rad, cf = readnl_geom(box, Date(2015, 1), Date(2015, 4); paths...)
     @test size(rad, Ti) == 4 && all(==(40.0), rad[Ti = 4])
     @test inside(rad, (72.15, 72.55), (19.25, 19.65)) && size(rad)[1:2] == size(cf)[1:2]
+    small, small_cf = readnl_geom(box, Date(2015, 1), Date(2015, 4); paths..., resample_factor = 2)
+    @test size(small, Ti) == 4 && all(size(small)[1:2] .< size(rad)[1:2]) && size(small) == size(small_cf)
+    @test all(==(40.0), small[Ti = 4])
 
     noise_path = joinpath(mktempdir(), "lit_mask.tif")
     lit = [isodd(i + j) ? 1 : 0 for i in 1:10, j in 1:10]

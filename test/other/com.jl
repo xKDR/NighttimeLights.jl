@@ -11,6 +11,10 @@
                                                                      k = floats(0.5, 100.0))
         img = only(c)
         assume!(any(>(0), img))
+        # an index centre on an exact .5 can round either way once k adds rounding error
+        w = img[:, :, 1]
+        centre(idx) = sum(idx .* w) / sum(w)
+        assume!(all(x -> abs(x - floor(x) - 0.5) > 1e-6, (centre(axes(w, 1)), centre(axes(w, 2)'))))
         centre_of_mass(as_raster(img)) == centre_of_mass(as_raster(k .* img))
     end
 
