@@ -1,6 +1,6 @@
 const pipelines = (PSTT2021_conventional, PSTT2021, clean_complete, PSTT2021_lowmem)
 
-# Generated cubes flood the output with outlier_variance failures
+# generated cubes flood the output with outlier_variance failures
 Logging.disable_logging(Logging.Warn)
 
 @testset "pipelines on generated cubes" begin

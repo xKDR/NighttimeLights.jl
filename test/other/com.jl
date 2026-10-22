@@ -25,5 +25,5 @@
     end
 
     img = view(radiance_datacube, Ti(1))
-    @test centre_of_mass(sparse(Array(img)[:, :, 1]), dims(img)) ≈ [72.88333535640002, 19.070832885899996]
+    @test isapprox(centre_of_mass(sparse(Array(img)[:, :, 1]), dims(img)), [72.88333535640002, 19.070832885899996])
 end

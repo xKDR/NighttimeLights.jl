@@ -6,3 +6,4 @@
 /docs/build/
 /test/Manifest.toml
 /test/SuppositionDB/
+/test/logs/

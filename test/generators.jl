@@ -4,9 +4,22 @@
 const CHEAP = 300
 const COSTLY = 15
 
-# Julia 1.10: @property wraps @check otherwise test doesn't count results
+# Julia 1.10: @property wraps @check otherwise test doesn't count results.
+# Logs the start (a hang while shrinking shows up as a start with no end) and the outcome.
 macro property(args...)
-    esc(:(@test something((Supposition.@check $(args...)).result) isa Supposition.Pass))
+    f = args[end]
+    name = string(Meta.isexpr(f, :function) ? f.args[1].args[1] : "property")
+    # gensyms: the expansion is escaped, so plain names would clobber the test's own variables
+    res, t0, secs = gensym(:res), gensym(:t0), gensym(:secs)
+    esc(quote
+        steplog("start property ", $name)
+        $t0 = time()
+        $res = something((Supposition.@check $(args...)).result)
+        $secs = round(time() - $t0; digits = 1)
+        $res isa Supposition.Pass ? steplog("pass property ", $name, " (", $secs, "s)") :
+            steplog("FAIL property ", $name, " (", $secs, "s): ", first(sprint(show, $res), 500))
+        @test $res isa Supposition.Pass
+    end)
 end
 
 floats(lo, hi) = Data.Floats{Float64}(; nans = false, minimum = lo, maximum = hi)

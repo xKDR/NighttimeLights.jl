@@ -20,12 +20,12 @@
 
     @property max_examples=CHEAP function invariant_to_scaling_weights(o = observations, k = Data.Integers(2, 100))
         x, w = o
-        NighttimeLights.weighted_mean(x, w) ≈ NighttimeLights.weighted_mean(x, k .* w)
+        isapprox(NighttimeLights.weighted_mean(x, w), NighttimeLights.weighted_mean(x, k .* w))
     end
 
     @property max_examples=CHEAP function float16_does_not_overflow(o = observations)
         x, w = o
         x16 = map(v -> ismissing(v) ? missing : Float16(300v), x)
-        NighttimeLights.weighted_mean(x16, w) ≈ NighttimeLights.weighted_mean(map(v -> ismissing(v) ? missing : Float64(v), x16), w)
+        isapprox(NighttimeLights.weighted_mean(x16, w), NighttimeLights.weighted_mean(map(v -> ismissing(v) ? missing : Float64(v), x16), w))
     end
 end

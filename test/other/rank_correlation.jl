@@ -1,6 +1,6 @@
 @testset "rank_correlation" begin
     # t = r*sqrt((n-2)/(1-r^2)): r = 0.5, n = 72 gives t = 4.8305, one-tailed p = 3.876e-6
-    @test NighttimeLights.t_test(72, 0.5) ≈ 3.876e-6 rtol = 1e-3
+    @test isapprox(NighttimeLights.t_test(72, 0.5), 3.876e-6; rtol = 1e-3)
 
     @property max_examples=CHEAP function t_test_falls_as_r_rises(n = Data.Integers(3, 200), r1 = floats(-0.99, 0.99), r2 = floats(-0.99, 0.99))
         lo, hi = minmax(r1, r2)
