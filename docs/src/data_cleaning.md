@@ -12,5 +12,6 @@ bias_PSTT2021(radiance, ncfobs, smoothing_parameter=10.0)
 bias_PSTT2021(radiance_datacube, ncfobs_datacube, mask)
 PSTT2021_conventional(radiance_datacube, ncfobs_datacube)
 PSTT2021(radiance_datacube, ncfobs_datacube)
+PSTT2021_lowmem
 clean_complete(radiance_datacube, ncfobs_datacube)
 ```

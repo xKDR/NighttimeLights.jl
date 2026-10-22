@@ -1,0 +1,15 @@
+RESOURCES — literature for the paper
+====================================
+
+Contents:
+
+  additional.bib   Bibliography for the project. This is a symlink to
+                   ../DOC/paper.bib (the canonical file — JOSS's build bot
+                   requires a real paper.bib in DOC, so the canonical copy
+                   lives there and this points at it).
+  notes            Few-sentence summaries of each cited work and why it
+                   matters to this project. Not a collation of abstracts.
+  <key>.pdf        The PDF of each cited work, named by its bib key
+                   (e.g. patnaik2021but.pdf).  TODO: add these.
+
+No Makefile here: nothing is generated.

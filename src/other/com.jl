@@ -13,8 +13,10 @@ centre_of_mass(spaster, dims(radiance_image))
 """
 function centre_of_mass(raster, dimensions)
     nz = findnz(raster)
-    xcom_index = Int(round(sum((nz[1] .* nz[3])) / sum(nz[3])))
-    ycom_index = Int(round(sum((nz[2] .* nz[3])) / sum(nz[3])))
+    weights = Float64.(nz[3]) # Float64 so that a Float16 image cannot overflow these sums
+    total = sum(weights)
+    xcom_index = Int(round(sum((nz[1] .* weights)) / total))
+    ycom_index = Int(round(sum((nz[2] .* weights)) / total))
     return map(getindex, dimensions, [xcom_index, ycom_index]) # longitude and latitude of the centre of mass
 end
 

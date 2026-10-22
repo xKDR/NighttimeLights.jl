@@ -31,6 +31,10 @@ To cite NighttimeLights.jl, please cite the package's corresponding [paper](http
 }
 ```
 
+## Contributing and getting help
+
+Bug reports, feature requests, and usage questions go to the [issue tracker](https://github.com/xKDR/NighttimeLights.jl/issues). See [CONTRIBUTING.md](CONTRIBUTING.md) for how to report a problem, run the tests, and submit a pull request.
+
 ## Support
 
 We gratefully acknowledge the JuliaLab at MIT for financial support for this project.

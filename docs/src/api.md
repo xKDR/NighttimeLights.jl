@@ -22,6 +22,7 @@ apply_mask
 annular_ring
 centre_of_mass
 replace_negative
+replace_above
 ```
 
 ## Internal
