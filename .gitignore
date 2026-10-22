@@ -7,3 +7,4 @@
 /test/Manifest.toml
 /test/SuppositionDB/
 /test/logs/
+.DS_Store
