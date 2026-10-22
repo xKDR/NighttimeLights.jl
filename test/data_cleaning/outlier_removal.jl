@@ -1,24 +1,37 @@
-@testset "removing outlier observations" begin
-    for i in 1:1000
-        len = rand(10:80)
-        x = Array{Union{Float64, Missing}}(rand(1:100.0,len))
-        x[rand(1:len)] = missing
-        @test length(outlier_hampel(x)) == len
+@testset "outlier_hampel" begin
+    @property max_examples=CHEAP function only_adds_missings(ts = gappy_series(radiance()))
+        out = outlier_hampel(ts)
+        length(out) == length(ts) &&
+            all(i -> ismissing(out[i]) || isequal(out[i], ts[i]), eachindex(ts))
+    end
+
+    @property max_examples=CHEAP function keeps_constant_series(c = radiance(), n = Data.Integers(1, 60))
+        isequal(outlier_hampel(fill(c, n)), fill(c, n))
+    end
+
+    @property max_examples=CHEAP function removes_a_spike(ts = Data.Vectors(floats(5.0, 15.0); min_size = 12, max_size = 60),
+                                                      at = Data.Integers(5, 7))
+        spiked = copy(ts)
+        spiked[at] = 1000.0
+        ismissing(outlier_hampel(spiked)[at])
     end
 end
 
-@testset "generating outlier mask" begin
-    for i in 1:10
-        x = size(radiance_datacube)[1]
-        y = size(radiance_datacube)[2]
-        z = size(radiance_datacube)[3]
-        
-        rad = Array{Union{Float64, Missing}}(rand(20:100.0, x, y, z))
-        for j in 1:rand(1:20)
-            rad[rand(1:x), rand(1:y), rand(1:z)] = missing
-        end
-        rad = Raster(rad, dims(radiance_datacube))
-        mask = rand(0:1, x, y)
-        @test size(outlier_variance(rad, mask)) == (x, y)
+@testset "outlier_variance" begin
+    @property max_examples=CHEAP function masks_only_lit_pixels(cm = cubes(maybe_missing(radiance()), Data.SampledFrom([1, missing])),
+                                                             cutoff = floats(0.01, 1.0))
+        cube, m = cm
+        mask = m[:, :, 1]
+        assume!(any(!ismissing, mask))
+        out = outlier_variance(as_raster(cube), mask; cutoff)
+        all(x -> isequal(x, 1) || ismissing(x), out) && all(ismissing, out[ismissing.(mask)])
+    end
+
+    @property max_examples=CHEAP function higher_cutoff_keeps_more(c = cubes(maybe_missing(radiance())),
+                                                                lo = floats(0.01, 1.0), hi = floats(0.01, 1.0))
+        cube = as_raster(only(c))
+        lo, hi = minmax(lo, hi)
+        kept(cutoff) = .!ismissing.(outlier_variance(cube; cutoff))
+        all(kept(lo) .<= kept(hi))
     end
 end

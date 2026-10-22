@@ -1,12 +1,19 @@
-@testset "background noise mask" begin
-    for i in 1:10
-        x = size(radiance_datacube)[1]
-        y = size(radiance_datacube)[2]
-        z = size(radiance_datacube)[3]
-        rad = rand(20:100.0, x,y,z)
-        ncfobs = rand(1:30, x,y,z)
-        rad = Raster(rad, dims(radiance_datacube))
-        ncfobs = Raster(ncfobs, dims(radiance_datacube))
-        @test size(bgnoise_PSTT2021(rad,ncfobs,rand(0:0.9))) == (x,y)
+@testset "bgnoise_PSTT2021" begin
+    @property max_examples=CHEAP function lit_iff_last_year_mean_above_threshold(c = cubes(maybe_missing(floats(0.0, 10.0)), ncfobs()),
+                                                                              th = floats(0.0, 10.0))
+        rad, ncf = c
+        mask = bgnoise_PSTT2021(as_raster(rad), as_raster(ncf), th)
+        last_year = size(rad, 3)-11:size(rad, 3)
+        all(CartesianIndices(mask)) do ij
+            lit = NighttimeLights.weighted_mean(rad[ij, last_year], ncf[ij, last_year]) > th
+            isequal(mask[ij], lit ? 1 : missing)
+        end
+    end
+
+    @property max_examples=CHEAP function ignores_earlier_months(c = cubes(radiance(), ncfobs(), radiance()))
+        rad, ncf, other = c
+        changed = copy(rad)
+        changed[:, :, 1:end-12] = other[:, :, 1:end-12]
+        isequal(bgnoise_PSTT2021(as_raster(rad), as_raster(ncf)), bgnoise_PSTT2021(as_raster(changed), as_raster(ncf)))
     end
 end

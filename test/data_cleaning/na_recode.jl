@@ -1,23 +1,25 @@
-@testset "marking missings in image" begin
-    for i in 1:10
-        x = rand(1:30)
-        y = rand(1:30)
-        image = rand(1:10.0, x, y)
-        image = convert(Array{Union{Float64, Missing}}, image)
-        ncfobs = rand(0:5, x, y)
-        @test size(NighttimeLights.na_recode_img(image, ncfobs)) == size(image) 
-    end
-end
+@testset "na_recode" begin
+    expected(rad, ncf) = ncf == 0 ? missing : rad
 
-@testset "marking missings in datacube" begin
-    for i in 1:10
-        x = size(radiance_datacube)[1]
-        y = size(radiance_datacube)[2]
-        z = size(radiance_datacube)[3]
-        rad = rand(20:100.0, x,y,z)
-        ncfobs = rand(0:3, x,y,z)
-        rad = Raster(rad, dims(radiance_datacube))
-        ncfobs = Raster(ncfobs, dims(radiance_datacube))
-        @test size(na_recode(rad, ncfobs)) == size(rad)
+    @property max_examples=CHEAP function marks_cloudy_months_in_cube(c = cubes(maybe_missing(radiance()), ncfobs()))
+        rad, ncf = c
+        isequal(Array(na_recode(as_raster(rad), as_raster(ncf))), expected.(rad, ncf))
+    end
+
+    @property max_examples=CHEAP function accepts_cube_without_missing_eltype(c = cubes(radiance(), ncfobs()))
+        rad, ncf = c
+        isequal(Array(na_recode(as_raster(rad), as_raster(ncf))), expected.(rad, ncf))
+    end
+
+    @property max_examples=CHEAP function marks_cloudy_months_in_image(c = cubes(radiance(), ncfobs()))
+        rad, ncf = c
+        img, ncf_img = as_missable(rad[:, :, 1]), ncf[:, :, 1]
+        isequal(NighttimeLights.na_recode_img(copy(img), ncf_img), expected.(img, ncf_img))
+    end
+
+    @property max_examples=CHEAP function custom_replacement(c = cubes(radiance(), ncfobs()))
+        rad, ncf = c
+        out = na_recode(as_raster(rad), as_raster(ncf); replacement = -1.0)
+        isequal(Array(out), ifelse.(ncf .== 0, -1.0, rad))
     end
 end
