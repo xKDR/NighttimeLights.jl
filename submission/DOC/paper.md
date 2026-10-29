@@ -67,7 +67,7 @@ The cloud-bias correction implemented here was developed and validated in @patna
 
 # Computational details
 
-Results referenced in this manuscript were generated with Julia 1.12.6 and `NighttimeLights.jl` 0.9.1. The version described here, 0.10.0, changes the cleaned values of fewer than 0.1% of pixel-months in the bundled Mumbai example, and its total radiance by less than 0.01%. Julia is available at <https://julialang.org/> and the package is available at <https://github.com/xKDR/NighttimeLights.jl>.
+Results referenced in this manuscript were generated with Julia 1.12.6 and `NighttimeLights.jl` 0.9.1. Version 0.10.0, described here, changes fewer than 0.1% of the cleaned values in the bundled Mumbai example. Julia is available at <https://julialang.org/> and the package is available at <https://github.com/xKDR/NighttimeLights.jl>.
 
 Installation from the General registry:
 
@@ -77,7 +77,7 @@ Installation from the General registry:
 
 # Usage example
 
-The following Julia code shows how to go from raw to cleaned data with `NighttimeLights.jl`. The example uses a rectangle of nighttime lights around Mumbai, which ships with the package and can be loaded with `load_example()`. Two inputs are needed. Both are `Raster` data cubes with dimensions $(x, y, t)$, where $t$ indexes months:
+The following Julia code shows how to go from raw to cleaned data with `NighttimeLights.jl`. The example uses monthly VIIRS composites for a rectangle around Mumbai, January 2014 to January 2018, downloaded from Google Earth Engine by the replication notebook at <https://github.com/xKDR/NighttimeLights.jl>. Two inputs are needed. Both are `Raster` data cubes with dimensions $(x, y, t)$, where $t$ indexes months:
 
 - `mumbai_radiance`: the monthly mean radiance of each pixel, in $nW\ cm^{-2}\ sr^{-1}$.
 - `mumbai_n_cloudfree`: the number of cloud-free observations that went into each monthly mean.
@@ -122,30 +122,29 @@ radiance_corrected = bias_PSTT2021(radiance_despiked, mumbai_n_cloudfree, pixel_
 mumbai_cleaned = long_apply(na_interp_linear, radiance_corrected)
 ```
 
-Two helpers recur in the sequence. `apply_mask` multiplies every monthly image in a data cube by a 2D mask, so that pixels marked as dropped in the mask are removed from every month. `long_apply` applies a function written for a single pixel's time series to every pixel of a data cube. The steps are:
+Two helpers recur: `apply_mask` removes the pixels a 2D mask marks as `missing` from every month, and `long_apply` applies a function written for one pixel's time series to every pixel. The steps are:
 
-1. **Missing data.** NOAA reports a radiance of 0 for a pixel-month in which every day was cloudy, which is indistinguishable from a genuinely dark pixel. `na_recode` uses `mumbai_n_cloudfree` to find pixel-months with zero cloud-free observations and recodes their radiance as `missing`.
+1. **Missing data.** NOAA reports zero radiance for a pixel-month with no cloud-free observations, which is indistinguishable from a dark pixel. `na_recode` recodes these as `missing`.
 
-2. **Negative values.** Radiance cannot be negative. Negative values in the raw data arise from calibration in the presence of airglow [@uprety2019calibration]. `replace_negative` recodes them as `missing`.
+2. **Negative values.** These arise from calibration in the presence of airglow [@uprety2019calibration] and are recoded as `missing`.
 
-3. **Background noise.** Pixels with no lights, such as oceans, forests, and deserts, still show a small positive radiance. `bgnoise_PSTT2021` builds an annual image from the last twelve months of data, weighting each month by its number of cloud-free observations [@guptaEtal2017_analysisViirsDerivedNightlightOverIndia]. Pixels whose annual radiance falls below the threshold (here 4 $nW\ cm^{-2}\ sr^{-1}$) are classified as dark. The result, `lit_mask`, is a 2D mask that is 1 for lit pixels and `missing` for dark ones. Applying it removes the dark pixels from every month.
+3. **Background noise.** Unlit areas such as oceans, forests and deserts still show a small positive radiance. `bgnoise_PSTT2021` averages the last twelve months, weighting each by its cloud-free observations [@guptaEtal2017_analysisViirsDerivedNightlightOverIndia], and marks pixels below the threshold (here 4 $nW\ cm^{-2}\ sr^{-1}$) as dark.
 
-4. **Cross-sectional outliers.** Fires, gas flares, and similar sources produce pixels whose radiance is far above anything from human settlement, and whose time series is highly variable. `outlier_variance` computes the standard deviation of each pixel's detrended time series and marks the top 0.1% of lit pixels as unstable. The result, `stable_mask`, is applied in the same way as `lit_mask`.
+4. **Cross-sectional outliers.** Fires and gas flares produce pixels with extreme, highly variable radiance. `outlier_variance` marks the top 0.1% of lit pixels by the standard deviation of their detrended series as unstable.
 
-5. **Time-series outliers.** A pixel that is stable overall can still contain isolated spikes. `outlier_hampel` runs a Hampel filter [@pearson2002outliers] over a single time series, with a window of 5 months and a cutoff of 3 standard deviations, and recodes flagged observations as `missing`. `long_apply` runs it over every pixel.
+5. **Time-series outliers.** `outlier_hampel` removes isolated spikes with a Hampel filter [@pearson2002outliers], using a 5-month window and a cutoff of 3 standard deviations.
 
-6. **Cloud bias.** Months with few cloud-free observations show attenuated radiance. This is the monsoon dip visible in the raw series of the figure below. For each pixel, `bias_PSTT2021` fits a smoothing spline of detrended radiance on the number of cloud-free observations, and raises observations from cloudy months to the level the spline predicts for clear months [@patnaik2021but]. The combined `pixel_mask` restricts the correction to pixels that survived steps 3 and 4.
+6. **Cloud bias.** Cloudy months show attenuated radiance: the monsoon dip in the figure below. For each pixel kept by steps 3 and 4, `bias_PSTT2021` fits a smoothing spline of detrended radiance on the number of cloud-free observations, and raises cloudy months to the level the spline predicts for clear months [@patnaik2021but].
 
-7. **Remaining gaps.** `na_interp_linear` fills `missing` values in a time series by linear interpolation between the nearest observed values. Leading and trailing gaps take the nearest observed value. Applied over every pixel, this produces the complete data cube `mumbai_cleaned`.
+7. **Remaining gaps.** `na_interp_linear` fills gaps by linear interpolation; leading and trailing gaps take the nearest observed value.
 
-Steps 1 to 5 and step 7, without the bias correction, are what most applied work already does. They are termed conventional cleaning in @patnaik2021but and are available as `PSTT2021_conventional()`. All three pathways, `clean_complete()`, `PSTT2021()`, and the explicit sequence, apply identical methods to transform the raw inputs into `mumbai_cleaned`.
+Steps 1 to 5 and 7, without the bias correction, are what most applied work already does. They are termed conventional cleaning in @patnaik2021but and are available as `PSTT2021_conventional()`.
 
 # An example
 
 ![Aggregate radiance of raw and cleaned nighttime lights for Mumbai, January 2014 to January 2018.\label{exampledata}](raw_vs_cleaned.png)
 
-\autoref{exampledata} shows the aggregate radiance of raw and cleaned NL of Mumbai. The notebook that produced this data can be found at <https://github.com/xKDR/NighttimeLights.jl>.
-On the $y$ axis, the lines show the aggregate raw and cleaned NL measured in $nW\ cm^{-2}\ sr^{-1}$. The $x$ axis shows time measured in months from January 2014 to January 2018. Note the bias during the monsoon months (e.g. July), which is significantly reduced in the cleaned data.
+\autoref{exampledata} shows the aggregate raw and cleaned radiance of Mumbai, in $nW\ cm^{-2}\ sr^{-1}$, from January 2014 to January 2018; the notebook that produced it is at <https://github.com/xKDR/NighttimeLights.jl>. The monsoon dip (e.g. July) in the raw data is much reduced after cleaning.
 
 | Statistic       |    Raw | Cleaned |
 | --------------- | -----: | ------: |
@@ -157,12 +156,12 @@ On the $y$ axis, the lines show the aggregate raw and cleaned NL measured in $nW
 
 : Effect of cleaning on nighttime lights for Mumbai.
 
-The table shows some summary statistics for raw and cleaned NL for Mumbai. Note the absence of negative values in the datacube. The maximum value after is also lower, as some outlier values have been removed. Half the values in the raw data cube are below 4, these can be attributed to background noise. All these measurements have been zeroed. The increase in the $99^{th}$ percentile value is due to the bias correction procedure.
+After cleaning there are no negative values, and the maximum is lower because outliers are removed. Half the raw values are below 4, attributable to background noise, and are zeroed. The higher $99^{th}$ percentile reflects the bias correction.
 
 
 # AI usage disclosure
 
-Generative AI (Anthropic's Claude, through Claude Code) was used to assist in developing parts of the test suite: logic tests of the outlier filters and background-noise removal on synthetic data, fixed seeding of the property-based tests, and tests for previously untested lines. It was also used to draft documentation notes on the limitations of the outlier filters and on running the tests, and to update the continuous integration configuration. The authors reviewed all AI-assisted changes and take responsibility for them. AI assistance was also used in formatting tables in the markdown document.
+Generative AI (Anthropic's Claude, through Claude Code) assisted with parts of the test suite, documentation of the outlier filters' limitations, and the continuous integration configuration. The authors reviewed all AI-assisted changes and take responsibility for them. AI assistance was also used in formatting tables in the markdown document.
 
 # Acknowledgements
 
