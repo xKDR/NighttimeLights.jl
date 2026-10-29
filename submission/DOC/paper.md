@@ -77,7 +77,7 @@ Installation from the General registry:
 
 # Usage example
 
-The following Julia code shows how to go from raw to cleaned data with `NighttimeLights.jl`. The example uses monthly VIIRS composites for a rectangle around Mumbai, January 2014 to January 2018, downloaded from Google Earth Engine by the replication notebook at <https://github.com/xKDR/NighttimeLights.jl>. Two inputs are needed. Both are `Raster` data cubes with dimensions $(x, y, t)$, where $t$ indexes months:
+The following Julia code shows how to go from raw to cleaned data with `NighttimeLights.jl`. The example uses monthly VIIRS composites for a rectangle around Mumbai, January 2014 to January 2018, downloaded from Google Earth Engine by the replication notebook at <https://github.com/xKDR/NighttimeLights.jl/blob/main/submission/SRC/replication.ipynb>. Two inputs are needed. Both are `Raster` data cubes with dimensions $(x, y, t)$, where $t$ indexes months:
 
 - `mumbai_radiance`: the monthly mean radiance of each pixel, in $nW\ cm^{-2}\ sr^{-1}$.
 - `mumbai_n_cloudfree`: the number of cloud-free observations that went into each monthly mean.
@@ -144,7 +144,7 @@ Steps 1 to 5 and 7, without the bias correction, are what most applied work alre
 
 ![Aggregate radiance of raw and cleaned nighttime lights for Mumbai, January 2014 to January 2018.\label{exampledata}](raw_vs_cleaned.png)
 
-\autoref{exampledata} shows the aggregate raw and cleaned radiance of Mumbai, in $nW\ cm^{-2}\ sr^{-1}$, from January 2014 to January 2018; the notebook that produced it is at <https://github.com/xKDR/NighttimeLights.jl>. The monsoon dip (e.g. July) in the raw data is much reduced after cleaning.
+\autoref{exampledata} shows the aggregate raw and cleaned radiance of Mumbai, in $nW\ cm^{-2}\ sr^{-1}$, from January 2014 to January 2018; the notebook that produced it is at <https://github.com/xKDR/NighttimeLights.jl/blob/main/submission/SRC/replication.ipynb>. The monsoon dip (e.g. July) in the raw data is much reduced after cleaning.
 
 | Statistic       |    Raw | Cleaned |
 | --------------- | -----: | ------: |
