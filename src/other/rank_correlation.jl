@@ -1,5 +1,5 @@
 function t_test(n,r)
-    stat = r *sqrt((n-2)/1-r^2)
+    stat = r * sqrt((n - 2) / (1 - r^2))
     t_dist = TDist(n-2)
     return pvalue(t_dist,stat,tail=:right)
 end 

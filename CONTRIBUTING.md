@@ -36,6 +36,11 @@ maintainers at XKDR Forum through <https://xkdr.org>.
    julia --project=. -e 'using Pkg; Pkg.test()'
    ```
 
+   Property tests use a fixed seed, so every run sees the same inputs. Set
+   `NTL_TEST_SEED=random` to draw fresh inputs each run, or any integer to pick
+   another seed. To run only some files, pass them as test arguments, e.g.
+   `Pkg.test(test_args = ["other/detrend.jl"])`.
+
 4. If you changed the documentation, build it locally:
 
    ```
@@ -57,7 +62,10 @@ always appreciated.
 - `src/other/` — supporting utilities (detrending, rank correlation, annular
   rings, centre of mass, weighted means).
 - `src/readnl.jl` — reading NOAA VIIRS files into data cubes.
-- `test/` — one test file per source file, listed in `test/runtests.jl`.
+- `test/` — one test file per source file, listed in `test/runtests.jl`. Each
+  file has mechanical tests (types, shapes, masks) and, where the function
+  implements a method, logic tests on synthetic data with a known answer.
+  `test/sum.md` describes every test and the reasoning behind its bounds.
 - `docs/` — Documenter.jl sources.
 
 ## Conduct
