@@ -9,7 +9,7 @@ using SparseArrays
 using Statistics
 using Supposition, Supposition.Data
 
-# Progress lines for run_tests.sh: the last one before a hang says where it stuck.
+# Progress lines: the last one before a hang says where it stuck.
 steplog(msg...) = (println(stdout, "[step ", Dates.format(now(), "HH:MM:SS"), "] ", msg...); flush(stdout))
 
 # DefaultTestSet that logs each testset's start and end and each result as it is recorded.
@@ -61,7 +61,6 @@ load_example()
         "other/com.jl",
         "other/rings.jl",
         "other/date_to_int.jl",
-        "logic.jl",
     ] : ARGS
     for file in files
         @testset "$file" begin

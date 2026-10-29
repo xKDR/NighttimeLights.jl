@@ -30,4 +30,6 @@
         @test count(ismissing, mask) > count(ismissing, annular_ring(img, 2.0, 19.07, 72.87, res)[2])
     end
     @test_nowarn annular_ring(img, nextfloat(0.0), 19.07, 72.87, res)
+    # R2 < R1: logs an error and lights nothing
+    @test all(ismissing, (@test_logs (:error, "R1 must be less than R2") annular_ring(img, 2.0, 1.0, 19.07, 72.87, res))[2])
 end

@@ -62,4 +62,7 @@ end
     @test 0 < length(cropped) < 100 && all(x -> isequal(x, 1) || ismissing(x), cropped)
     cropped = read_noise_mask(X(Rasters.Between(72.2, 72.5)), Y(Rasters.Between(19.3, 19.6)); path = noise_path)
     @test inside(cropped, (72.2, 72.5), (19.3, 19.6)) && all(x -> isequal(x, 1) || ismissing(x), cropped)
+    @test size(read_noise_mask(; path = noise_path, resample_factor = 2)) == (5, 5)
+    @test length(read_noise_mask(box; path = noise_path, resample_factor = 2)) < length(read_noise_mask(box; path = noise_path))
+    @test length(read_noise_mask(X(Rasters.Between(72.2, 72.5)), Y(Rasters.Between(19.3, 19.6)); path = noise_path, resample_factor = 2)) < length(cropped)
 end

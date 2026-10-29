@@ -67,7 +67,7 @@ The cloud-bias correction implemented here was developed and validated in @patna
 
 # Computational details
 
-Results referenced in this manuscript were generated with Julia 1.12.6 and `NighttimeLights.jl` 0.9.1. Julia is available at <https://julialang.org/> and the package is available at <https://github.com/xKDR/NighttimeLights.jl>.
+Results referenced in this manuscript were generated with Julia 1.12.6 and `NighttimeLights.jl` 0.9.1. The version described here, 0.10.0, changes the cleaned values of fewer than 0.1% of pixel-months in the bundled Mumbai example, and its total radiance by less than 0.01%. Julia is available at <https://julialang.org/> and the package is available at <https://github.com/xKDR/NighttimeLights.jl>.
 
 Installation from the General registry:
 
@@ -162,7 +162,7 @@ The table shows some summary statistics for raw and cleaned NL for Mumbai. Note 
 
 # AI usage disclosure
 
-No generative AI tools were used in the development of the software package, or the written text. AI assistance was used in formatting tables in the markdown document.
+Generative AI (Anthropic's Claude, through Claude Code) was used to assist in developing parts of the test suite: logic tests of the outlier filters and background-noise removal on synthetic data, fixed seeding of the property-based tests, and tests for previously untested lines. It was also used to draft documentation notes on the limitations of the outlier filters and on running the tests, and to update the continuous integration configuration. The authors reviewed all AI-assisted changes and take responsibility for them. AI assistance was also used in formatting tables in the markdown document.
 
 # Acknowledgements
 

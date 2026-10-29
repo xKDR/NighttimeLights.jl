@@ -5,7 +5,9 @@ two types of test:
 - logic: methods validation. statistical bounds on synthetic data. 
 
 ### types of test: 
-property = Supposition library, generated inputs. 
+property = Supposition library, generated inputs. seeded (seed 1, no example database), so every
+run and machine generates the same inputs. `NTL_TEST_SEED=random` draws fresh inputs each run and
+replays stored failures; any integer picks another fixed seed. 
 example = fixed inputs
 Monte Carlo = seeded, bounds on medians/rates
 
@@ -100,8 +102,9 @@ Monte Carlo = seeded, bounds on medians/rates
 ## logic
 
 the real attenuation mechanism is unknown, so the tests use a stand-in model.
-all logic tests are in logic.jl, in the order below. the model helpers (`cloudiness`,
-`cloud_free_days`, `dimming`) are at its top.
+each logic test sits after the mechanical tests in the file of the function it checks, named in
+the headings below. the model helpers (`cloudiness`, `cloud_free_days`, `dimming`) are in
+generators.jl; each file's own scene helpers sit just above its logic tests.
 
 model, for month k:
 
@@ -138,7 +141,7 @@ skipped.
 null: depth = 0, so there is no dimming. obs = L + e, and ncfobs is seasonal but has nothing to 
 do with obs. any correction made there is a false positive.
 
-### detrend_ts (property)
+### detrend_ts (property, other/detrend.jl)
 - `keeps_seasonality`: a linear trend + periodic function (seasonality), 2-10 whole years, no
   noise. checks if the output is the periodic function, to rounding. the periodic function is
   a cosine symmetric within each year (peak between June and July), so it has no linear trend
@@ -150,7 +153,7 @@ do with obs. any correction made there is a false positive.
   the trend changes nothing: the output equals the detrended periodic function alone, with
   `missing` in the same places.
 
-### rank_correlation_test (Monte Carlo, 2000 series of 72 months)
+### rank_correlation_test (Monte Carlo, 2000 series of 72 months, other/rank_correlation.jl)
 `rank_correlation_test` decides which pixels `bias_PSTT2021` corrects, so it can fail two ways:
 correcting pixels clouds do not dim, or skipping pixels that do.
 - null: 2000 null-case series. checks if p < 0.05 in 3-7% of them. a correct test at the 5%
@@ -161,7 +164,7 @@ correcting pixels clouds do not dim, or skipping pixels that do.
   p < 0.05 in more than 98% of them. a lower rate means dimmed pixels are skipped and keep
   their cloud bias.
 
-### bias correction, dimmed pixels (Monte Carlo, 500 pixels)
+### bias correction, dimmed pixels (Monte Carlo, 500 pixels, data_cleaning/bias_correction.jl)
 each pixel: 72 months, L 10-60, depth 0.2-0.5, g = 0 except in "trend kept".
 `bias_PSTT2021_pixel` is called directly, so the noise mask, variance mask, Hampel filter and
 rank correlation test play no part: this measures the correction alone.
@@ -187,7 +190,7 @@ rank correlation test play no part: this measures the correction alone.
   observed maximum to their observed value hits the late, high months. checked by removing the
   cap: the 5th percentile of the slope change moves from -0.021 to -0.0001.
 
-### bias correction, pure noise (Monte Carlo, 20x25 cube)
+### bias correction, pure noise (Monte Carlo, 20x25 cube, data_cleaning/bias_correction.jl)
 null case with L = 20, sigma = 0.6.
 - false corrections: `bias_PSTT2021` on the whole cube. checks if fewer than 8% of the 500
   pixels are changed. about 5% pass the rank correlation test by chance; with no cloud effect,
@@ -200,7 +203,40 @@ null case with L = 20, sigma = 0.6.
   to fix. the bound is there so a change in this bias is noticed; the rank correlation test
   keeps it to about 5% of pixels.
 
-### full pipelines, dirty scenes (property, 15 scenes per run)
+### outlier_hampel, seasonal series (Monte Carlo, 2000 series of 72 months, data_cleaning/outlier_removal.jl)
+clean dimmed series: L 10-60, g 0-0.1, depth 0.2-0.5, 3% relative noise, no spikes.
+- false flags: checks if fewer than 0.5% of months are flagged, and fewer than 0.5% of cloudy
+  months (ncfobs <= 10). measured: 0.09% and 0.12%. the monsoon dip is real data, and a
+  flagged cloudy month is one the bias correction can no longer use.
+- spikes: a 5x spike in months 5-67 is always flagged; a 2x spike more than 80% of the time
+  (measured 92%).
+- ends: the filter loops over `window_size:(n - window_size)`, so the first 4 and last 5
+  observed months are never checked. checks if a 5x spike there stays, as the docstring says.
+  this is deliberate: at the ends a spike cannot be told apart from the start of a real change
+  in level. checking them with shortened windows caught the spikes but also removed 0.66 of the
+  last 3 months of a real 50% drop, and flagging only upward spikes there removed 1.75 of the
+  last 3 months of a real 1.5x rise.
+- level shift: a lasting 1.5x jump at month 37 (e.g. electrification) is not a spike. checks if
+  fewer than 0.1 months are flagged on average in months 30-44 (measured 0.02).
+
+### outlier_variance, city scenes (Monte Carlo, 50 scenes of 1000 pixels, data_cleaning/outlier_removal.jl)
+40x25 lit pixels, levels 5 + 20 * lognormal(0, 0.8), one depth per scene, 3% relative noise.
+- flare: one pixel uniform 0-500 is the top 0.1%. checks if it is dropped in every scene and
+  nothing else is.
+- no flare: the cutoff still drops the top 0.1% of pixels by standard deviation, which scales
+  with level, so usually the brightest pixel. checks if the light lost is below 1.5% in the
+  median scene and below 3% in every scene (measured 0.9% and 1.7%). in a smaller region the
+  dropped pixel is a larger share of the total.
+
+### bgnoise, airglow scenes (Monte Carlo, 50 scenes, data_cleaning/bgnoise.jl)
+20x20, ~80% dark. dark pixels read airglow: a level 0.5-3 per pixel plus Normal(0, 1) noise
+each month, so some months are negative. lit pixels: L 10-60, dimmed, 3% relative noise.
+- checks if the mask marks exactly the lit pixels as lit.
+- regional mean: airglow inflates the raw regional mean by more than 10% (measured ~24%) over
+  the dimmed truth. after masking (dark pixels counted as 0) it is within 0.5% of the dimmed
+  truth. the comparison is with the dimmed truth since removing noise does not undo clouds.
+
+### full pipelines, dirty scenes (property, 15 scenes per run, data_cleaning/full_procedures.jl)
 4x4x72 cube. each pixel has its own L 10-60; the scene has one g 0-0.1, one depth 0.2-0.5 and a
 noise seed. lit pixels grow and are dimmed, with 3% relative noise. then dirt is added: a dark
 row (obs ~ Normal(0, 1), some negative), one gas flare (uniform 0-500), up to 30 lit
@@ -214,7 +250,9 @@ says something in the chain is wrong; the single-step tests above say where.
   `clean_complete` and `PSTT2021_lowmem`. the cloud-driven seasonal pattern is the bias, so
   conventional cleaning should leave it and the bias-correcting pipelines should mostly remove it.
 - `recovers_true_lights`: checks if each lit pixel's median error against the truth is below
-  8% and below 0.6x the conventional pipeline's error.
+  8% and below 0.6x the conventional pipeline's error (0.65x for `PSTT2021_lowmem`). the
+  Float16 path came out at 0.63x on one pixel of one generated scene (all levels 10, depth 0.2),
+  where `PSTT2021` passed; over 100 more scenes at that corner the worst ratio was 0.52.
 - `keeps_long_run_growth`: `PSTT2021` only. checks if the median growth over lit pixels lies
   in [g * (1 - depth) - 0.015, g + 0.015]. the lower bound allows the understatement
   described under "trend kept".
@@ -227,7 +265,7 @@ says something in the chain is wrong; the single-step tests above say where.
   reference.
 
 ### bounds checked by breaking code
-each broken version below was run against logic.jl, and makes exactly the listed ones fail.
+each broken version below was run against the logic tests, and makes exactly the listed ones fail.
 - correction that changes nothing: mean rises, share of bias removed, follows cloud cover,
   forced lift, `bias_correction_removes_seasonality`, `recovers_true_lights` and
   `cleans_the_dirt` fail.

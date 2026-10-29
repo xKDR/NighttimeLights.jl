@@ -15,3 +15,18 @@
         0 <= NighttimeLights.rank_correlation_test(rad, ncf) <= 1
     end
 end
+
+@testset "rank_correlation on seasonal cloud cover" begin
+    # seeded Monte Carlo, seasonal cloud cover
+    rng = Xoshiro(4)
+    noisy(depth) = map(1:2000) do _
+        ncf = cloud_free_days.(rng, 1:72)
+        L = 10 + 50 * rand(rng)
+        y = L .* dimming.(ncf, depth) .+ 0.03 * L .* randn(rng, 72)
+        NighttimeLights.rank_correlation_test(y, ncf)
+    end
+    # no dimming: p < 0.05 ~5% of the time (+/-4 sd over 2000 draws)
+    @test 0.03 < mean(noisy(0.0) .< 0.05) < 0.07
+    # 20% dimming: nearly always detected
+    @test mean(noisy(0.2) .< 0.05) > 0.98
+end

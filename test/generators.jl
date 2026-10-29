@@ -4,6 +4,11 @@
 const CHEAP = 300
 const COSTLY = 15
 
+# Fixed seed and no example database by default, so every run and machine sees the same inputs.
+# NTL_TEST_SEED=random draws fresh inputs (and replays stored failures); any integer picks another seed.
+const SEED = get(ENV, "NTL_TEST_SEED", "1")
+property_rng() = SEED == "random" ? Xoshiro(rand(RandomDevice(), UInt)) : Xoshiro(parse(UInt, SEED))
+
 # Julia 1.10: @property wraps @check otherwise test doesn't count results.
 # Logs the start (a hang while shrinking shows up as a start with no end) and the outcome.
 macro property(args...)
@@ -14,7 +19,7 @@ macro property(args...)
     esc(quote
         steplog("start property ", $name)
         $t0 = time()
-        $res = something((Supposition.@check $(args...)).result)
+        $res = something((Supposition.@check rng=property_rng() db=(SEED == "random") $(args...)).result)
         $secs = round(time() - $t0; digits = 1)
         $res isa Supposition.Pass ? steplog("pass property ", $name, " (", $secs, "s)") :
             steplog("FAIL property ", $name, " (", $secs, "s): ", first(sprint(show, $res), 500))
@@ -46,3 +51,11 @@ end
 
 as_raster(a) = Raster(a, (X(1.0:size(a, 1)), Y(1.0:size(a, 2)), Ti(1:size(a, 3))))
 as_missable(a) = Array{Union{Missing, eltype(a)}}(a)
+
+# stand-in cloud model for the logic tests (see sum.md)
+# seasonal clouds: 1 at the July monsoon peak, 0 in January
+cloudiness(k) = (1 + cos(2pi * (k - 7) / 12)) / 2
+# ncfobs ~6 in July, ~28 in January
+cloud_free_days(rng, k) = clamp(round(Int, 28 - 22 * cloudiness(k)) + rand(rng, -2:2), 1, 30)
+# radiance factor: 1 at ncfobs = 30, 1 - depth at 0
+dimming(ncf, depth) = 1 - depth * (1 - ncf / 30)
