@@ -165,6 +165,6 @@ Generative AI (Anthropic's Claude, through Claude Code) assisted with parts of t
 
 # Acknowledgements
 
-We acknowledge contributions from Anshul Tayal, Siddhant Chauddhary, and Hrishikesh Saikia to the codebase and package design. This work received financial support from the MIT Julia Lab.
+We acknowledge contributions from Anshul Tayal, Siddhant Chauddhary, and Hrishikesh Saikia for their contributions to the codebase and package design, and Kapilan Mahalingam for package improvements, test development, and manuscript preparation. This work received financial support from the MIT Julia Lab.
 
 # References
